@@ -1,0 +1,19 @@
+.deskWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  width: fit-content;
+  height: 90px;
+}
+
+.tableSurface {
+  width: 100%;
+  min-width: 80px; 
+  height: 40px;
+  background-color: #967969;
+  border-radius: 8px;
+}
