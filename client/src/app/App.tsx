@@ -1,13 +1,23 @@
 import './App.css';
-import Navbar from '../components/Navbar/navbar';
-import ViewSlots from '../pages/ViewSlotsPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from '../components/Navbar/navbar.tsx'
+import ViewSlots from '../pages/ViewSlotsPage.tsx'
+import LoginPage from '../pages/LoginPage.tsx'
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <ViewSlots />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        
+        <Route path="/slots" element={
+          <>
+            <Navbar /> 
+            <ViewSlots />
+          </>
+        } />
+      </Routes>
+    </Router>
   );
 }
 

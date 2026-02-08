@@ -1,0 +1,14 @@
+.customButton {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 60px;
+}
+
+.primary {
+  background-color: #437d32;
+  color: white;
+}
