@@ -1,17 +1,18 @@
-import { useState } from 'react'
 import './App.css'
-import './../components/navbar.tsx'
-import Navbar from './../components/navbar.tsx'
+import '../components/Navbar/navbar.tsx'
+import Navbar from '../components/Navbar/navbar.tsx'
+import Slot from '../components/Slot/Slot.tsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
       <div>
         <Navbar></Navbar>
       </div>
-  
+      <div>
+        <Slot id='A1' status='available'></Slot>
+      </div>
     </>
   )
 }
