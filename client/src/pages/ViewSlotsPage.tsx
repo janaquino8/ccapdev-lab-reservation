@@ -3,9 +3,8 @@ import Board from '../components/Board/Board.tsx';
 import styles from '../components/Board/Board.module.css'
 
 const ViewSlots = () => {
-
     return (
-        <>
+        <>  
             <div style={{padding: '50px', display: 'flex', justifyContent: 'center'}}>
                 <Board title="Gokongwei 307A">
                    <div className={styles.deskRow}>

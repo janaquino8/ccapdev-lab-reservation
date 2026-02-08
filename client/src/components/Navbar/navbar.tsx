@@ -5,7 +5,7 @@ const Navbar = () => {
     { name: 'Create Reservation', href: '#' },
     { name: 'Edit Reservation', href: '#' },
     { name: 'Previous Reservations', href: '#' },
-    { name: 'View Slots', href: '#' },
+    { name: 'View Slots', href: '/view-slots' },
     { name: 'Search', href: '#' },
   ];
 
