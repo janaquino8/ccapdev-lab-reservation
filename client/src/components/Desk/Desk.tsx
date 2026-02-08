@@ -8,14 +8,13 @@ interface SlotData {
 }
 
 interface DeskProps {
-  topSlots?: SlotData[];    // ? makes this optional
-  bottomSlots?: SlotData[]; // ? makes this optional
+  topSlots?: SlotData[];   
+  bottomSlots?: SlotData[];
 }
 
 const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots }) => {
   return (
     <div className={styles.deskWrapper}>
-      {/* Only render the top row if topSlots is provided */}
       {topSlots && (
         <div className={styles.row}>
           {topSlots.map((slot) => (
@@ -24,10 +23,8 @@ const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots }) => {
         </div>
       )}
 
-      {/* The table surface always stays */}
       <div className={styles.tableSurface}></div>
 
-      {/* Only render the bottom row if bottomSlots is provided */}
       {bottomSlots && (
         <div className={styles.row}>
           {bottomSlots.map((slot) => (
