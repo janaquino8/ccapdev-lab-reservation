@@ -11,10 +11,12 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         
         <Route path="/slots" element={
-          <>
-            <Navbar /> 
-            <ViewSlots />
-          </>
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <ViewSlots />
+            </div> 
+          </div>
         } />
       </Routes>
     </Router>

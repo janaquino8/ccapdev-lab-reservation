@@ -1,18 +1,12 @@
 .pageContainer {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../../../assets/dlsu-bg.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed; 
-    padding: 20px;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     gap: 100px; 
-    padding: 40px;
-    background-color: white; 
+    padding: 0.1px 40px;
     min-height: 100vh;
     box-sizing: border-box;
+    background: transparent;
 }
 
 /* ^^ Could move this to a generalized css for all pages, as well as some of the other stuff here */
