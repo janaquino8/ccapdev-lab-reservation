@@ -2,6 +2,7 @@ import styles from '../Navbar/Navbar.module.css';
 
 const AdminNavbar = () => {
   const navLinks = [
+    { name: 'Back to Login', href: '/' },
     { name: 'Edit Reservation', href: '#' },
     { name: 'Delete Reservation', href: '#' },
   ];
