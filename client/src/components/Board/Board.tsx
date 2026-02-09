@@ -14,6 +14,12 @@ const Board: React.FC<BoardProps> = ({ children, title }) => {
             {title && <h2 className={styles.boardTitle}>{title}</h2>}
         </div>
 
+        <div className={styles.legendContainer}>
+            <div className={`${styles.legendItem} ${styles.available}`}>Available</div>
+            <div className={`${styles.legendItem} ${styles.reserved}`}>Reserved</div>
+            <div className={`${styles.legendItem} ${styles.unavailable}`}>Unavailable</div>
+        </div>
+
         <div className={styles.layoutContainer}>
             {children}
         </div>
