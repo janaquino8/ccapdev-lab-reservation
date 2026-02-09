@@ -1,0 +1,25 @@
+.rowContainer, .headerContainer {
+  display: flex;
+  gap: 10px; /* Space between the gray pills */
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.cell {
+  background-color: #e0eadd; /* Light grayish-green from mockup */
+  color: #2e7d32;
+  flex: 1; /* Makes all columns equal width */
+  padding: 12px 5px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerContainer .cell {
+  background-color: #d1dfcd; /* Slightly darker for the header labels */
+  font-weight: 800;
+}

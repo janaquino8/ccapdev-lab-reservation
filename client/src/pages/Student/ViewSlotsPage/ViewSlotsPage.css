@@ -3,13 +3,11 @@
     justify-content: center;
     align-items: flex-start;
     gap: 100px; 
-    padding: 0.1px 40px;
+    padding: 40px 40px;
     min-height: 100vh;
     box-sizing: border-box;
     background: transparent;
 }
-
-/* ^^ Could move this to a generalized css for all pages, as well as some of the other stuff here */
 
 .leftColumn {
     flex: 2.5; 

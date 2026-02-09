@@ -7,7 +7,7 @@ function LoginPage() {
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        navigate('./slots');   
+        navigate('./home');   
     }
 
     return (

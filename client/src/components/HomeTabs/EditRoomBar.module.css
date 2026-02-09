@@ -1,0 +1,41 @@
+.roomBarContainer {
+  background-color: #5d8253;
+  border-radius: 15px;
+  padding: 20px 25px;
+  display: flex;
+  flex-direction: column; /* Stacks everything vertically */
+  align-items: flex-start; /* Aligns everything to the left */
+  gap: 15px;
+  margin-bottom: 20px;
+  color: white;
+  width: 95%;
+}
+
+.roomInfo h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.details p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9; /* Makes details slightly softer than the title */
+}
+
+.reserveButton {
+  background: transparent;
+  color: white;
+  border: none;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 10px;
+  font-size: 1rem;
+}
