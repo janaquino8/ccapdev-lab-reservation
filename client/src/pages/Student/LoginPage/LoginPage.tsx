@@ -10,6 +10,10 @@ function LoginPage() {
         navigate('./home');   
     }
 
+    const handleAdminLogin = () => {
+        navigate('./adminhome');   
+    }
+
     return (
         <div className="login">
             <div className="overlay">
@@ -30,6 +34,10 @@ function LoginPage() {
                         <input type="checkbox" className="remember"/> <span className="rememberme">Remember me</span>
 
                         <a href="/register" className="signup">Sign up</a>
+
+                        <div className="tempAdmin">
+                            <LPButton text="Login as Admin" variant="primary" onClick={handleAdminLogin} />
+                        </div>
                     </div>
                 </div>
             </div>

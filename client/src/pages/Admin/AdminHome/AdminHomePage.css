@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+.homeWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.welcomeSection {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 10% 8% 10%; /* Space between Navbar and Green area */
+  color: white; /* Ensure text is visible on the dark bg-image */
+  margin-bottom: 70px;
+}
+
+.welcomeSection h1 {
+  font-size: 4rem;
+  font-weight: ;
+  margin: 0;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
+
+.greenBody {
+  background-color: #2e7d32; /* DLSU Green */
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 100px; /* Space before the footer */
+}
+
+.mainCard {
+  background-color: white;
+  width: 90%;
+  max-width: 1100px;
+  border-radius: 30px;
+  margin-top: -75px; 
+  position: relative;
+  z-index: 2;
+  padding: 15px 40px 40px 40px;
+  box-sizing: border-box;
+}
+
+.greenDivider {
+  background-color: #2e7d32;
+  width: 100%;
+  padding: 60px 0 10px 0;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.tabContainer {
+  display: flex;
+  position: absolute;
+  top: -46px; 
+  left: 40px;
+  gap: 4px;
+}
+
+.tab {
+  background-color: #3d663a;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 15px 15px 0 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tabActive {
+  background-color: white;
+  color: #2e7d32;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 15px 15px 0 0;
+  font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 2px;
+}

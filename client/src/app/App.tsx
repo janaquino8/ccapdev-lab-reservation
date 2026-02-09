@@ -6,6 +6,8 @@ import ViewSlots from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
 import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
+import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
+import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
 
 function App() {
   return (
@@ -20,6 +22,16 @@ function App() {
             <Navbar />
             <div className="contentArea">
               <HomePage />
+            </div>
+            <Footer />
+          </div>
+        } />
+
+        <Route path="/adminhome" element={
+          <div className="mainlayout">
+            <AdminNavbar />
+            <div className="contentArea">
+              <AdminHomePage />
             </div>
             <Footer />
           </div>
