@@ -1,11 +1,13 @@
 import Desk from '../components/Desk/Desk.tsx';
 import Board from '../components/Board/Board.tsx';
 import styles from '../components/Board/Board.module.css'
+import slotStyles from './ViewSlotsPage.module.css';
 
 const ViewSlots = () => {
     return (
         <>  
-            <div style={{padding: '50px', display: 'flex', justifyContent: 'center'}}>
+            <div className={slotStyles.pageContainer}>
+                <div className={slotStyles.leftColumn}>
                 <Board title="Gokongwei 307A">
                    <div className={styles.deskRow}>
                         <div className={styles.deskPair}>
@@ -83,6 +85,31 @@ const ViewSlots = () => {
                         </div>
                     </div>
                 </Board>
+                </div>
+
+                <aside className={slotStyles.rightColumn}>
+                <div className={slotStyles.sidePanel}>
+                    <h3>Reservation Reminders</h3>
+                    <p>Use the time drop-down to check slot availability.</p>
+                </div>
+                
+                <div className={slotStyles.sidePanel}>
+                    <h3>Edit Reservation</h3>
+                    <div className={slotStyles.inputGroup}>
+                        <label>Laboratory:</label>
+                        <input type="text" readOnly value="Gokongwei 307A" />
+                    </div>
+                    <div className={slotStyles.inputGroup}>
+                        <label>Time Start:</label>
+                        <select>{/* Options */}</select>
+                    </div>
+                    <div className={slotStyles.inputGroup}>
+                        <label>Time End:</label>
+                        <select>{/* Options */}</select>
+                    </div>
+                    <button className={slotStyles.createBtn}>Create Reservation</button>
+                </div>
+            </aside>
             </div>
         </>
     );
