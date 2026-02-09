@@ -15,6 +15,8 @@
     box-sizing: border-box;
 }
 
+/* ^^ Could move this to a generalized css for all pages, as well as some of the other stuff here */
+
 .leftColumn {
     flex: 2.5; 
     max-width: 1100px;

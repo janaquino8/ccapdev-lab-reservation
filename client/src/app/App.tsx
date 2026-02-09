@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
-import ViewSlots from '../pages/ViewSlotsPage.tsx'
-import LoginPage from '../pages/LoginPage.tsx'
+import ViewSlots from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
+import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
 
 function App() {
   return (

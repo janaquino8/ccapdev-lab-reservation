@@ -69,13 +69,15 @@
 
 .available {
     background-color: #2d5a27; 
+    color: white
 }
 
 .reserved {
     background-color: #f6d365; 
-    color: #3d663a;
+    color: #333;
 }
 
 .unavailable {
     background-color: #ff4b4b;
+    color: #333;
 }
