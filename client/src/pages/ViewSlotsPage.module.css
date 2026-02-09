@@ -1,4 +1,10 @@
 .pageContainer {
+    background-image: url('../assets/dlsu-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; 
+    padding: 20px;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -25,7 +31,7 @@
 .sidePanel {
     background-color: #3d663a; 
     border-radius: 25px;
-    padding: 30px; 
+    padding: 20px; 
     color: white;
     font-family: 'Inter', sans-serif;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);

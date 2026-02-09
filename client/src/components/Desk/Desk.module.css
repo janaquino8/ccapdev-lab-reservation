@@ -7,12 +7,12 @@
   background-color: rgba(255, 255, 255, 0.404);
   border-radius: 14px;
   width: fit-content;
-  height: 90px;
+  height: 80px;
 }
 
 .tableSurface {
-  width: 100%;
-  min-width: 80px; 
+  width: 50%;
+  min-width: 70px; 
   height: 40px;
   background-color: #664a26;
   border-radius: 8px;
