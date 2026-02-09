@@ -57,7 +57,17 @@
 
 .signup {
   display: block;
-  margin-top: 50px;
+  margin-top: 30px;
   color: #2e7d32;
   text-decoration: underline;
+}
+
+.remember {
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.rememberme {
+  color: #2e7d32;
+  margin-left: 10px;
 }
