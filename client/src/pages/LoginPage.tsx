@@ -27,6 +27,7 @@ function LoginPage() {
                         <LPInput label="Password" type="password" />
 
                         <LPButton text="Login" variant="primary" onClick={handleLogin} />
+                        <input type="checkbox" className="remember"/> <span className="rememberme">Remember me</span>
 
                         <a href="#" className="signup">Sign up</a>
                     </div>
