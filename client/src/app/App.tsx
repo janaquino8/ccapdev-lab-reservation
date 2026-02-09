@@ -5,12 +5,15 @@ import Footer from '../components/Footer/Footer.tsx'
 import ViewSlots from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
 import HomePage from '../pages/Student/HomePage/HomePage.tsx'
+import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+
+        <Route path="/register" element={<RegisterPage />} />
         
         <Route path="/home" element={
           <div className="mainlayout">

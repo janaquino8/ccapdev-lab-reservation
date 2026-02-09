@@ -29,7 +29,7 @@ function LoginPage() {
                         <LPButton text="Login" variant="primary" onClick={handleLogin} />
                         <input type="checkbox" className="remember"/> <span className="rememberme">Remember me</span>
 
-                        <a href="#" className="signup">Sign up</a>
+                        <a href="/register" className="signup">Sign up</a>
                     </div>
                 </div>
             </div>
