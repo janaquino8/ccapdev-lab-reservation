@@ -1,5 +1,5 @@
 .pageContainer {
-    background-image: url('../assets/dlsu-bg.png');
+    background-image: url('../../../assets/dlsu-bg.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed; 
@@ -14,6 +14,8 @@
     min-height: 100vh;
     box-sizing: border-box;
 }
+
+/* ^^ Could move this to a generalized css for all pages, as well as some of the other stuff here */
 
 .leftColumn {
     flex: 2.5; 

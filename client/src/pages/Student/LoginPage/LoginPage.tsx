@@ -1,5 +1,5 @@
-import LPInput from '../components/LPInput/LPInput';
-import LPButton from '../components/LPButton/LPButton';
+import LPInput from '../../../components/LPInput/LPInput';
+import LPButton from '../../../components/LPButton/LPButton';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 

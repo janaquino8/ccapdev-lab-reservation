@@ -28,6 +28,7 @@
 
 .available {
   background-color: #2D5A27; 
+  color: white
 }
 
 .reserved {
@@ -37,6 +38,7 @@
 
 .unavailable {
   background-color: #FF3E3E; 
+  color: #333;
 }
 
 .dropdown {
