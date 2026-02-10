@@ -4,14 +4,15 @@ import styles from './Board.module.css';
 interface BoardProps {
   children: React.ReactNode;
   title?: string;
+  room?: string;
 }
 
-const Board: React.FC<BoardProps> = ({ children, title }) => {
+const Board: React.FC<BoardProps> = ({ children, title, room }) => {
   return (
     <div className={styles.greenBoard}>
         <div className={styles.header}>
-            <span className={styles.label}>View Slots</span>
-            {title && <h2 className={styles.boardTitle}>{title}</h2>}
+            <span className={styles.label}>{title}</span>
+            {title && <h2 className={styles.boardTitle}>{room}</h2>}
         </div>
 
         <div className={styles.legendContainer}>

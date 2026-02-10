@@ -1,0 +1,91 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 100px; 
+    padding: 40px 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+.leftColumn {
+    flex: 2.5; 
+    max-width: 1100px;
+}
+
+.rightColumn {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    min-width: 350px; 
+}
+
+.sidePanel {
+    background-color: #3d663a; 
+    border-radius: 25px;
+    padding: 20px; 
+    color: white;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+hr {
+    border: 2px solid white;
+    margin: 2em 0;
+}
+
+.panelTitle {
+    margin-top: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.panelText {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.inputGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inputGroup label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.inputSmall, .selectSmall {
+    width: 160px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    padding: 0 10px;
+    background-color: #d9e3d8;
+    font-size: 1rem;
+}
+
+.createBtn {
+    width: 100%;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.1s ease;
+}
+
+.createBtn:hover {
+    background-color: #ffffff;
+    transform: scale(1.02);
+}

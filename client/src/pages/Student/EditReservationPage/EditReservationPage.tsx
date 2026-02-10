@@ -1,14 +1,14 @@
 import Desk from '../../../components/Desk/Desk.tsx';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css'
-import './ViewSlotsPage.css';
+import './EditReservationPage.css';
 
-const ViewSlots = () => {
+const EditReservation = () => {
     return (
         <>  
             <div className="pageContainer">
                 <div className="leftColumn">
-                <Board title="View Slots" room="Gokongwei 307A">
+                <Board title="Edit Reservation" room="Gokongwei 307A">
                    <div className={styles.deskRow}>
                         <div className={styles.deskPair}>
                             <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
@@ -95,6 +95,9 @@ const ViewSlots = () => {
                 
                 <div className="sidePanel">
                     <h3>Edit Reservation</h3>
+                    <p>Student No.:</p>
+                    <p>Name:</p>
+                    <hr className="divider" />
                     <div className="inputGroup">
                         <label>Laboratory:</label>
                         <input type="text" readOnly value="Gokongwei 307A" />
@@ -107,7 +110,10 @@ const ViewSlots = () => {
                         <label>Time End:</label>
                         <select>{/* Options */}</select>
                     </div>
-                    <button className="createBtn">Create Reservation</button>
+                    <div>
+
+                    </div>
+                    <button className="createBtn">Edit Reservation</button>
                 </div>
             </aside>
             </div>
@@ -115,4 +121,4 @@ const ViewSlots = () => {
     );
 };
 
-export default ViewSlots;
+export default EditReservation;

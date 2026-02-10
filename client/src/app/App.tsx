@@ -7,6 +7,7 @@ import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
 import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
 import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import CreateReservationPage from '../pages/Student/CreateReservationPage/CreateReservationPage.tsx'
+import EditReservationPage from '../pages/Student/EditReservationPage/EditReservationPage.tsx'
 import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
@@ -43,7 +44,7 @@ function App() {
           <div className="mainlayout">
             <Navbar />
             <div className="contentArea">
-              {/* <Page /> */}
+              <EditReservationPage />
             </div> 
           </div>
         } />
