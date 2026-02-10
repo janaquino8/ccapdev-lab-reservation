@@ -7,7 +7,7 @@ const AdminNavbar = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { name: 'Home', href: '/home' },
+    { name: 'Home', href: '/adminhome' },
     { name: 'Edit Reservation', href: '#' },
     { name: 'Delete Reservation', href: '/delete' },
   ];
@@ -20,7 +20,7 @@ const AdminNavbar = () => {
   return (
     <nav className={styles.navbar}>
       <div>
-        <a href="/home" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
+        <a href="/adminhome" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
       </div>
       <div className={styles.linkContainer}>
         {navLinks.map((link) => (

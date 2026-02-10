@@ -11,7 +11,7 @@ const Edit = () => {
     <div>
       <p>
         <span className={styles.description}>
-            <strong>DLSU Comp. Labs</strong> have three laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“Reserve a Slot”</strong> on the desired computer laboratory.
+            <strong>DLSU Comp. Labs</strong> allow lab technicians to edit student reservations. Click on <strong>“Edit Reservation”</strong> to make changes to current reservations.
         </span>
       </p>
       <RoomBar roomName="Gokongwei Room 307A" onReserve={() => handleEdit("307A")} buttonText="Edit Reservation" />

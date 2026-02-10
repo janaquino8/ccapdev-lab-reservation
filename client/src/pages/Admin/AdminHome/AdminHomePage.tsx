@@ -1,6 +1,7 @@
 import './AdminHomePage.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
+import CreateReservation from '../../../components/AdminHomeTabs/Create';
 import EditReservation from '../../../components/AdminHomeTabs/Edit';
 import DeleteReservation from '../../../components/AdminHomeTabs/Delete';
 
@@ -10,6 +11,7 @@ const AdminHomePage = () => {
   // Function to determine which component to show
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'create': return <CreateReservation />;
       case 'edit': return <EditReservation />;
       case 'delete': return <DeleteReservation />;
       default: return <EditReservation />;
@@ -27,6 +29,12 @@ const AdminHomePage = () => {
         <div className="greenBody">
             <div className="mainCard">
                 <div className="tabContainer">
+                    <button 
+                    className={activeTab === 'create' ? 'tabActive' : 'tab'} 
+                    onClick={() => setActiveTab('create')}
+                    >
+                    Create Reservation
+                    </button>
                     <button 
                     className={activeTab === 'edit' ? 'tabActive' : 'tab'} 
                     onClick={() => setActiveTab('edit')}
