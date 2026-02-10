@@ -9,7 +9,7 @@ import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import CreateReservationPage from '../pages/Student/CreateReservationPage/CreateReservationPage.tsx'
 import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
-import DeleteReservation from '../pages/Student/DeleteReservationPage/DeleteReservationPage.tsx';
+import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
 
 function App() {
   return (
