@@ -8,6 +8,7 @@ import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
+import DeleteReservation from '../pages/Student/DeleteReservationPage/DeleteReservationPage.tsx';
 
 function App() {
   return (
@@ -45,6 +46,16 @@ function App() {
             </div> 
           </div>
         } />
+
+          <Route path="/delete" element={
+            <div className="mainlayout">
+              <AdminNavbar />
+              <div className="contentArea">
+                <DeleteReservation />
+              </div>
+            </div>
+
+          } />
       </Routes>
     </Router>
   );

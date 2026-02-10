@@ -4,7 +4,7 @@ const AdminNavbar = () => {
   const navLinks = [
     { name: 'Back to Login', href: '/' },
     { name: 'Edit Reservation', href: '#' },
-    { name: 'Delete Reservation', href: '#' },
+    { name: 'Delete Reservation', href: '/delete' },
   ];
 
   return (
