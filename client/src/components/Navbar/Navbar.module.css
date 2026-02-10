@@ -72,6 +72,17 @@
   border-radius: 4px;
 }
 
+.viewProfileBtn {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: #000000;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 .signOutBtn:hover {
   background-color: #fff5f5;
 }

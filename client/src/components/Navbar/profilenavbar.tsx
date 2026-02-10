@@ -2,7 +2,7 @@ import styles from './Navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const Navbar = () => {
+const ProfileNavbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -54,4 +54,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default ProfileNavbar;
