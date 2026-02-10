@@ -1,6 +1,7 @@
 import styles from './Navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import johnPork from '../../assets/john-pork.jpg';
 
 const ProfileNavbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -8,11 +9,6 @@ const ProfileNavbar = () => {
 
   const navLinks = [
     { name: 'Home', href: '/home' },
-    { name: 'Create Reservation', href: '/create' },
-    { name: 'Edit Reservation', href: '/edit' },
-    { name: 'Previous Reservations', href: '/previous' },
-    { name: 'View Slots', href: '/view' },
-    { name: 'Search', href: '#' },
   ];
 
   const handleSignOut = () => {
@@ -37,6 +33,7 @@ const ProfileNavbar = () => {
           className={styles.profileCircle}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
+            <img src={johnPork} alt="John Pork" />
         </div>
 
         {isDropdownOpen && (

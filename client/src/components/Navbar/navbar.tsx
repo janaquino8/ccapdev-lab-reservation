@@ -1,6 +1,7 @@
 import styles from './Navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import johnPork from '../../assets/john-pork.jpg';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -37,6 +38,7 @@ const Navbar = () => {
           className={styles.profileCircle}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
+          <img src={johnPork} alt="John Pork" />
         </div>
 
         {isDropdownOpen && (

@@ -12,6 +12,7 @@ import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
+import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 
 function App() {
   return (
@@ -70,7 +71,7 @@ function App() {
 
         <Route path="/viewprofile" element={
           <div className="mainlayout">
-            <Navbar />
+            <ProfileNavbar />
             <div className="contentArea">
               <ViewProfile />
             </div> 

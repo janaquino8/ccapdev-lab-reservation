@@ -34,7 +34,6 @@
 .profileCircle {
   width: 35px;
   height: 35px;
-  background-color: white;
   border-radius: 50%;
   margin-left: 10px;
 }
@@ -46,6 +45,13 @@
 
 .profileCircle:hover {
   border-color: #2e7d32;
+}
+
+.profileCircle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .dropdown {
