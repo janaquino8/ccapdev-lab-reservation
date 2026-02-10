@@ -1,11 +1,21 @@
 import styles from '../Navbar/Navbar.module.css';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const AdminNavbar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
   const navLinks = [
-    { name: 'Back to Login', href: '/' },
+    { name: 'Home', href: '/home' },
     { name: 'Edit Reservation', href: '#' },
     { name: 'Delete Reservation', href: '/delete' },
   ];
+
+  const handleSignOut = () => {
+    console.log("Signing out...");
+    navigate('/');
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -16,7 +26,19 @@ const AdminNavbar = () => {
         {navLinks.map((link) => (
           <a key={link.name} href={link.href} className={styles.navLink}>{link.name}</a>
         ))}
-        <div className={styles.profileCircle}></div>
+        <div 
+            className={styles.profileCircle} 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+          </div>
+
+          {isDropdownOpen && (
+            <div className={styles.dropdown}>
+              <button onClick={handleSignOut} className={styles.signOutBtn}>
+                Sign Out
+              </button>
+            </div>
+          )}
       </div>
     </nav>
   );

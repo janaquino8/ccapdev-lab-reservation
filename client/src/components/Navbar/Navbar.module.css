@@ -27,10 +27,51 @@
   text-decoration: none;
 }
 
+.profileWrapper {
+  position: relative;
+}
+
 .profileCircle {
   width: 35px;
   height: 35px;
   background-color: white;
   border-radius: 50%;
   margin-left: 10px;
+}
+
+.profileCircle:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.profileCircle:hover {
+  border-color: #2e7d32;
+}
+
+.dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.signOutBtn {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: #ff4d4d; /* Red for sign out */
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.signOutBtn:hover {
+  background-color: #fff5f5;
 }
