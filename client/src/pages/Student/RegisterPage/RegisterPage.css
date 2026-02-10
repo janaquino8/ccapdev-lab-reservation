@@ -35,20 +35,21 @@
 }
 
 .right {
+  margin-top: 50px;
   max-width: 50%;
 }
 
-.card {
+.card1 {
   background: rgba(255, 255, 255, 0.6);
   padding: 40px;
   border-radius: 30px;
-  height: 60vh;
+  height: 70vh;
   width: 350px;
   text-align: center;
   backdrop-filter: blur(3px);
 }
 
-.card h2 {
+.card1 h2 {
   color: #2e7d32;
   margin-top: 0px;
   margin-bottom: 20px;

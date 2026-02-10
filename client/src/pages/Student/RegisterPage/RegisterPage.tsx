@@ -18,7 +18,7 @@ function RegisterPage() {
         <div className="register">
             <div className="overlay">
                 <div className="content-wrapper">
-                    <div className="card">
+                    <div className="card1">
                         <h2>Register</h2>
                         
                         <div className="content-card">
