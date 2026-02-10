@@ -1,5 +1,5 @@
 import React from "react";
-import "./CreateReservation.css";
+import "./CreateReservationPage.css";
 
 const CreateReservation: React.FC = () => {
   return (

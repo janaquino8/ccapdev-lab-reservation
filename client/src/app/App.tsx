@@ -1,19 +1,21 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
-import Footer from '../components/Footer/Footer.tsx'
-import ViewSlots from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
-import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
-import HomePage from '../pages/Student/HomePage/HomePage.tsx'
-import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
-import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
+import Footer from '../components/Footer/Footer.tsx'
+import LoginPage from '../pages/Student/LoginPage/LoginPage.tsx'
+import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
+import HomePage from '../pages/Student/HomePage/HomePage.tsx'
+import CreateReservationPage from '../pages/Student/CreateReservationPage/CreateReservationPage.tsx'
+import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
+import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import DeleteReservation from '../pages/Student/DeleteReservationPage/DeleteReservationPage.tsx';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Student routes */}
         <Route path="/" element={<LoginPage />} />
 
         <Route path="/register" element={<RegisterPage />} />
@@ -28,6 +30,43 @@ function App() {
           </div>
         } />
 
+        <Route path="/create" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <CreateReservationPage />
+            </div> 
+          </div>
+        } />
+
+        <Route path="/edit" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              {/* <Page /> */}
+            </div> 
+          </div>
+        } />
+
+        <Route path="/previous" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              {/* <Page /> */}
+            </div> 
+          </div>
+        } />
+
+        <Route path="/view" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <ViewSlotsPage />
+            </div> 
+          </div>
+        } />
+
+        {/* Admin routes */}
         <Route path="/adminhome" element={
           <div className="mainlayout">
             <AdminNavbar />
@@ -37,25 +76,16 @@ function App() {
             <Footer />
           </div>
         } />
-        
-        <Route path="/view" element={
+
+        <Route path="/delete" element={
           <div className="mainlayout">
-            <Navbar />
+            <AdminNavbar />
             <div className="contentArea">
-              <ViewSlots />
-            </div> 
-          </div>
-        } />
-
-          <Route path="/delete" element={
-            <div className="mainlayout">
-              <AdminNavbar />
-              <div className="contentArea">
-                <DeleteReservation />
-              </div>
+              <DeleteReservation />
             </div>
+          </div>
 
-          } />
+        } />
       </Routes>
     </Router>
   );
