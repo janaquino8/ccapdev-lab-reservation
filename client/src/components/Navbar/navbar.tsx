@@ -13,7 +13,7 @@ const Navbar = () => {
     { name: 'Edit Reservation', href: '/edit' },
     { name: 'Previous Reservations', href: '/previous' },
     { name: 'View Slots', href: '/view' },
-    { name: 'Search', href: '#' },
+    { name: 'Search', href: '/search' },
   ];
 
   const handleSignOut = () => {
