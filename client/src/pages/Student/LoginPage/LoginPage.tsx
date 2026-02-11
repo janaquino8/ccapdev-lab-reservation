@@ -11,7 +11,7 @@ function LoginPage() {
     }
 
     const handleAdminLogin = () => {
-        navigate('./adminhome');   
+        navigate('./admin/home');   
     }
 
     return (

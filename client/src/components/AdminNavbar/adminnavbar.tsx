@@ -7,9 +7,10 @@ const AdminNavbar = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { name: 'Home', href: '/adminhome' },
-    { name: 'Edit Reservation', href: '#' },
-    { name: 'Delete Reservation', href: '/delete' },
+    { name: 'Home', href: '/admin/home' },
+    { name: 'Create Reservation', href: '/admin/create' },
+    { name: 'Edit Reservation', href: '/admin/edit' },
+    { name: 'Delete Reservation', href: '/admin/delete' },
   ];
 
   const handleSignOut = () => {
@@ -20,7 +21,7 @@ const AdminNavbar = () => {
   return (
     <nav className={styles.navbar}>
       <div>
-        <a href="/adminhome" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
+        <a href="/admin/home" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
       </div>
       <div className={styles.linkContainer}>
         {navLinks.map((link) => (
