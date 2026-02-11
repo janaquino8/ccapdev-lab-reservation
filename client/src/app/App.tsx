@@ -8,6 +8,7 @@ import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
 import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import CreateReservationPage from '../pages/Student/CreateReservationPage/CreateReservationPage.tsx'
 import EditReservationPage from '../pages/Student/EditReservationPage/EditReservationPage.tsx'
+import PreviousReservationsPage from '../pages/Student/PreviousReservationsPage/PreviousReservationsPage.tsx'
 import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import AdminCreateReservationPage from '../pages/Admin/CreateReservationPage/CreateReservationPage.tsx';
@@ -15,6 +16,7 @@ import AdminEditReservationPage from '../pages/Admin/EditReservationPage/EditRes
 import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
 import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
+import Previous from '../components/HomeTabs/Previous.tsx';
 
 function App() {
   return (
@@ -57,7 +59,7 @@ function App() {
           <div className="mainlayout">
             <Navbar />
             <div className="contentArea">
-              {/* <Page /> */}
+              <PreviousReservationsPage />
             </div> 
           </div>
         } />
@@ -81,6 +83,7 @@ function App() {
         } />
 
         {/* Admin routes */}
+
         <Route path="/admin/home" element={
           <div className="mainlayout">
             <AdminNavbar />
