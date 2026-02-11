@@ -1,10 +1,14 @@
 import RoomBar from '../HomeTabs/RoomBar';
 import styles from './Create.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
+  const navigate = useNavigate();
   const handleReserve = (room: string) => {
     console.log(`Navigating to reservation for ${room}`);
     // You'll eventually use useNavigate() here
+    console.log(`Navigating to reserve ${room}`);
+    navigate('/admin/create', { state: { laboratory: room } });
   };
 
   return (

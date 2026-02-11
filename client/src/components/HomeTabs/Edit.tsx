@@ -1,8 +1,11 @@
 import EditRoomBar from './EditRoomBar';
 import styles from './Edit.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   // In a real app, this data would come from an API or State
+  const navigate = useNavigate();
+
   const reservations = [
     {
       id: 1,
@@ -14,8 +17,9 @@ const Edit = () => {
     }
   ];
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: number, room: string) => {
     console.log(`Redirecting to edit form for reservation ${id}`);
+    navigate('/edit', { state: { laboratory: room } });
   };
 
   return (
@@ -36,7 +40,7 @@ const Edit = () => {
           slot={res.slot}
           timeStart={res.start}
           timeEnd={res.end}
-          onEdit={() => handleEdit(res.id)}
+          onEdit={() => handleEdit(res.id, res.room)}
         />
       ))}
     </div>

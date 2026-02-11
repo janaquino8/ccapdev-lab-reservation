@@ -1,10 +1,14 @@
 import RoomBar from '../HomeTabs/RoomBar';
 import styles from './Delete.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Delete = () => {
+  const navigate = useNavigate();
   const handleDelete = (room: string) => {
     console.log(`Navigating to reservation for ${room}`);
     // You'll eventually use useNavigate() here
+    console.log(`Navigating to reserve ${room}`);
+    navigate('/admin/edit', { state: { laboratory: room } });
   };
 
   return (
