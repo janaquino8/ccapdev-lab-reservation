@@ -8,7 +8,7 @@ const DeleteReservation = () => {
         <>  
             <div className="pageContainer">
                 <div className="leftColumn">
-                <Board title="Gokongwei 307A">
+                <Board title="Delete Reservation" room="Gokongwei 307A">
                    <div className={styles.deskRow}>
                         <div className={styles.deskPair}>
                             <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
