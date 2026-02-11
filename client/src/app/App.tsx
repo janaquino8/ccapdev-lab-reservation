@@ -10,6 +10,7 @@ import CreateReservationPage from '../pages/Student/CreateReservationPage/Create
 import EditReservationPage from '../pages/Student/EditReservationPage/EditReservationPage.tsx'
 import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
+import AdminCreateReservationPage from '../pages/Admin/CreateReservationPage/CreateReservationPage.tsx';
 import AdminEditReservationPage from '../pages/Admin/EditReservationPage/EditReservationPage.tsx';
 import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
@@ -87,6 +88,15 @@ function App() {
               <AdminHomePage />
             </div>
             <Footer />
+          </div>
+        } />
+
+        <Route path="/admin/create" element={
+          <div className="mainlayout">
+            <AdminNavbar />
+            <div className="contentArea">
+              <AdminCreateReservationPage />
+            </div> 
           </div>
         } />
 
