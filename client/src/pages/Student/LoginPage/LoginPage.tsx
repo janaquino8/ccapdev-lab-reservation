@@ -33,7 +33,7 @@ function LoginPage() {
                         <LPButton text="Login" variant="primary" onClick={handleLogin} />
                         <input type="checkbox" className="remember"/> <span className="rememberme">Remember me</span>
 
-                        <a href="/register" className="signup">Sign up</a>
+                        <a href="/register" className="signup">Don't have an account? Sign up.</a>
 
                         <div className="tempAdmin">
                             <LPButton text="Login as Admin" variant="primary" onClick={handleAdminLogin} />

@@ -29,7 +29,7 @@ function RegisterPage() {
 
                         <LPButton text="Register" variant="primary" onClick={handleRegister} />
 
-                        <a key="login" href="/" className="signup" onClick={handleLogin}>Already have an account?</a>
+                        <a key="login" href="/" className="signup" onClick={handleLogin}>Already have an account? Log in.</a>
                     </div>
 
                     <div className="right">
