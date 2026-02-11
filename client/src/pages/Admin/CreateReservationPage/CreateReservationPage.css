@@ -79,6 +79,10 @@
     gap: 10px;
 }
 
+option {
+    color: #32691b;
+}
+
 .subGroup {
     display: flex;
     align-items: center;

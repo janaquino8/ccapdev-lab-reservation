@@ -6,12 +6,15 @@
 }
 
 .tableContainer {
+  display: flex;
+  flex-direction: column;
   background-color: #5d8253; /* Darker green box from mockup */
   border-radius: 25px;
   padding: 30px;
   width: 100%;
   box-sizing: border-box;
   min-height: 400px; /* Ensures the box stays large even with few rows */
+  justify-content: center;
 }
 
 .viewAllLink {
@@ -22,4 +25,9 @@
   text-decoration: underline;
   font-weight: bold;
   cursor: pointer;
+}
+
+button {
+  background-color: #d1dfcd;
+  color: #2e7d32;
 }

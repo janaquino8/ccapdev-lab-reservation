@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color: white;
 }
 
 .pageContainer {
@@ -14,50 +15,19 @@
     background: transparent;
 }
 
-.leftColumn {
-    flex: 2.5; 
-    max-width: 1100px;
-}
-
-.rightColumn {
-    flex: 1; 
+.InputGroup {
     display: flex;
-    flex-direction: column;
-    gap: 30px;
-    min-width: 380px; 
-}
-
-.sidePanel {
-    background-color: rgba(50, 105, 27, 0.85);
-    border-radius: 25px;
-    padding: 25px; 
-    color: white;
-    font-family: 'Bricolage Grotesque', sans-serif;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.sidePanel h3 {
-    margin-top: 0;
-    font-size: 1.6rem;
-    text-align: center;
-    margin-bottom: 20px;
-    font-family: 'League Spartan', sans-serif;
-    font-weight: 700;
-}
-
-.inputGroup {
-    display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 15px;
+    gap: 10px;
 }
 
-.inputGroup label {
+.InputGroup label {
     font-size: 1.1rem;
     font-weight: 500;
 }
 
-.inputGroup select, .inputGroup input {
+.InputGroup select, .InputGroup input {
     width: 180px;
     height: 35px;
     border-radius: 8px;
@@ -68,76 +38,4 @@
     font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 1rem;
     outline: none;
-}
-
-.inputGroup.horizontal {
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.subGroup {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.subGroup select {
-    width: 80px;
-}
-
-.createBtn {
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #32691b;
-    border: none;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.2s ease;
-    font-family: 'Bricolage Grotesque', sans-serif;
-}
-
-.createBtn:hover {
-    background-color: #ffffff;
-    transform: scale(1.02);
-}
-
-.createBtn:active {
-    transform: scale(0.98);
-}
-
-.legend {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px;
-    margin: 20px 0;
-}
-
-.legend div {
-    padding: 8px 15px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: 0.9rem;
-}
-
-.available { background-color: #32691b; color: white; }
-.reserved { background-color: #ffde59; color: #32691b; }
-.unavailable { background-color: #ff3131; color: white; }
-
-.slot1, .slot2, .slot3, .slot4 {
-    border-radius: 4px;
-    background-color: #32691b;
-}
-
-.elbat, .table {
-    background-color: #846439;
-    border-radius: 4px;
 }
