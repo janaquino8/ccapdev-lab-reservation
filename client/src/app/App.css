@@ -71,6 +71,10 @@ h3 {
   text-align: center;
 }
 
+strong {
+  color: #2e7d32;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
