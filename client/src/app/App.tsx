@@ -17,6 +17,7 @@ import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReserv
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
 import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
+import SearchPage from '../pages/Student/Search/SearchPage.tsx';
 
 function App() {
   return (
@@ -75,9 +76,18 @@ function App() {
 
         <Route path="/viewprofile" element={
           <div className="mainlayout">
-            <ProfileNavbar />
+            <Navbar />
             <div className="contentArea">
               <ViewProfile />
+            </div> 
+          </div>
+        } />
+
+        <Route path="/search" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <SearchPage />
             </div> 
           </div>
         } />
