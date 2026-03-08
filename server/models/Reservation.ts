@@ -1,19 +1,31 @@
 import mongoose from "mongoose";
 
+const ReservedSlotSchema = new mongoose.Schema(
+    {
+        slot: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Slot",
+            required: true
+        },
+
+        timeStart: {
+            type: Date,
+            required: true,
+        },
+
+        timeEnd: {
+            type: Date,
+            required: true,
+        }
+    },
+
+    {
+        _id: false
+    }
+)
+
 const ReservationSchema = new mongoose.Schema(
     {
-        // user: {
-        //     fullName: {
-        //         type: String,
-        //         required: true
-        //     },
-
-        //     username: {
-        //         type: String,
-        //         required: true
-        //     }
-        // },
-
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -27,46 +39,17 @@ const ReservationSchema = new mongoose.Schema(
 
         isAnonymous: {
             type: Boolean,
-            default: false
+            default: true
         },
 
-        // laboratory: {
-        //     type: String,
-        //     required: true,
-        //     // add enum for all respective labs?
-        // },
-
-        laboratory: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Laboratory",
-            required: true
+        status: {
+            type: String,
+            enum: ["active", "ongoing", "completed", "cancelled"],
+            default: "active" 
         },
-
-        // slot: {
-        //     type: String,
-        //     required: true,
-        //     // maybe a function that checks if slot is in lab
-        // },
 
         reservedSlots: {
-            type: [{
-                slot: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "Slot",
-                    required: true
-                },
-
-                timeStart: {
-                    type: Date,
-                    required: true,
-                },
-
-                timeEnd: {
-                    type: Date,
-                    required: true,
-                },
-
-            }],
+            type: [ReservedSlotSchema],
             required: true
         }
     },

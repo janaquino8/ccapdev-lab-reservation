@@ -8,50 +8,39 @@ const SlotSchema = new mongoose.Schema(
             unique: true
         },
 
-        laboratory: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-
         // laboratory: {
-        //     type: String,
-        //     required: true,
-        //     // add enum for all respective labs?
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     required: true
         // },
 
-        reservations: {
-            user: {
-                fullName: {
-                    type: String,
-                    required: true
-                },
-
-                username: {
-                    type: String,
-                    required: true
-                }
-            },
-
-            timeStart: {
-                type: Date,
-                required: true,
-            },
-
-            timeEnd: {
-                type: Date,
-                required: true,
-            },
-        },
-
-        timeStart: {
-            type: Date,
+        laboratory: {
+            type: String,
             required: true,
         },
 
-        timeEnd: {
-            type: Date,
-            required: true,
-        },
+        // reservations: {
+        //     user: {
+        //         fullName: {
+        //             type: String,
+        //             required: true
+        //         },
+
+        //         username: {
+        //             type: String,
+        //             required: true
+        //         }
+        //     },
+
+        //     timeStart: {
+        //         type: Date,
+        //         required: true,
+        //     },
+
+        //     timeEnd: {
+        //         type: Date,
+        //         required: true,
+        //     },
+        // },
 
     },
 

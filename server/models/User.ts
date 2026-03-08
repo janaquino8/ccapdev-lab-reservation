@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema(
         },
 
         // we can use this for the url; comes from the email
+        // or revert to email?
         username: {
             type: String,
             required: true,
