@@ -60,5 +60,6 @@ const ReservationSchema = new mongoose.Schema(
 );
 
 const Reservation = mongoose.model("Reservation", ReservationSchema);
+const ReservedSlot  = mongoose.model("ReservedSlot", ReservedSlotSchema);
 
-export default Reservation;
+export { Reservation, ReservedSlot };

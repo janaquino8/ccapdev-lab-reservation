@@ -1,4 +1,4 @@
-import Reservation from '../models/Reservation.ts';
+import { Reservation } from '../models/Reservation.ts';
 import { Request, Response } from "express";
 
 export async function createReservation(req: Request, res: Response) {

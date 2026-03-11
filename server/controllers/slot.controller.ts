@@ -1,5 +1,6 @@
 import Slot from '../models/Slot.ts';
 import Laboratory from '../models/Laboratory.ts';
+import { ReservedSlot } from '../models/Reservation.ts'
 import { Request, Response } from "express";
 
 export async function createSlot(req: Request, res: Response) {
@@ -45,7 +46,34 @@ export async function getSlotById(req: Request, res: Response) {
 }
 
 export async function getSlotsByFilter(req: Request, res: Response) {
-    // search for slots
+    try {
+        const {
+            laboratory,
+            startTime,
+            endTime
+        } = req.body;
+
+        const slots = await Slot.find({
+            laboratory: laboratory
+        });
+
+        const reservedSlots = await ReservedSlot.find({
+            laboratory: laboratory,
+            timeStart: { $lt: endTime },
+            timeEnd: { $gt: startTime }
+        }, 'slot');
+
+        const reservedSlotIds = reservedSlots.map(rs => rs.slot.toString());
+        const finalSlots = slots.filter(item => !reservedSlotIds.includes(item._id.toString()));
+
+        if (finalSlots.length === 0) {
+            return res.status(404).send({ message: "Slot not found." });
+        }
+        res.status(200).send(finalSlots);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({ message: err });
+    }
 }
 
 export async function updateSlot(req: Request, res: Response) {
