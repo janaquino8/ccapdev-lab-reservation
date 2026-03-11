@@ -58,6 +58,24 @@ export async function getUserByName(req: Request, res: Response) {
     }
 }
 
+export async function getUserReservations(req: Request, res: Response) {
+    try {
+        const user = req.params.id;
+
+        const reservations = await Reservation.find({
+            user: user
+        });
+
+        if (reservations.length === 0) {
+            return res.status(404).send({ message: "User has no reservations" });
+        }
+        res.status(200).send(reservations);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({ error: err.message })
+    }
+}
+
 export async function updateUser(req: Request, res: Response) {
     try {
         const id = req.params.id;

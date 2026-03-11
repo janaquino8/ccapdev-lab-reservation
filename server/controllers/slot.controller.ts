@@ -45,6 +45,7 @@ export async function getSlotById(req: Request, res: Response) {
     }
 }
 
+// might be wrong
 export async function getSlotsByFilter(req: Request, res: Response) {
     try {
         const {
@@ -72,7 +73,7 @@ export async function getSlotsByFilter(req: Request, res: Response) {
         res.status(200).send(finalSlots);
     } catch (err: any) {
         console.error(err);
-        res.status(500).send({ message: err });
+        res.status(500).send({error: err.message});
     }
 }
 

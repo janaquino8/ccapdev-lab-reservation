@@ -1,6 +1,7 @@
 import { Reservation } from '../models/Reservation.ts';
 import { Request, Response } from "express";
 
+// user should be params?
 export async function createReservation(req: Request, res: Response) {
     try {
         const reservation = await Reservation.create(req.body);
