@@ -45,8 +45,7 @@ export async function getSlotById(req: Request, res: Response) {
     }
 }
 
-// might be wrong
-export async function getSlotsByFilter(req: Request, res: Response) {
+export async function getFilteredSlots(req: Request, res: Response) {
     try {
         const {
             laboratory,
