@@ -1,11 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-import authRouter from './routes/auth.routes';
-import laboratoryRouter from './routes/laboratory.routes';
-import reservationRouter from './routes/reservation.routes';
-import slotRouter from './routes/slot.routes';
-import userRouter from './routes/user.routes';
+import authRouter from '../routes/auth.routes';
+import laboratoryRouter from '../routes/laboratory.routes';
+import reservationRouter from '../routes/reservation.routes';
+import slotRouter from '../routes/slot.routes';
+import userRouter from '../routes/user.routes';
 
 dotenv.config();
 const app = express();
