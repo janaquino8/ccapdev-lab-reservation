@@ -27,7 +27,7 @@ function LoginPage() {
                     
                     <div className="card">
                         <h2>Login</h2>
-                        <LPInput label="Student Number" type="text" /> <br />
+                        <LPInput label="DLSU Email" type="text" /> <br />
                         <LPInput label="Password" type="password" />
 
                         <LPButton text="Login" variant="primary" onClick={handleLogin} />
