@@ -17,7 +17,7 @@ export async function login(req: Request, res: Response) {
         }
 
         if (!email.includes("@dlsu.edu.ph")) {
-            return res.status(400).send({ errorr: "Email must be a DLSU Email." });
+            return res.status(400).send({ error: "Email must be a DLSU Email." });
         }
         const userName = email.replace("@dlsu.edu.ph", "")
         const user = await Auth.findOne({ username: userName });
@@ -45,13 +45,13 @@ export async function register(req: Request, res: Response) {
         } = req.body;
 
         if (!email.includes("@dlsu.edu.ph")) {
-            return res.status(400).send({ errorr: "Email must be a DLSU Email." });
+            return res.status(400).send({ error: "Email must be a DLSU Email." });
         }
 
-        // gathering of info (i made it manual for now i.e., not getting info from google themselves)
-        const userName = email.replace("@dlsu.edu.ph");
+        const userName = email.replace("@dlsu.edu.ph", "");
         
-        const temp = userName.split(".").split("_").map((word: String) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+        const temp = userName.split(/[._]/).map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+        
         const len = temp.length;
         const given = temp.slice(0, len - 1).join(" ");
         const last = temp[len - 1];
@@ -72,7 +72,6 @@ export async function register(req: Request, res: Response) {
         res.status(201).send({ message: "User successfully created." })
     } catch (err: any) {
         console.error(err);
-        res.status(500).send({error: "Error on authentication" + err.message});
+        res.status(500).send({error: "Error on authentication: " + err.message});
     }
-
 }
