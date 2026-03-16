@@ -4,8 +4,6 @@ import { Request, Response } from "express";
 export async function createReservation(req: Request, res: Response) {
     try {
         const details = req.body;
-        const user = req.params.id;
-        details.user = user;
 
         const reservation = await Reservation.create(details);
         res.status(201).send(reservation);
