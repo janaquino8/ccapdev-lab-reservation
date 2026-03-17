@@ -52,7 +52,7 @@ function RegisterPage() {
         }
     }
 
-    const handleLogin = (e) => {
+    const handleLogin = (e: { preventDefault: () => void; }) => {
         e.preventDefault(); 
         navigate('/');   
     }

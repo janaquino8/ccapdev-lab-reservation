@@ -28,6 +28,7 @@ function LoginPage() {
             if (response.ok) {
                 // Login successful! (Status 200)
                 console.log("Logged in user:", data);
+                localStorage.setItem('user', JSON.stringify(data));
                 navigate('/home');
             } else {
                 // Login failed (Status 400, 401, 404)

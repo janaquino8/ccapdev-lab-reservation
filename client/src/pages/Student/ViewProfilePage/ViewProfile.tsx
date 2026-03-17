@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewProfile.css";
-import johnPork from "../../../assets/john-pork.jpg"
+import blankPicture from "../../../assets/blank-dp.png";
+
+interface UserProfile {
+  givenName: string;
+  lastName: string;
+  username: string;
+  description: string;
+  profilePicture: string;
+}
 
 const ViewProfile: React.FC = () => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  if (!user) {
+    return <div className="profile-page"><h2>Loading profile...</h2></div>;
+  }
+
   return (
     <div className="profile-page">
       <div className="banner-container">
@@ -13,7 +34,7 @@ const ViewProfile: React.FC = () => {
 
           <div className="sidebar">
             <div className="avatar">
-              <img src={johnPork}></img>
+              <img src={user.profilePicture || blankPicture} alt="Profile" />
             </div>
             <div className="buttons">
               <button className="action-btn">Edit Profile</button>
@@ -23,8 +44,8 @@ const ViewProfile: React.FC = () => {
 
           <div className="details">
             <span className="label">View Profile</span>
-            <h1 className="name">John Pork</h1>
-            <p className="description">Tim Cheese is my biggest opp.</p>
+            <h1 className="name">{user.givenName} {user.lastName}</h1>
+            <p className="description">{user.description}</p>
           </div>
 
         </div>
