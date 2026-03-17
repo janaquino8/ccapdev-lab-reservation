@@ -19,18 +19,25 @@ export async function login(req: Request, res: Response) {
         if (!email.includes("@dlsu.edu.ph")) {
             return res.status(400).send({ error: "Email must be a DLSU Email." });
         }
-        const userName = email.replace("@dlsu.edu.ph", "")
-        const user = await Auth.findOne({ username: userName });
+        const userName = email.replace("@dlsu.edu.ph", "");
+        
+        const authRecord = await Auth.findOne({ username: userName });
 
-        if (!user) {
+        if (!authRecord) {
             return res.status(404).send({ error: "User not found." });
         }
 
-        if (!(await bcrypt.compare(password, user.password))) {
+        if (!(await bcrypt.compare(password, authRecord.password))) {
             return res.status(401).send({ error: "Invalid login." });
         }
 
-        res.status(200).send(user);
+        const userProfile = await User.findOne({ username: userName });
+
+        if (!userProfile) {
+            return res.status(404).send({ error: "User profile missing from database." });
+        }
+
+        res.status(200).send(userProfile);
     } catch (err: any) {
         console.error(err);
         res.status(500).send({ error: "Error on authentication: " + err.message });
