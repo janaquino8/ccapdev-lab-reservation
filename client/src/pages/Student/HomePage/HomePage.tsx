@@ -23,9 +23,8 @@ const HomePage = () => {
   return (
     <div className="homeWrapper">
         <div className="welcomeSection">
-            <h1>Welcome to DLSU</h1><br />
-            <h1><span className="underline">Computer Laboratories</span></h1>
-            <p>Basta witty tagline</p>
+            <h1>Welcome to <span className="underline">DLSULabs!</span></h1>
+            <p>Archer-approved speed for your lab needs.</p>
         </div>
 
         <div className="greenBody">

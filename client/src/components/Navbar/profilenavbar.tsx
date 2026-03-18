@@ -2,6 +2,7 @@ import styles from './Navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import johnPork from '../../assets/john-pork.jpg';
+import dlsuLABS from '../../assets/dlsulabs.png'
 
 const ProfileNavbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -23,7 +24,7 @@ const ProfileNavbar = () => {
   return (
     <nav className={styles.navbar}>
       <div>
-        <a href="/home" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
+        <a href="/home" className={styles.navLink}><img src={dlsuLABS} alt="Logo" /></a>
       </div>
       <div className={styles.linkContainer}>
         {navLinks.map((link) => (

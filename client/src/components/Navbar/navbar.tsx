@@ -2,6 +2,7 @@ import styles from './Navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import blankImage from '../../assets/blank-dp.png';
+import dlsuLABS from '../../assets/dlsulabs.png'
 
 interface UserProfile {
   givenName: string;
@@ -43,7 +44,7 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div>
-        <a href="/home" className={styles.navLink}>DLSU Computer Laboratories (insert logo here)</a>
+        <a href="/home" className={styles.navLink}><img src={dlsuLABS} alt="Logo" /></a>
       </div>
       <div className={styles.linkContainer}>
         {navLinks.map((link) => (

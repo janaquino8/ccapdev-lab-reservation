@@ -1,17 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .pageContainer {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 100px; 
+    gap: 60px;
     padding: 40px 40px;
     min-height: 100vh;
-    box-sizing: border-box;
     background: transparent;
+    overflow-x: hidden;
 }
 
 .leftColumn {
     flex: 2.5; 
     max-width: 1100px;
+    min-width: 0;
 }
 
 .rightColumn {
@@ -19,68 +26,79 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
-    min-width: 350px; 
+    min-width: 380px; 
 }
 
 .sidePanel {
-    background-color: #3d663a; 
+    background-color: rgba(50, 105, 27, 0.85);
     border-radius: 25px;
-    padding: 20px; 
+    padding: 25px; 
     color: white;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.panelTitle {
+.sidePanel h3 {
     margin-top: 0;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     text-align: center;
     margin-bottom: 20px;
-    font-weight: 800;
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 700;
 }
 
-.panelText {
-    font-size: 1.1rem;
-    line-height: 1.5;
+.boardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
 }
 
-.inputGroup {
+.deskPair {
+    display: flex;
+    gap: 12px;
+}
+
+.deskRow {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.inputGroup label {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.inputSmall, .selectSmall {
-    width: 160px;
-    height: 35px;
-    border-radius: 10px;
-    border: none;
-    padding: 0 10px;
-    background-color: #d9e3d8;
-    font-size: 1rem;
-}
-
-.createBtn {
     width: 100%;
-    background-color: #e0e0e0;
-    color: #333;
+    flex-wrap: nowrap; 
+    gap: 10px;
+}
+
+.sidebarLogo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.bottomLogoContainer {
+    margin-top: auto;
+    padding-top: 20px;
+    text-align: right;
+}
+
+.viewBtn, .createBtn {
+    width: 100%;
+    background-color: #d9e3d8;
+    color: #3d663a;
     border: none;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 20px;
-    transition: transform 0.1s ease;
 }
 
-.createBtn:hover {
-    background-color: #ffffff;
-    transform: scale(1.02);
+.fullWidthSelect {
+    width: 100%;
+    min-width: 230px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -19,15 +19,28 @@
 }
 
 .navLink {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 5px 10px;
+    height: 100%;
 }
 
-.navLink:hover {
-  text-decoration: none;
+.navLink img {
+    height: 45px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    color: white;
+}
+
+.navLink:visited {
+    color: #ffffff;
+}
+
+.navLink img:hover {
+    transform: scale(1.05);
 }
 
 .profileWrapper {
