@@ -13,6 +13,6 @@ router.put('/:id', ReservationController.updateReservation);
 router.delete('/:id', ReservationController.deleteReservation);
 
 // Miscellaneous routes
-router.get('/search', ReservationController.getFilteredReservations);
+router.post('/search', ReservationController.getFilteredReservations);
 
 export default router;

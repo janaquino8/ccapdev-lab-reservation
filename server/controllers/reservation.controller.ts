@@ -13,10 +13,22 @@ export async function getFilteredReservations(req: Request, res: Response) {
             return res.status(404).json({ message: 'Laboratory not found.' });
         }
 
+        const convertToUTC = (dateString: string, timeString: string) => {
+            const [timePart, modifier] = timeString.split(' ');
+            let [hours, minutes] = timePart.split(':');
+            
+            let hoursInt = parseInt(hours, 10);
+            if (modifier === 'PM' && hoursInt < 12) hoursInt += 12;
+            if (modifier === 'AM' && hoursInt === 12) hoursInt = 0;
+            
+            const paddedHours = hoursInt.toString().padStart(2, '0');
+            return new Date(`${dateString}T${paddedHours}:${minutes}:00.000Z`);
+        };
+
         const [startTimeStr, endTimeStr] = time.split(' - '); 
 
-        const searchStartTime = new Date(`${date} ${startTimeStr}`);
-        const searchEndTime = new Date(`${date} ${endTimeStr}`);
+        const searchStartTime = convertToUTC(date, startTimeStr);
+        const searchEndTime = convertToUTC(date, endTimeStr);
 
         const reservations = await Reservation.find({
             laboratory: labDoc._id,
