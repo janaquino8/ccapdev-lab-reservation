@@ -1,17 +1,20 @@
+import { Request, Response } from "express";
 import Slot from '../models/Slot.ts';
 import Laboratory from '../models/Laboratory.ts';
-import { ReservedSlot } from '../models/Reservation.ts'
-import { Request, Response } from "express";
+import Reservation from '../models/Reservation.ts';
 
 export async function createSlot(req: Request, res: Response) {
     try {
-        const slot = await Slot.create(req.body);
+        const { name, laboratory } = req.body;
 
-        await Laboratory.updateOne(
-            { name: slot.laboratory },
+        const labDoc = await Laboratory.findOne({ name: laboratory });
+        if (!labDoc) {
+            return res.status(404).json({ message: 'Laboratory not found.' });
+        }
 
-            { $push: { slots: slot } }
-        )
+        const slot = await Slot.create({ name, laboratory: labDoc._id });
+
+        await Laboratory.findByIdAndUpdate(labDoc._id, { $push: { slots: slot._id } });
 
         res.status(201).send(slot);
     } catch (err: any) {
@@ -22,8 +25,10 @@ export async function createSlot(req: Request, res: Response) {
 
 export async function getAllSlots(req: Request, res: Response) {
     try {
-        const slot = await Slot.find({});
-        res.status(200).send(slot);
+        const slots = await Slot.find({})
+            .populate('laboratory', 'name');
+            
+        res.status(200).send(slots);
     } catch (err: any) {
         console.error(err);
         res.status(500).send({error: err.message});
@@ -33,7 +38,7 @@ export async function getAllSlots(req: Request, res: Response) {
 export async function getSlotById(req: Request, res: Response) {
     try {
         const id = req.params.id;
-        const slot = await Slot.findById(id);
+        const slot = await Slot.findById(id).populate('laboratory', 'name');
 
         if (!slot) {
             return res.status(404).json({ message: 'Slot not found.' });
@@ -47,27 +52,29 @@ export async function getSlotById(req: Request, res: Response) {
 
 export async function getFilteredSlots(req: Request, res: Response) {
     try {
-        const {
-            laboratory,
-            startTime,
-            endTime
-        } = req.body;
+        const { laboratory, startTime, endTime } = req.body;
 
-        const slots = await Slot.find({
-            laboratory: laboratory
+        const labDoc = await Laboratory.findOne({ name: laboratory });
+        if (!labDoc) {
+            return res.status(404).json({ message: 'Laboratory not found.' });
+        }
+
+        const allSlotsInLab = await Slot.find({ laboratory: labDoc._id });
+
+        const overlappingReservations = await Reservation.find({
+            laboratory: labDoc._id,
+            "reservedSlots.timeStart": { $lt: new Date(endTime) },
+            "reservedSlots.timeEnd": { $gt: new Date(startTime) }
         });
 
-        const reservedSlots = await ReservedSlot.find({
-            laboratory: laboratory,
-            timeStart: { $lt: endTime },
-            timeEnd: { $gt: startTime }
-        }, 'slot');
+        const reservedSlotIds = overlappingReservations.flatMap(res => 
+            res.reservedSlots.map((rs: any) => rs.slot.toString())
+        );
 
-        const reservedSlotIds = reservedSlots.map(rs => rs.slot.toString());
-        const finalSlots = slots.filter(item => !reservedSlotIds.includes(item._id.toString()));
+        const finalSlots = allSlotsInLab.filter(item => !reservedSlotIds.includes(item._id.toString()));
 
         if (finalSlots.length === 0) {
-            return res.status(404).send({ message: "Slot not found." });
+            return res.status(404).send({ message: "No available slots found for this time." });
         }
         res.status(200).send(finalSlots);
     } catch (err: any) {
@@ -79,13 +86,22 @@ export async function getFilteredSlots(req: Request, res: Response) {
 export async function updateSlot(req: Request, res: Response) {
     try {
         const id = req.params.id;
+        const updateData = { ...req.body };
 
-        // Prevent updating with an empty object
-		if (Object.keys(req.body).length === 0) {
-			return res.status(400).json({ message: 'No update fields provided.' });
-		}
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({ message: 'No update fields provided.' });
+        }
 
-        const slot = await Slot.findByIdAndUpdate(id, req.body, { new: true });
+        if (updateData.laboratory) {
+            const labDoc = await Laboratory.findOne({ name: updateData.laboratory });
+            if (!labDoc) {
+                return res.status(404).json({ message: 'Laboratory not found.' });
+            }
+            updateData.laboratory = labDoc._id;
+        }
+
+        const slot = await Slot.findByIdAndUpdate(id, updateData, { new: true })
+            .populate('laboratory', 'name');
 
         if (!slot) {
             return res.status(404).json({ message: 'Slot not found.' });
@@ -100,11 +116,16 @@ export async function updateSlot(req: Request, res: Response) {
 export async function deleteSlot(req: Request, res: Response) {
     try {
         const id = req.params.id;
+        
         const deletedSlot = await Slot.findByIdAndDelete(id);
 
-        if (deletedSlot === null) {
+        if (!deletedSlot) {
             return res.status(404).json({ message: 'Slot not found.' });
         }
+
+        await Laboratory.findByIdAndUpdate(deletedSlot.laboratory, {
+            $pull: { slots: id }
+        });
 
         res.status(200).json({ message: 'Slot deleted successfully.' });
     } catch (err: any) {
