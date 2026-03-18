@@ -55,9 +55,15 @@ export async function register(req: Request, res: Response) {
             return res.status(400).send({ error: "Email must be a DLSU Email." });
         }
 
-        const userName = email.replace("@dlsu.edu.ph", "");
+        const userName = email.replace("@dlsu.edu.ph", "")
+
+        let temp = userName.split(/[._]/);
         
-        const temp = userName.split(/[._]/).map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+        if (temp.length <= 1 || temp.includes("")) {
+            return res.status(400).send({ error: "Invalid DLSU Email." });
+        }
+
+        temp = temp.map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
         
         const len = temp.length;
         const given = temp.slice(0, len - 1).join(" ");

@@ -11,9 +11,9 @@ interface SlotProps {
   isAnonymous?: boolean;
 }
 
-const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy = "John Doe", isAnonymous = false }) => {
+const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, isAnonymous = false }) => {
   const statusClass = styles[status];
-  const navigate = useNavigate(); //
+  const navigate = useNavigate(); 
 
   const handleReserve = () => {
     onToggle('');
@@ -23,6 +23,10 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy = 
   const getDisplayName = () => {
     if (status === 'available') return "None";
     if (status === 'unavailable') return "Maintenance";
+    if (status === 'reserved' && !reservedBy) {
+      return "Loading..."; 
+    }
+
     return isAnonymous ? "Anonymous" : reservedBy;
   };
 

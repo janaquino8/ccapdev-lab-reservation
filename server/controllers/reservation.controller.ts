@@ -37,6 +37,9 @@ export async function getFilteredReservations(req: Request, res: Response) {
         }).populate({
             path: 'reservedSlots.slot',
             select: 'name' 
+        }).populate({
+            path: 'user',
+            select: 'givenName lastName'
         });
 
         if (!reservations || reservations.length === 0) {
@@ -44,7 +47,17 @@ export async function getFilteredReservations(req: Request, res: Response) {
         }
 
         const formattedResults = reservations.flatMap(res => 
-            res.reservedSlots.map((rs: any) => ({ slot: rs.slot.name }))
+            res.reservedSlots.map((rs: any) => {
+                const populatedUser = res.user as any;
+
+                const firstName = populatedUser?.givenName || "Unknown";
+                const lastName = populatedUser?.lastName || "User";
+
+                return { 
+                    slot: rs.slot.name,
+                    reserverName: res.isAnonymous ? "Anonymous" : `${firstName} ${lastName}`
+                };
+            })
         );
 
         res.status(200).send(formattedResults);
