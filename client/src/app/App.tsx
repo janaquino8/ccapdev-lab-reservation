@@ -18,6 +18,7 @@ import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
 import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
 import SearchPage from '../pages/Student/Search/SearchPage.tsx';
+import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
 
 function App() {
   return (
@@ -89,6 +90,16 @@ function App() {
             <div className="contentArea">
               <SearchPage />
             </div> 
+          </div>
+        } />
+
+        <Route path='/reserve' element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <SlotReserve />
+            </div> 
+            <Footer />
           </div>
         } />
 

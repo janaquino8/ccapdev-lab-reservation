@@ -70,21 +70,44 @@
   color: black;
 }
 
+.reserveActionBtn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: #2D5A27; /* Matching the available green */
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  transition: background 0.2s;
+  margin-top: 5px;
+}
+
+.reserveActionBtn:hover {
+  background-color: #3e7a36;
+}
+
 .profileLink {
   display: block;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: black;
-  padding: 6px;
+  background-color: #f0f0f0;
+  color: #2D5A27;
+  padding: 8px;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  border: 1px solid #ccc;
+  transition: all 0.2s;
 }
 
 .profileLink:hover {
   background-color: #ffffff;
+  border-color: #2D5A27;
 }
 
 .closeBtn {
