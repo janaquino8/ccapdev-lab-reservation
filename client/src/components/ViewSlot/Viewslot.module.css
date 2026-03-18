@@ -20,8 +20,8 @@
 }
 
 /* Status Colors from your Create Reservation CSS */
-.available { background-color: #32691b; color: white; }
-.reserved { background-color: #ffde59; color: #32691b; }
+.available { background-color: #2D5A27; color: white; }
+.reserved { background-color: #ffde59; color: #2D5A27; }
 .unavailable { background-color: #ff3131; color: white; }
 
 .slotButton:hover {
