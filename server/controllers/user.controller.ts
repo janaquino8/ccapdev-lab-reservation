@@ -1,5 +1,5 @@
 import User from '../models/User.ts';
-import { Reservation } from '../models/Reservation.ts';
+import Reservation from '../models/Reservation.ts';
 import { Request, Response } from "express";
 
 export async function createUser(req: Request, res: Response) {
@@ -80,7 +80,6 @@ export async function updateUser(req: Request, res: Response) {
     try {
         const id = req.params.id;
 
-        // Prevent updating with an empty object
 		if (Object.keys(req.body).length === 0) {
 			return res.status(400).json({ message: 'No update fields provided.' });
 		}
