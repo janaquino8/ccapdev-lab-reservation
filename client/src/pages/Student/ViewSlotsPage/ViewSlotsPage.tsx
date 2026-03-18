@@ -103,6 +103,15 @@ const ViewSlots = () => {
                     <h3>Check Other Timeslots</h3>
 
                     <div className="inputGroup">
+                        <label>Laboratory:</label>
+                        <select className="fullWidthSelect">
+                            <option>Gokongwei 307A</option>
+                            <option>Gokongwei 307B</option>
+                            <option>Gokongwei 404A</option>
+                        </select>
+                    </div>
+
+                    <div className="inputGroup">
                         <label>Time Slot:</label>
                         <select className="fullWidthSelect">
                             <option>07:30 AM - 08:00 AM</option>
@@ -130,7 +139,7 @@ const ViewSlots = () => {
                     <button className="createBtn">View Slots</button>
                 </div>
 
-                <button className="otherLabsBtn"><a href="/home">Other Laboratories</a></button>
+                <button className="otherLabsBtn"><a href="/home">Back to Home</a></button>
 
                 <div className="bottomLogoContainer">
                     <img src={dlsuLABS} alt="DLSU LABS" className="sidebarLogo" />
