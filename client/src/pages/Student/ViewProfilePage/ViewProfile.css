@@ -91,6 +91,20 @@
     transition: background 0.2s;
 }
 
+.action-btn-delete {
+    background-color: #ff4d4d;
+    color: #e0eadd;
+    border: none;
+    padding: 12px 0;
+    width: 100%;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+
 .action-btn:hover {
     background-color: #ffffff;
 }

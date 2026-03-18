@@ -92,12 +92,11 @@ const ViewProfile: React.FC = () => {
             
             <div className="buttons">
               <button className="action-btn" onClick={() => setIsEditing(true)}>Edit Profile</button>
-              <button className="action-btn delete-btn">Delete Account</button>
+              <button className="action-btn-delete">Delete Account</button>
             </div>
           </div>
 
           <div className="details">
-            <span className="label">View Profile</span>
             <h1 className="name">{user.givenName} {user.lastName}</h1>
             <p className="description">{user.description}</p>
           </div>
