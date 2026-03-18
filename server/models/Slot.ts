@@ -5,50 +5,18 @@ const SlotSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
-            unique: true
         },
-
-        // laboratory: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     required: true
-        // },
-
         laboratory: {
-            type: String,
-            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Laboratory", 
+            required: true
         },
-
-        // reservations: {
-        //     user: {
-        //         fullName: {
-        //             type: String,
-        //             required: true
-        //         },
-
-        //         username: {
-        //             type: String,
-        //             required: true
-        //         }
-        //     },
-
-        //     timeStart: {
-        //         type: Date,
-        //         required: true,
-        //     },
-
-        //     timeEnd: {
-        //         type: Date,
-        //         required: true,
-        //     },
-        // },
-
     },
-
-    {
-        timestamps: true
-    }
+    { timestamps: true }
 );
 
-const Slot = mongoose.model("Slot", SlotSchema);
+// made it so that the name & lab combo is unique
+SlotSchema.index({ name: 1, laboratory: 1 }, { unique: true });
 
+const Slot = mongoose.model("Slot", SlotSchema);
 export default Slot;
