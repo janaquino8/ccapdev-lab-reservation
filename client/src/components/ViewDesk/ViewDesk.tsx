@@ -5,6 +5,7 @@ import styles from '../Desk/Desk.module.css';
 interface SlotData {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
+  reservedBy?: string; 
 }
 
 interface ViewDeskProps {
@@ -28,6 +29,7 @@ const ViewDesk: React.FC<ViewDeskProps> = ({ topSlots, bottomSlots }) => {
               key={slot.id} 
               id={slot.id} 
               status={slot.status} 
+              reservedBy={slot.reservedBy} 
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
             />
@@ -44,6 +46,7 @@ const ViewDesk: React.FC<ViewDeskProps> = ({ topSlots, bottomSlots }) => {
               key={slot.id} 
               id={slot.id} 
               status={slot.status} 
+              reservedBy={slot.reservedBy} 
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
             />
