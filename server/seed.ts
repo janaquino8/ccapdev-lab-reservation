@@ -53,28 +53,6 @@ async function seedDatabase() {
             await lab.save();
         }
 
-        console.log("Booking desks A1 and B4 in Gokongwei 307A for Richmond...");
-        
-        await Reservation.create({
-            user: myUserId,
-            laboratory: gokongwei307A_id!,
-            isReservedByAdmin: false,
-            isAnonymous: false,
-            status: "active",
-            reservedSlots: [
-                {
-                    slot: slotA1_id!,
-                    timeStart: new Date("2026-03-20T07:30:00.000Z"), 
-                    timeEnd: new Date("2026-03-20T08:00:00.000Z")
-                },
-                {
-                    slot: slotB4_id!,
-                    timeStart: new Date("2026-03-20T07:30:00.000Z"),
-                    timeEnd: new Date("2026-03-20T08:00:00.000Z")
-                }
-            ]
-        });
-
         console.log("🎉 Database Successfully Seeded! All 3 labs and 192 slots are ready.");
         process.exit();
 
