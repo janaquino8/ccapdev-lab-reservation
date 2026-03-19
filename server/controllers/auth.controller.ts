@@ -85,6 +85,11 @@ export async function register(req: Request, res: Response) {
         res.status(201).send({ message: "User successfully created." })
     } catch (err: any) {
         console.error(err);
+
+        if (err.message.includes("E11000 duplicate key error collection: labDB.users index: username_1 dup key")) {
+            return res.status(400).send({ error: "User already exists." });
+        }
+
         res.status(500).send({error: "Error on authentication: " + err.message});
     }
 }
