@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Slot from './../Slot/Slot';
 import styles from './Desk.module.css';
-import { useState } from 'react';
 
 interface SlotData {
   id: string;
@@ -11,9 +10,10 @@ interface SlotData {
 interface DeskProps {
   topSlots?: SlotData[];   
   bottomSlots?: SlotData[];
+  onSlotClick: (id: string) => void;
 }
 
-const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots }) => {
+const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots, onSlotClick }) => {
   const [openSlotId, setOpenSlotId] = useState<string | null>(null);
 
   const handleToggle = (id: string) => {
@@ -25,7 +25,14 @@ const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots }) => {
       {topSlots && (
         <div className={styles.row}>
           {topSlots.map((slot) => (
-            <Slot key={slot.id} id={slot.id} status={slot.status} isOpen={openSlotId === slot.id} onToggle={handleToggle} />
+            <Slot 
+              key={slot.id} 
+              id={slot.id} 
+              status={slot.status} 
+              isOpen={openSlotId === slot.id} 
+              onToggle={handleToggle} 
+              onSlotClick={onSlotClick}
+            />
           ))}
         </div>
       )}
@@ -35,7 +42,14 @@ const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots }) => {
       {bottomSlots && (
         <div className={styles.row}>
           {bottomSlots.map((slot) => (
-            <Slot key={slot.id} id={slot.id} status={slot.status} isOpen={openSlotId === slot.id} onToggle={handleToggle} />
+            <Slot 
+              key={slot.id} 
+              id={slot.id} 
+              status={slot.status} 
+              isOpen={openSlotId === slot.id} 
+              onToggle={handleToggle} 
+              onSlotClick={onSlotClick}
+            />
           ))}
         </div>
       )}

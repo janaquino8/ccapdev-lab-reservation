@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
 import "./SlotReservePage.css";
 
@@ -15,6 +15,9 @@ const SlotAvailability: React.FC = () => {
   ];
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { laboratory, slot } = location.state || { laboratory: "Select a Lab", slot: "None" };
 
   const getCellStatus = (day: string, time: string) => {
     if (day === "Monday" && time === "7:30am - 8:00am") return "status-unavailable";
@@ -24,14 +27,14 @@ const SlotAvailability: React.FC = () => {
 
   return (
     <div className="pageContainer">
-      <Board title="Create Reservation" room="Gokongwei 307A" slot="Slot A1">
+      <Board title="Create Reservation" room={laboratory} slot={`Slot ${slot}`}>
         <div className="timetableContainer">
           <table className="availabilityTable">
             <thead>
               <tr>
                 <th className="sticky-col">Date / Time</th>
-                {timeSlots.map(slot => (
-                  <th key={slot}>{slot}</th>
+                {timeSlots.map(timeSlot => (
+                  <th key={timeSlot}>{timeSlot}</th>
                 ))}
               </tr>
             </thead>
@@ -39,10 +42,10 @@ const SlotAvailability: React.FC = () => {
               {days.map(day => (
                 <tr key={day}>
                   <td className="sticky-col dayLabel">{day}</td>
-                  {timeSlots.map(slot => (
+                  {timeSlots.map(timeSlot => (
                     <td 
-                      key={slot} 
-                      className={`timeCell ${getCellStatus(day, slot)}`}
+                      key={timeSlot} 
+                      className={`timeCell ${getCellStatus(day, timeSlot)}`}
                     ></td>
                   ))}
                 </tr>

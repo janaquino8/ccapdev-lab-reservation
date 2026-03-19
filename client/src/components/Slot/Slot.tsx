@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import styles from './Slot.module.css';
-
 
 interface SlotProps {
   id: string;
@@ -9,15 +7,11 @@ interface SlotProps {
   /* Available: Green, Reserved: Yellow, Unavailable: Red */
   isOpen: boolean;
   onToggle: (id: string) => void;
+  onSlotClick: (id: string) => void;
 }
 
-const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle }) => {
+const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, onSlotClick }) => {
   const statusClass = styles[status];
-  const navigate = useNavigate();
-
-  const handleReserveClick = () => {
-    navigate('/reserve', { state: { slotId: id } });
-  };
 
   return (
     <div className={styles.slotContainer}>
@@ -30,7 +24,7 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle }) => {
 
       {isOpen && (
         <div className={styles.dropdown} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.dropdownItem} onClick={handleReserveClick}>
+          <div className={styles.dropdownItem} onClick={() => onSlotClick(id)}>
             Reserve {id}
           </div>
           <div className={styles.dropdownItem}>View Specs</div>
