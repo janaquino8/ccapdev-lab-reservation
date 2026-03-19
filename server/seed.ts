@@ -11,64 +11,71 @@ async function seedDatabase() {
         await mongoose.connect(MONGO_URI);
         console.log("Connected!");
 
-        console.log("Clearing old data...");
-        await Laboratory.deleteMany({});
-        await Slot.deleteMany({});
-        await Reservation.deleteMany({});
+        console.log("Nuking old collections...");
+        try { await Laboratory.collection.drop(); } catch (e) {}
+        try { await Slot.collection.drop(); } catch (e) {}
+        try { await Reservation.collection.drop(); } catch (e) {}
 
-        // Using your exact User ID
         const myUserId = new mongoose.Types.ObjectId("69b845426fa0c10654dbbcbf"); 
-
-        console.log("Creating Gokongwei 307A...");
-        const gokongweiLab = await Laboratory.create({
-            name: "Gokongwei 307A",
-            slots: []
-        });
-
-        console.log("Building 64 desks...");
         const sections = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        const slotDocs = [];
+        const labNames = ["Gokongwei 307A", "Gokongwei 307B", "Gokongwei 404A"];
 
-        for (const section of sections) {
-            for (let i = 1; i <= 8; i++) {
-                const newSlot = await Slot.create({
-                    name: `${section}${i}`,
-                    laboratory: gokongweiLab._id
-                });
-                slotDocs.push(newSlot);
+        let gokongwei307A_id = null;
+        let slotA1_id = null;
+        let slotB4_id = null;
+        
+        for (const labName of labNames) {
+            console.log(`Creating ${labName} and building 64 desks...`);
+            
+            const lab = await Laboratory.create({
+                name: labName,
+                slots: []
+            });
+
+            const slotDocs = [];
+            for (const section of sections) {
+                for (let i = 1; i <= 8; i++) {
+                    const newSlot = await Slot.create({
+                        name: `${section}${i}`,
+                        laboratory: lab._id
+                    });
+                    slotDocs.push(newSlot);
+
+                    if (labName === "Gokongwei 307A") {
+                        gokongwei307A_id = lab._id;
+                        if (newSlot.name === "A1") slotA1_id = newSlot._id;
+                        if (newSlot.name === "B4") slotB4_id = newSlot._id;
+                    }
+                }
             }
+
+            lab.slots = slotDocs.map(slot => slot._id);
+            await lab.save();
         }
 
-        gokongweiLab.slots = slotDocs.map(slot => slot._id);
-        await gokongweiLab.save();
-
-        console.log("Booking desks A1 and B4 for Richmond...");
+        console.log("Booking desks A1 and B4 in Gokongwei 307A for Richmond...");
         
-        const slotA1 = slotDocs.find(s => s.name === "A1");
-        const slotB4 = slotDocs.find(s => s.name === "B4");
-
         await Reservation.create({
             user: myUserId,
-            laboratory: gokongweiLab._id,
+            laboratory: gokongwei307A_id!,
             isReservedByAdmin: false,
             isAnonymous: false,
             status: "active",
             reservedSlots: [
                 {
-                    slot: slotA1?._id,
-                    // FIXED: Using standard ISO Date formatting so Node.js doesn't crash!
+                    slot: slotA1_id!,
                     timeStart: new Date("2026-03-20T07:30:00.000Z"), 
                     timeEnd: new Date("2026-03-20T08:00:00.000Z")
                 },
                 {
-                    slot: slotB4?._id,
+                    slot: slotB4_id!,
                     timeStart: new Date("2026-03-20T07:30:00.000Z"),
                     timeEnd: new Date("2026-03-20T08:00:00.000Z")
                 }
             ]
         });
 
-        console.log("🎉 Database Successfully Seeded! You can now test your frontend.");
+        console.log("🎉 Database Successfully Seeded! All 3 labs and 192 slots are ready.");
         process.exit();
 
     } catch (error) {
