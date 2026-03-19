@@ -19,6 +19,7 @@ import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
 import SearchPage from '../pages/Student/Search/SearchPage.tsx';
 import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
+import AdminSlotReserve from '../pages/Admin/SlotReserve/SlotReservePage.tsx'
 
 function App() {
   return (
@@ -138,6 +139,16 @@ function App() {
             <AdminNavbar />
             <div className="contentArea">
               <DeleteReservation />
+            </div>
+          </div>
+
+        } />
+
+        <Route path="/admin/reserve" element={
+          <div className="mainlayout">
+            <AdminNavbar />
+            <div className="contentArea">
+              <AdminSlotReserve />
             </div>
           </div>
 
