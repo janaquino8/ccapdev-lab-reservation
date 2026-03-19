@@ -53,6 +53,18 @@
     background-color: #ff3131;
 }
 
+.availabilityTable td.status-available {
+    background-color: #3e7033;
+}
+
+.availabilityTable td.status-reserved {
+    background-color: #ffde59;
+}
+
+.availabilityTable td.status-unavailable {
+    background-color: #ff3131;
+}
+
 .timeCell:hover {
     filter: brightness(1.2);
     cursor: pointer;
