@@ -175,7 +175,7 @@ const SlotAvailability: React.FC = () => {
             ← Back to Seat Selection
           </button>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#333' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#fff' }}>
             <input 
               type="checkbox" 
               checked={isAnonymousToggle} 
