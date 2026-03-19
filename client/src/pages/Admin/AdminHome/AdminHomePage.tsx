@@ -23,7 +23,7 @@ const AdminHomePage = () => {
         <div className="welcomeSection">
             <h1>Welcome to DLSU - Admin</h1><br />
             <h1><span className="underline">Computer Laboratories</span></h1>
-            <p>Basta witty tagline</p>
+            <p>Archer-approved speed for your lab needs.</p>
         </div>
 
         <div className="greenBody">
