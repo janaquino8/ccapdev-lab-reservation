@@ -17,6 +17,9 @@ function getHeaders(type: string): any[] {
       {id: 4, name: "Time Start"},
       {id: 5, name: "Time End"},
     ];
+    case 'user': return [
+
+    ];
     default: return [
       {id: 1, name: "N/A"},
       {id: 2, name: "N/A"},
@@ -28,19 +31,19 @@ function getHeaders(type: string): any[] {
 }
 
 interface ReservationData {
-  id: number | string;
-  date: string;
+  id?: number | string;
+  date?: string;
   name?: string;       
   laboratory?: string; 
-  slot: string;
-  timeStart: string;
-  timeEnd: string;
+  slot?: string;
+  timeStart?: string;
+  timeEnd?: string;
 }
 
 interface ReservationCardProps {
   type: string;
   entry: string;
-  content: ReservationData[];
+  content: any[];
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = ({ type, entry, content }) => {

@@ -19,7 +19,7 @@
 .layout {
     max-width: 1100px;
     margin: -150px auto 0;
-    padding: 0 50px;
+    padding: 0 0px;
     position: relative;
     z-index: 5;
 }
@@ -107,6 +107,57 @@
 
 .action-btn:hover {
     background-color: #ffffff;
+}
+
+.reservations {
+    margin: 2.4rem 0 0 0;
+    padding: 0.5rem 2rem;
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.1);
+    background-color: #557C45;
+    border-radius: 0.7rem;
+}
+
+.reservations h1 {
+    text-align: center;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    padding: 1.2rem 0;
+}
+
+.header {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.entry-label {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.reservationSlots {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.reservationSlot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.pill {
+  background-color: #E2E8DC;
+  color: #385E33;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 0.35rem;
 }
 
 .modal-overlay {

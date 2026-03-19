@@ -85,6 +85,15 @@ function App() {
           </div>
         } />
 
+        <Route path="/profile/:id" element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <ViewProfile />
+            </div> 
+          </div>
+        } />
+
         <Route path="/search" element={
           <div className="mainlayout">
             <Navbar />

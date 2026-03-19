@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./ViewProfile.css";
 import blankPicture from "../../../assets/blank-dp.png";
+import ReservationCard from "../../../components/ReservationCard/ReservationCard";
 
 interface UserProfile {
   _id: string;
@@ -11,9 +12,20 @@ interface UserProfile {
   profilePicture: string;
 }
 
+interface UserSlot {
+  slot: string;
+  timeStart: Date;
+  timeEnd: Date;
+}
+
+interface UserReservation {
+  laboratory: string;
+  reservedSlots: [UserSlot];
+}
+
 const ViewProfile: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  
+  const [reservations, setReservations] = useState<[UserReservation] | []>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState("");
   const [editProfilePicture, setEditProfilePicture] = useState("");
@@ -28,6 +40,46 @@ const ViewProfile: React.FC = () => {
       setEditProfilePicture(parsedUser.profilePicture || "");
     }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserReservations();
+    }
+  }, [user]);
+
+  const fetchUserReservations = async () => {
+    if (!user) {
+      return setError("User does not exist.");
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/reservations/`, {
+          method: 'GET', 
+          headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+          const userReservations = await response.json();
+          
+          const finalReservations = userReservations.map((reservation: any) => ({
+            laboratory: reservation.laboratory.name,
+            reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
+              slot: slotData.slot.name,
+              timeStart: slotData.timeStart,
+              timeEnd: slotData.timeEnd
+            }))
+          }));
+
+          setReservations(finalReservations);
+          console.log(finalReservations);
+      } else {
+          return setReservations([]);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Cannot connect to server.");
+    }
+  }
 
   const handleSaveChanges = async () => {
     if (!user) return;
@@ -100,6 +152,34 @@ const ViewProfile: React.FC = () => {
             <h1 className="name">{user.givenName} {user.lastName}</h1>
             <p className="description">{user.description}</p>
           </div>
+        </div>
+
+        <div className="reservations">
+          <h1>{user.givenName}'s Current Reservations</h1>
+          {reservations.map((item, index) => (
+            <div key={index}>
+              <div className="header">
+                <h2 className="entry-label">
+                  {`${index + 1}. ${item.laboratory} | ${new Date(item.reservedSlots[0].timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                </h2>
+              </div>
+              
+              <div className="reservationSlots">
+                {item.reservedSlots.map((item, index2) => (
+                  <div className="reservationSlot">
+                    <div key={index2} className="pill">
+                      {item.slot}
+                    </div>
+                    <p>
+                      {`${new Date(item.timeStart).toLocaleTimeString("en-US", {timeStyle: "short"})}`}
+                      &nbsp;-&nbsp;
+                      {`${new Date(item.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short"})}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

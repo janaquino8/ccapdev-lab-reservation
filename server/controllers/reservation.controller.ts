@@ -34,13 +34,9 @@ export async function getFilteredReservations(req: Request, res: Response) {
             laboratory: labDoc._id,
             "reservedSlots.timeStart": { $lt: searchEndTime },
             "reservedSlots.timeEnd": { $gt: searchStartTime }
-        }).populate({
-            path: 'reservedSlots.slot',
-            select: 'name' 
-        }).populate({
-            path: 'user',
-            select: 'givenName lastName'
-        });
+        }).populate('user', 'givenName lastName username')
+            .populate('laboratory', 'name')
+            .populate('reservedSlots.slot', 'name'); 
 
         if (!reservations || reservations.length === 0) {
             return res.status(404).json({ message: 'No reservations found.' });
