@@ -17,7 +17,7 @@ const CreateReservation: React.FC = () => {
       setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(timer); // Cleanup on unmount
+    return () => clearInterval(timer);
   }, []);
 
   const handleViewSlots = async () => {
@@ -63,9 +63,23 @@ const CreateReservation: React.FC = () => {
     <>
       <div className="pageContainer">
         <div className="boardSection">
-          <Board title="Create Reservation" room="Gokongwei 307A">
+          <Board title="Create Reservation" room={selectedLab}>
             <div className="boardInternalLayout">
               <section className="instructionSectionInside">
+
+                <div className="labSelectionBox" style={{ marginBottom: '20px' }}>
+                  <h3 style={{ marginTop: 0 }}>Select Laboratory</h3>
+                  <select 
+                    value={selectedLab}
+                    onChange={(e) => setSelectedLab(e.target.value)}
+                    style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
+                  >
+                    <option value="Gokongwei 307A">Gokongwei 307A</option>
+                    <option value="Gokongwei 307B">Gokongwei 307B</option>
+                    <option value="Gokongwei 404A">Gokongwei 404A</option>
+                  </select>
+                </div>
+
                 <div className="howToBox">
                   <h2>How to Reserve?</h2>
                   <p>
@@ -92,8 +106,6 @@ const CreateReservation: React.FC = () => {
 
                 <button className="otherLabsBtn"><a href="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Back to Home</a></button>
               </section>
-
-
 
               <div className="deskGridArea"> <br />
                 <div className={styles.deskRow}>
