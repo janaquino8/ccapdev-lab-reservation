@@ -96,8 +96,8 @@ export async function createReservation(req: Request, res: Response) {
         const newReservation = {
             user: user,
             laboratory: labDoc._id,
-            isReservedByAdmin: isReservedByAdmin || false,
-            isAnonymous: isAnonymous || true,
+            isReservedByAdmin: isReservedByAdmin ?? false,
+            isAnonymous: isAnonymous ?? false,
             status: status || 'active',
             reservedSlots: translatedSlots
         };

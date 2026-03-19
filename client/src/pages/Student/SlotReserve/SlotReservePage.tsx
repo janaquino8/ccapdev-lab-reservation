@@ -18,6 +18,8 @@ const SlotAvailability: React.FC = () => {
 
   const [scheduleDays, setScheduleDays] = useState<{dayName: string, dateString: string}[]>([]);
   const [reservedCells, setReservedCells] = useState<Set<string>>(new Set());
+ 
+  const [isAnonymousToggle, setIsAnonymousToggle] = useState(false);
 
   useEffect(() => {
     const daysArray = [];
@@ -60,7 +62,6 @@ const SlotAvailability: React.FC = () => {
                 if (rs.slot?.name === slot) {
                   const dateString = rs.timeStart.split('T')[0];
                   const gridTime = formatDBTimeToGridTime(rs.timeStart, rs.timeEnd);
-
                   taken.add(`${dateString}_${gridTime}`);
                 }
               });
@@ -83,9 +84,100 @@ const SlotAvailability: React.FC = () => {
     return reservedCells.has(`${dateString}_${time}`) ? "status-reserved" : "status-available";
   };
 
+  const handleCreateReservation = async (dateString: string, timeString: string) => {
+    if (getCellStatus(dateString, timeString) === "status-reserved") {
+      alert("This slot is already reserved!");
+      return;
+    }
+
+    const storedUser = localStorage.getItem('user'); 
+    if (!storedUser) {
+      alert("You must be logged in to make a reservation!");
+      return;
+    }
+
+    let currentUserId = "";
+    try {
+      const parsedUser = JSON.parse(storedUser);
+      currentUserId = parsedUser._id || parsedUser.id;
+    } catch (e) {
+      currentUserId = storedUser; 
+    }
+
+    const confirmBooking = window.confirm(`Reserve ${slot} in ${laboratory} on ${dateString} at ${timeString}${isAnonymousToggle ? ' anonymously' : ''}?`);
+    if (!confirmBooking) return;
+
+    const [startStr, endStr] = timeString.split(' - ');
+
+    const convertToUTC = (dateStr: string, timeStr: string) => {
+      let [hours, minAmPm] = timeStr.split(':');
+      let minutes = minAmPm.substring(0, 2);
+      let modifier = minAmPm.substring(2); 
+
+      let hoursInt = parseInt(hours, 10);
+      if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
+      if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
+
+      const paddedHours = hoursInt.toString().padStart(2, '0');
+      return new Date(`${dateStr}T${paddedHours}:${minutes}:00.000Z`);
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user: currentUserId, 
+          laboratory: laboratory,
+          isReservedByAdmin: false,
+          isAnonymous: isAnonymousToggle, 
+          status: 'active',
+          reservedSlots: [
+            {
+              slot: slot,
+              timeStart: convertToUTC(dateString, startStr).toISOString(),
+              timeEnd: convertToUTC(dateString, endStr).toISOString()
+            }
+          ]
+        })
+      });
+
+      if (response.ok) {
+        alert("🎉 Reservation successfully created!");
+        setReservedCells(prev => new Set(prev).add(`${dateString}_${timeString}`));
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to reserve: ${errorData.error || errorData.message}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again.");
+    }
+  };
+
   return (
     <div className="pageContainer">
       <Board title="Create Reservation" room={laboratory} slot={`Slot ${slot}`}>
+        
+        <div className="topControls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+          <button 
+            className="backToSelectionBtn" 
+            onClick={() => navigate('/create')}
+          >
+            ← Back to Seat Selection
+          </button>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#333' }}>
+            <input 
+              type="checkbox" 
+              checked={isAnonymousToggle} 
+              onChange={(e) => setIsAnonymousToggle(e.target.checked)} 
+              style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+            />
+            Reserve Anonymously
+          </label>
+        </div>
+
         <div className="timetableContainer">
           <table className="availabilityTable">
             <thead>
@@ -103,25 +195,21 @@ const SlotAvailability: React.FC = () => {
                     <div style={{ color: '#000'}}>{dayObj.dayName}</div>
                     <div style={{ fontSize: '0.8em', color: '#666' }}>{dayObj.dateString}</div>
                   </td>
-                  {timeSlots.map(timeSlot => (
-                    <td 
-                      key={`${dayObj.dateString}_${timeSlot}`}
-                      className={`timeCell ${getCellStatus(dayObj.dateString, timeSlot)}`}
-                    ></td>
-                  ))}
+                  {timeSlots.map(timeSlot => {
+                    const status = getCellStatus(dayObj.dateString, timeSlot);
+                    return (
+                      <td 
+                        key={`${dayObj.dateString}_${timeSlot}`}
+                        className={`timeCell ${status}`}
+                        style={{ cursor: status === 'status-available' ? 'pointer' : 'not-allowed' }}
+                        onClick={() => handleCreateReservation(dayObj.dateString, timeSlot)}
+                      ></td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="topControls">
-          <button 
-            className="backToSelectionBtn" 
-            onClick={() => navigate('/create')}
-          >
-            ← Back to Seat Selection
-          </button>
         </div>
       </Board>
     </div>
