@@ -22,6 +22,11 @@ function RegisterPage() {
             return;
         }
 
+        if (!password) {
+            setErrorMessage("Please input a password.");
+            return;
+        }
+
         if (!email.includes("@dlsu.edu.ph")) {
             setErrorMessage("Please use a valid DLSU email address.");
             return;
