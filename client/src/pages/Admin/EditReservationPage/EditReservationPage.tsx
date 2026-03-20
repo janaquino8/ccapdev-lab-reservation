@@ -1,10 +1,12 @@
 import React, { useState, type ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
 import ReservationCard from '../../../components/AdminReservationCard/AdminReservationCard.tsx'
 import "./EditReservationPage.css";
 
 const EditReservation: React.FC = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('Select Filter');
   const [email, setEmail] = useState("");
   
@@ -49,6 +51,8 @@ const EditReservation: React.FC = () => {
 
           formattedData.push({
             id: resDoc._id,
+            userId: user._id,
+            email: email,    
             date: startDate.toLocaleDateString(),
             name: `${user.givenName} ${user.lastName}`, 
             laboratory: resDoc.laboratory?.name || "Unknown Lab",
@@ -67,9 +71,10 @@ const EditReservation: React.FC = () => {
     }
   };
 
-  const handleEditClick = (id: string) => { // Changed to string for MongoDB IDs
-    alert(`Editing reservation ID: ${id}`);
-    // navigate('/admin/edit-specific-reservation', { state: { id } });
+  const handleEditClick = (id: string) => { 
+    const reservationToEdit = realReservations.find(res => res.id === id);
+    
+    navigate('/admin/edit-board', { state: { targetReservation: reservationToEdit } });
   };
 
   const handleCancelClick = async (id: string) => {
@@ -139,6 +144,7 @@ const EditReservation: React.FC = () => {
                 type={"student"}
                 entry="Previous Reservations" 
                 content={realReservations}
+                onEdit={handleEditClick}
                 onCancel={handleCancelClick}
             /> 
           </div>

@@ -150,13 +150,13 @@ const ViewSlots = () => {
 
             <aside className="rightColumn">
                 <div className="sidePanel">
-                    <h3>Reservation Reminders</h3>
+                    <h3>Reminders</h3>
                     <p>Use the time drop-down to check slot availability.</p>
                     {error && <p style={{ color: 'red', fontWeight: 'bold' }}>{error}</p>}
                 </div>
 
                 <div className="sidePanel">
-                    <h3>Check Other Timeslots</h3>
+                    <h3>Check Timeslots</h3>
 
                     <div className="inputGroup">
                         <label>Laboratory:</label>
@@ -211,7 +211,7 @@ const ViewSlots = () => {
                         </select>
                     </div>
 
-                    <button className="createBtn" onClick={handleViewSlots}>View Slots</button>
+                    <button className="createBtn" onClick={handleViewSlots}>Search</button>
                 </div>
 
                 <button className="otherLabsBtn"><a href="/home" style={{textDecoration: 'none', color: 'inherit'}}>Back to Home</a></button>

@@ -18,6 +18,8 @@ import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
 import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
 import AdminSlotReserve from '../pages/Admin/SlotReserve/SlotReservePage.tsx'
+import EditBoardSelection from '../pages/Admin/EditBoardSelection/EditBoardSelection.tsx';
+import EditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
 
 function App() {
   return (
@@ -130,8 +132,26 @@ function App() {
               <AdminSlotReserve />
             </div>
           </div>
-
         } />
+
+        <Route path="/admin/edit-board" element={
+          <div className="mainlayout">
+            <AdminNavbar />
+            <div className="contentArea">
+              <EditBoardSelection />
+            </div>
+          </div>
+        } />
+
+        <Route path="/admin/edit-timetable" element={
+          <div className="mainlayout">
+            <AdminNavbar />
+            <div className="contentArea">
+              <EditTimetable />
+            </div>
+          </div>
+        } />
+
       </Routes>
     </Router>
   );
