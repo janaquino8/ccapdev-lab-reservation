@@ -26,7 +26,6 @@ const Navbar = () => {
     { name: 'Home', href: '/home' },
     { name: 'Create Reservation', href: '/create' },
     { name: 'Edit Reservation', href: '/edit' },
-    { name: 'Previous Reservations', href: '/previous' },
     { name: 'View Slots', href: '/view' },
     { name: 'Search', href: '/search' },
   ];

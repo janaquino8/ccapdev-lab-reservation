@@ -8,7 +8,6 @@ import RegisterPage from '../pages/Student/RegisterPage/RegisterPage.tsx'
 import HomePage from '../pages/Student/HomePage/HomePage.tsx'
 import CreateReservationPage from '../pages/Student/CreateReservationPage/CreateReservationPage.tsx'
 import EditReservationPage from '../pages/Student/EditReservationPage/EditReservationPage.tsx'
-import PreviousReservationsPage from '../pages/Student/PreviousReservationsPage/PreviousReservationsPage.tsx'
 import ViewSlotsPage from '../pages/Student/ViewSlotsPage/ViewSlotsPage.tsx'
 import AdminHomePage from '../pages/Admin/AdminHome/AdminHomePage.tsx'
 import AdminCreateReservationPage from '../pages/Admin/CreateReservationPage/CreateReservationPage.tsx';
@@ -54,15 +53,6 @@ function App() {
             <Navbar />
             <div className="contentArea">
               <EditReservationPage />
-            </div> 
-          </div>
-        } />
-
-        <Route path="/previous" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <PreviousReservationsPage />
             </div> 
           </div>
         } />
