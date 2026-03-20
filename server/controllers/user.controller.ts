@@ -44,11 +44,12 @@ export async function getUserByName(req: Request, res: Response) {
             $or: [ 
                 { givenName: { $regex: search, $options: "i" } }, 
                 { lastName: { $regex: search, $options: "i" } }, 
-                { username: { $regex: search, $options: "i" } }
+                { username: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } }
             ]  
         });
 
-        if (!user) {
+        if (!user || user.length === 0) {
             return res.status(404).json({ message: 'User not found.' });
         }
         res.status(200).send(user);
@@ -114,6 +115,21 @@ export async function deleteUser(req: Request, res: Response) {
         )
 
         res.status(200).json({ message: 'User deleted successfully.' });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({error: err.message});
+    }
+}
+
+export async function getUserByEmail(req: Request, res: Response) {
+    try {
+        const email = req.params.email;
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).send(user);
     } catch (err: any) {
         console.error(err);
         res.status(500).send({error: err.message});

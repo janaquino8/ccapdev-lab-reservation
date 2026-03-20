@@ -15,5 +15,6 @@ router.get('/:id/reservations', UserController.getUserReservations);
 
 // Miscellaneous routes
 router.get('/search', UserController.getUserByName);
+router.get('/email/:email', UserController.getUserByEmail);
 
 export default router;

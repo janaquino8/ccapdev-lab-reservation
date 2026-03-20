@@ -74,7 +74,8 @@ export async function register(req: Request, res: Response) {
         await User.create({
             givenName: given,
             lastName: last,
-            username: userName
+            username: userName,
+            email: email
         });
 
         await Auth.create({

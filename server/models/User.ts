@@ -12,13 +12,20 @@ const UserSchema = new mongoose.Schema(
             required: true,
         },
 
-        // we can use this for the url; comes from the email
-        // or revert to email?
+        // i included both nlng
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+
         username: {
             type: String,
             required: true,
             unique: true,
-            set: (email: String) => email.replace("@dlsu.edu.ph", "")
+            set: (emailOrUsername: string) => emailOrUsername.replace("@dlsu.edu.ph", "")
         },
 
         description: {
@@ -31,36 +38,11 @@ const UserSchema = new mongoose.Schema(
             type: String,
             default: ""
         },
-
-        // reservations: {
-        //     laboratory: {
-        //         type: String,
-        //         required: true,
-        //     },
-
-        //     slot: {
-        //         type: String,
-        //         required: true,
-        //     },
-
-        //     timeStart: {
-        //         type: Date,
-        //         required: true,
-        //     },
-
-        //     timeEnd: {
-        //         type: Date,
-        //         required: true,
-        //     },
-        // }
-
-
     },
-
     {
         timestamps: true
     }
-)
+);
 
 const User = mongoose.model("User", UserSchema);
 
