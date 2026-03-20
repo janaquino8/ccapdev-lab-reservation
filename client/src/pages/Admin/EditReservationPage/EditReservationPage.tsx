@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, { useState, useEffect, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
@@ -8,9 +8,21 @@ import "./EditReservationPage.css";
 const EditReservation: React.FC = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Select Filter');
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    return sessionStorage.getItem('adminEditEmail') || "";
+  });
   
   const [realReservations, setRealReservations] = useState<any[]>([]);
+
+  useEffect(() => {
+    sessionStorage.setItem('adminEditEmail', email);
+  }, [email]);
+
+  useEffect(() => {
+    if (email) {
+      handleSearch();
+    }
+  }, []);
 
   function handleFilter(e: ChangeEvent<HTMLSelectElement>) {
     setFilter(e.target.value)
