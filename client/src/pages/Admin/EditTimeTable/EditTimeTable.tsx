@@ -146,13 +146,24 @@ const EditTimetable: React.FC = () => {
     <div className="pageContainer">
       <Board title="Reschedule Reservation" room={newLaboratory} slot={`Slot ${newSlot}`}>
         
-        <div className="howToBox" style={{ marginBottom: '20px', backgroundColor: 'rgba(255,255,255,0.9)', padding: '15px', borderRadius: '8px' }}>
-          <h3 style={{ color: '#385E33', marginTop: 0 }}>Modifying Schedule for:</h3>
-          <p style={{ color: 'black', margin: '5px 0' }}><strong>Name:</strong> {targetReservation.name}</p>
-          <p style={{ color: 'black', margin: '5px 0' }}><strong>Email:</strong> {targetReservation.email}</p>
-          <p style={{ color: '#dc3545', margin: '5px 0', fontSize: '0.9em' }}>
-            <em>Old Schedule: {targetReservation.date} | {targetReservation.timeStart} - {targetReservation.timeEnd}</em>
-          </p>
+        <div className="howToBox" style={{ 
+          marginBottom: '20px', 
+          backgroundColor: 'rgba(255, 255, 255, 0.15)',
+          backdropFilter: 'blur(8px)', 
+          padding: '18px 24px', 
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          color: '#ffffff',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ color: '#ffffff', marginTop: 0, marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '8px' }}>
+            Modifying Schedule
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '1rem' }}>
+            <p style={{ margin: 0 }}><strong>Student:</strong> {targetReservation.name} <span style={{opacity: 0.8, fontSize: '0.9em'}}>({targetReservation.email})</span></p>
+            <p style={{ margin: 0 }}><strong>Previous Lab & Seat:</strong> {targetReservation.laboratory} - {targetReservation.slot}</p>
+            <p style={{ margin: 0 }}><strong>Previous Time:</strong> {targetReservation.date} | {targetReservation.timeStart} - {targetReservation.timeEnd}</p>
+          </div>
         </div>
 
         <div className="timetableContainer">
