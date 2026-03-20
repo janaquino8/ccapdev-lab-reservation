@@ -16,7 +16,6 @@ import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReserv
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
 import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
-import SearchPage from '../pages/Student/Search/SearchPage.tsx';
 import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
 import AdminSlotReserve from '../pages/Admin/SlotReserve/SlotReservePage.tsx'
 
@@ -80,15 +79,6 @@ function App() {
             <Navbar />
             <div className="contentArea">
               <ViewProfile />
-            </div> 
-          </div>
-        } />
-
-        <Route path="/search" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <SearchPage />
             </div> 
           </div>
         } />
