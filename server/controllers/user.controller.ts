@@ -65,7 +65,9 @@ export async function getUserReservations(req: Request, res: Response) {
 
         const reservations = await Reservation.find({
             user: user
-        });
+        }).populate('user', 'givenName lastName username')
+            .populate('laboratory', 'name')
+            .populate('reservedSlots.slot', 'name');
 
         if (reservations.length === 0) {
             return res.status(404).send({ message: "User has no reservations" });
