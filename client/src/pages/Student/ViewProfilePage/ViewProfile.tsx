@@ -53,7 +53,7 @@ const ViewProfile: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/reservations/`, {
+      const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
           method: 'GET', 
           headers: { 'Content-Type': 'application/json' },
       });
@@ -171,9 +171,9 @@ const ViewProfile: React.FC = () => {
                       {item.slot}
                     </div>
                     <p>
-                      {`${new Date(item.timeStart).toLocaleTimeString("en-US", {timeStyle: "short"})}`}
+                      {`${new Date(item.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
                       &nbsp;-&nbsp;
-                      {`${new Date(item.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short"})}`}
+                      {`${new Date(item.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
                     </p>
                   </div>
                 ))}
