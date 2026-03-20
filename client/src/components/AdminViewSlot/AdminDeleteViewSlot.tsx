@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './AdminViewslot.module.css';
+import styles from './AdminDeleteViewslot.module.css';
 
 interface SlotProps {
   id: string;
@@ -68,7 +68,7 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, i
             <>
               <div 
                 className={styles.profileLink} 
-                onClick={() => navigate(`/admin/profile/${reservedBy}`)}
+                onClick={() => navigate(`/profile/${reservedBy}`)}
               >
                 View Profile
               </div>

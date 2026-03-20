@@ -1,91 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
 .pageContainer {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 100px; 
+    gap: 60px; 
     padding: 40px 40px;
     min-height: 100vh;
-    box-sizing: border-box;
     background: transparent;
 }
 
-.leftColumn {
-    flex: 2.5; 
-    max-width: 1100px;
-}
-
-.rightColumn {
-    flex: 1; 
+.InputGroup {
     display: flex;
-    flex-direction: column;
-    gap: 30px;
-    min-width: 350px; 
-}
-
-.sidePanel {
-    background-color: #3d663a; 
-    border-radius: 25px;
-    padding: 20px; 
-    color: white;
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-hr {
-    border: 2px solid white;
-    margin: 2em 0;
-}
-
-.panelTitle {
-    margin-top: 0;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: 800;
-}
-
-.panelText {
-    font-size: 1.1rem;
-    line-height: 1.5;
-}
-
-.inputGroup {
-    display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 10px;
 }
 
-.inputGroup label {
+.InputGroup label {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 500;
 }
 
-.inputSmall, .selectSmall {
-    width: 160px;
+.InputGroup select, .InputGroup input {
+    width: 180px;
     height: 35px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: none;
     padding: 0 10px;
-    background-color: #d9e3d8;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #32691b;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 1rem;
-}
-
-.createBtn {
-    width: 100%;
-    background-color: #e0e0e0;
-    color: #333;
-    border: none;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: transform 0.1s ease;
-}
-
-.createBtn:hover {
-    background-color: #ffffff;
-    transform: scale(1.02);
+    outline: none;
 }

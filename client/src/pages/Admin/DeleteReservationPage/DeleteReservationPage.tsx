@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ViewDesk from '../../../components/AdminViewDesk/AdminViewDesk';
+import ViewDesk from '../../../components/AdminViewDesk/AdminDeleteViewDesk';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
 import dlsuLABS from '../../../assets/dlsuLABS.png'; 
@@ -69,7 +69,7 @@ const ViewSlots = () => {
     return (
         <div className="pageContainer">
             <div className="leftColumn">
-                <Board title="Delete Slots" room={selectedLab}>
+                <Board title="Delete Reservation" room={selectedLab}>
                     <div className={styles.deskRow}>
                         <div className={styles.deskPair}>
                             <ViewDesk topSlots={[{ id: 'A1', status: getSlotStatus('A1'), reservedBy: getSlotName('A1') }, { id: 'A2', status: getSlotStatus('A2'), reservedBy: getSlotName('A2') }]} />

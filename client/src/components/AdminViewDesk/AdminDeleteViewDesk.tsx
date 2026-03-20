@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ViewSlot from '../AdminViewSlot/AdminViewSlot.tsx';
+import ViewSlot from '../AdminViewSlot/AdminDeleteViewSlot.tsx';
 import styles from '../Desk/Desk.module.css';
 
 interface SlotData {

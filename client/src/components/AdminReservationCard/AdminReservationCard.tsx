@@ -1,10 +1,10 @@
 import React from 'react';
-import './ReservationCard.css';
+import './AdminReservationCard.css';
 import { useNavigate } from 'react-router-dom';
 
 function getHeaders(type: string): any[] {
   switch (type) {
-    case 'laboratory': return [
+    case 'email': return [
       {id: 1, name: "Date"}, 
       {id: 2, name: "Name"}, 
       {id: 3, name: "Slot"}, 
@@ -70,8 +70,8 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ type, entry, content 
       {/* CONTENT ROWS */}
       <div className="content-container">
         {content.map((row, index) => (
-          <div key={row.id || index} className="grid-layout row clickable-row" onClick={() =>navigate('/create')}>
-            
+          <div key={row.id || index} className="grid-layout row clickable-row" onClick={() =>navigate('/admin/create')}>
+
             {/* 1. Date */}
             <div className="cell">{row.date}</div>
 

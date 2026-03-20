@@ -1,124 +1,92 @@
-import Desk from '../../../components/Desk/Desk.tsx';
+import React, { useState, type ChangeEvent } from "react";
 import Board from '../../../components/Board/Board.tsx';
-import styles from '../../../components/Board/Board.module.css'
-import './EditReservationPage.css';
+import styles from '../../../components/Board/Board.module.css';
+import ReservationCard from '../../../components/AdminReservationCard/AdminReservationCard.tsx'
+import "./EditReservationPage.css";
 
-const EditReservation = () => {
-    return (
-        <>  
-            <div className="pageContainer">
-                <div className="leftColumn">
-                <Board title="Edit Reservation" room="Gokongwei 307A">
-                   <div className={styles.deskRow}>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A3', status: 'available'}, {id: 'A4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A5', status: 'available'}, {id: 'A6', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A7', status: 'available'}, {id: 'A8', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A3', status: 'available'}, {id: 'A4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A5', status: 'available'}, {id: 'A6', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A7', status: 'available'}, {id: 'A8', status: 'available'}]} />
-                        </div>
-                    </div>
+const CreateReservation: React.FC = () => {
+  const [filter, setFilter] = useState('Select Filter');
+  const [email, setEmail] = useState("");
 
-                    <div className={styles.deskRow}>
-                       <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B1', status: 'available'}, {id: 'B2', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B3', status: 'available'}, {id: 'B4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B5', status: 'available'}, {id: 'B6', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B7', status: 'available'}, {id: 'B8', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B1', status: 'available'}, {id: 'B2', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B3', status: 'available'}, {id: 'B4', status: 'available'}]} />
-                            </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B5', status: 'available'}, {id: 'B6', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B7', status: 'available'}, {id: 'B8', status: 'available'}]} />
-                        </div>
-                    </div>
+  function handleFilter(e: ChangeEvent<HTMLSelectElement>) {
+    setFilter(e.target.value)
+  } 
 
-                    <div className={styles.deskRow}>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A3', status: 'available'}, {id: 'A4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A5', status: 'available'}, {id: 'A6', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A7', status: 'available'}, {id: 'A8', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A1', status: 'available'}, {id: 'A2', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A3', status: 'available'}, {id: 'A4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk topSlots={[{id: 'A5', status: 'available'}, {id: 'A6', status: 'available'}]} />
-                            <Desk topSlots={[{id: 'A7', status: 'available'}, {id: 'A8', status: 'available'}]} />
-                        </div>
-                    </div>
+  // AI-GENERATED DUMMY DATA
+  const DUMMY_RESERVATIONS = [
+  {
+    id: 1,
+    date: "2023-10-25",
+    name: "Juan Dela Cruz",        // Displayed if type="laboratory"
+    laboratory: "Gokongwei 307A",  // Displayed if type="student"
+    slot: "Slot 1",
+    timeStart: "09:00 AM",
+    timeEnd: "10:30 AM",
+  },
+  {
+    id: 2,
+    date: "2023-10-26",
+    name: "Maria Clara",
+    laboratory: "Gokongwei 307B",
+    slot: "Slot 3",
+    timeStart: "01:00 PM",
+    timeEnd: "02:30 PM",
+  },
+  {
+    id: 3,
+    date: "2023-10-27",
+    name: "Jose Rizal",
+    laboratory: "Velasco 202",
+    slot: "Slot 2",
+    timeStart: "10:30 AM",
+    timeEnd: "12:00 PM",
+  },
+  {
+    id: 4,
+    date: "2023-10-28",
+    name: "Antonio Luna",
+    laboratory: "Gokongwei 307A",
+    slot: "Slot 5",
+    timeStart: "04:00 PM",
+    timeEnd: "05:30 PM",
+  },
+  {
+    id: 5,
+    date: "2023-10-29",
+    name: "Gabriela Silang",
+    laboratory: "Andrew 901",
+    slot: "Slot 1",
+    timeStart: "07:30 AM",
+    timeEnd: "09:00 AM",
+  },
+];
 
-                    <div className={styles.deskRow}>
-                       <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B1', status: 'available'}, {id: 'B2', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B3', status: 'available'}, {id: 'B4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B5', status: 'available'}, {id: 'B6', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B7', status: 'available'}, {id: 'B8', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B1', status: 'available'}, {id: 'B2', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B3', status: 'available'}, {id: 'B4', status: 'available'}]} />
-                        </div>
-                        <div className={styles.deskPair}>
-                            <Desk bottomSlots={[{id: 'B5', status: 'available'}, {id: 'B6', status: 'available'}]} />
-                            <Desk bottomSlots={[{id: 'B7', status: 'available'}, {id: 'B8', status: 'available'}]} />
-                        </div>
-                    </div>
-                </Board>
-                </div>
-
-                <aside className="rightColumn">
-                <div className="sidePanel">
-                    <h3>Reservation Reminders</h3>
-                    <p>Use the time drop-down to check slot availability.</p>
-                </div>
-                
-                <div className="sidePanel">
-                    <h3>Edit Reservation</h3>
-                    <p>Student No.:</p>
-                    <p>Name:</p>
-                    <hr className="divider" />
-                    <div className="inputGroup">
-                        <label>Laboratory:</label>
-                        <input type="text" readOnly value="Gokongwei 307A" />
-                    </div>
-                    <div className="inputGroup">
-                        <label>Time Start:</label>
-                        <select>{/* Options */}</select>
-                    </div>
-                    <div className="inputGroup">
-                        <label>Time End:</label>
-                        <select>{/* Options */}</select>
-                    </div>
-                    <div>
-
-                    </div>
-                    <button className="createBtn">Edit Reservation</button>
-                </div>
-            </aside>
+  return (
+    <>
+      <div className="pageContainer">
+        <Board title="Edit Reservations">
+            <div className="descrption">
+                <p>Input the student's email before clicking on the reservation you want to edit.</p>
             </div>
-        </>
-    );
+            <div className="emailContainer">
+          <label htmlFor="email">Student Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="example@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="emailInput"
+          />
+        </div>
+            {/*change the conditions here para lumabas yung reservations ng curr user*/}
+          <div className="entries">
+            <ReservationCard type={"email"} entry="Previous Reservations" content={DUMMY_RESERVATIONS} /> 
+          </div>
+        </Board>
+      </div>
+    </>
+  );
 };
 
-export default EditReservation;
+export default CreateReservation;
