@@ -34,8 +34,10 @@ const EditReservation: React.FC = () => {
       return;
     }
 
+    const username = email.split('@')[0];
+
     try {
-      const userRes = await fetch(`http://localhost:3000/users/email/${encodeURIComponent(email)}`);
+      const userRes = await fetch(`http://localhost:3000/users/username/${encodeURIComponent(username)}`);
       
       if (!userRes.ok) {
         alert("Student not found.");
@@ -45,7 +47,15 @@ const EditReservation: React.FC = () => {
       
       const user = await userRes.json();
 
-      const resResponse = await fetch(`http://localhost:3000/users/${user._id}/reservations`);
+      const resResponse = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: 'active'
+        })
+      });
       
       if (!resResponse.ok) {
         setRealReservations([]);
@@ -64,7 +74,7 @@ const EditReservation: React.FC = () => {
           formattedData.push({
             id: resDoc._id,
             userId: user._id,
-            email: email,    
+            email: email,
             date: startDate.toLocaleDateString(),
             name: `${user.givenName} ${user.lastName}`, 
             laboratory: resDoc.laboratory?.name || "Unknown Lab",
