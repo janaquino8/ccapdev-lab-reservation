@@ -19,8 +19,10 @@ import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
 import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
 import AdminSlotReserve from '../pages/Admin/SlotReserve/SlotReservePage.tsx'
-import EditBoardSelection from '../pages/Admin/EditBoardSelection/EditBoardSelection.tsx';
-import EditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
+import AdminEditBoardSelection from '../pages/Admin/EditBoardSelection/EditBoardSelection.tsx';
+import EditBoardSelection from '../pages/Student/EditBoardSelection/EditBoardSelection.tsx';
+import EditTimetable from '../pages/Student/EditTimeTable/EditTimeTable.tsx';
+import AdminEditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
 
 function App() {
   return (
@@ -96,6 +98,26 @@ function App() {
           </div>
         } />
 
+        <Route path='/edit-board' element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <EditBoardSelection />
+            </div> 
+            <Footer />
+          </div>
+        } />
+
+        <Route path='/edit-timetable' element={
+          <div className="mainlayout">
+            <Navbar />
+            <div className="contentArea">
+              <EditTimetable />
+            </div> 
+            <Footer />
+          </div>
+        } />
+
         {/* Admin routes */}
 
         <Route path="/admin/home" element={
@@ -139,7 +161,7 @@ function App() {
           <div className="mainlayout">
             <AdminNavbar />
             <div className="contentArea">
-              <EditBoardSelection />
+              <AdminEditBoardSelection />
             </div>
           </div>
         } />
@@ -148,7 +170,7 @@ function App() {
           <div className="mainlayout">
             <AdminNavbar />
             <div className="contentArea">
-              <EditTimetable />
+              <AdminEditTimetable />
             </div>
           </div>
         } />

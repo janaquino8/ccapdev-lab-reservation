@@ -1,75 +1,94 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Board from '../../../components/Board/Board.tsx';
-import styles from '../../../components/Board/Board.module.css';
-import ReservationCard from '../../../components/ReservationCard/ReservationCard.tsx'
+import ReservationCard from '../../../components/ReservationCard/ReservationCard.tsx'; 
 import "./EditReservationPage.css";
 
-const CreateReservation: React.FC = () => {
-  const [filter, setFilter] = useState('Select Filter')
+const EditReservation: React.FC = () => {
+  const navigate = useNavigate();
+  const [realReservations, setRealReservations] = useState<any[]>([]);
 
-  function handleFilter(e: ChangeEvent<HTMLSelectElement>) {
-    setFilter(e.target.value)
-  } 
+  useEffect(() => {
+    fetchMyReservations();
+  }, []);
 
-  // AI-GENERATED DUMMY DATA
-  const DUMMY_RESERVATIONS = [
-  {
-    id: 1,
-    date: "2023-10-25",
-    name: "Juan Dela Cruz",        // Displayed if type="laboratory"
-    laboratory: "Gokongwei 307A",  // Displayed if type="student"
-    slot: "Slot 1",
-    timeStart: "09:00 AM",
-    timeEnd: "10:30 AM",
-  },
-  {
-    id: 2,
-    date: "2023-10-26",
-    name: "Maria Clara",
-    laboratory: "Gokongwei 307B",
-    slot: "Slot 3",
-    timeStart: "01:00 PM",
-    timeEnd: "02:30 PM",
-  },
-  {
-    id: 3,
-    date: "2023-10-27",
-    name: "Jose Rizal",
-    laboratory: "Velasco 202",
-    slot: "Slot 2",
-    timeStart: "10:30 AM",
-    timeEnd: "12:00 PM",
-  },
-  {
-    id: 4,
-    date: "2023-10-28",
-    name: "Antonio Luna",
-    laboratory: "Gokongwei 307A",
-    slot: "Slot 5",
-    timeStart: "04:00 PM",
-    timeEnd: "05:30 PM",
-  },
-  {
-    id: 5,
-    date: "2023-10-29",
-    name: "Gabriela Silang",
-    laboratory: "Andrew 901",
-    slot: "Slot 1",
-    timeStart: "07:30 AM",
-    timeEnd: "09:00 AM",
-  },
-];
+  const fetchMyReservations = async () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      
+      if (!storedUser) {
+        alert("You must be logged in to view your reservations.");
+        navigate('/');
+        return;
+      }
+      
+      const user = JSON.parse(storedUser);
+
+      const resResponse = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: 'active'
+        }) 
+      });
+      
+      if (!resResponse.ok) {
+        setRealReservations([]);
+        return;
+      }
+
+      const reservationsData = await resResponse.json();
+      const formattedData: any[] = [];
+      
+      reservationsData.forEach((resDoc: any) => {
+        resDoc.reservedSlots.forEach((slotData: any) => {
+          const startDate = new Date(slotData.timeStart);
+          const endDate = new Date(slotData.timeEnd);
+
+          formattedData.push({
+            id: resDoc._id,
+            userId: user._id,
+            email: user.email,    
+            date: startDate.toLocaleDateString(),
+            name: `${user.givenName} ${user.lastName}`, 
+            laboratory: resDoc.laboratory?.name || "Unknown Lab",
+            slot: slotData.slot?.name || "Unknown Slot",
+            timeStart: startDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
+            timeEnd: endDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
+          });
+        });
+      });
+
+      setRealReservations(formattedData);
+
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+      alert("Network error. Could not connect to the server.");
+    }
+  };
+
+  const handleEditClick = (id: string) => { 
+    const reservationToEdit = realReservations.find(res => res.id === id);
+    navigate('/edit-board', { state: { targetReservation: reservationToEdit } });
+  };
 
   return (
     <>
       <div className="pageContainer">
-        <Board title="Edit Reservations">
-            <div className="descrption">
-                <p>Click on a previous reservation you want to edit.</p>
+        <Board title="Edit My Reservations">
+            <div className="description" style={{ marginBottom: '20px' }}>
+                <p>Click "Edit" to modify your schedule, or "Cancel" to permanently delete a reservation.</p>
             </div>
-            {/*change the conditions here para lumabas yung reservations ng curr user*/}
+
           <div className="entries">
-            <ReservationCard type={"student"} entry="Your Previous Reservations" content={DUMMY_RESERVATIONS} /> 
+            <ReservationCard 
+                type={"student"}
+                entry="Your Active Reservations" 
+                content={realReservations}
+                onEdit={handleEditClick}
+            /> 
           </div>
         </Board>
       </div>
@@ -77,4 +96,4 @@ const CreateReservation: React.FC = () => {
   );
 };
 
-export default CreateReservation;
+export default EditReservation;
