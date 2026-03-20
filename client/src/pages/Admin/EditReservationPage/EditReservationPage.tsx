@@ -57,8 +57,8 @@ const EditReservation: React.FC = () => {
             name: `${user.givenName} ${user.lastName}`, 
             laboratory: resDoc.laboratory?.name || "Unknown Lab",
             slot: slotData.slot?.name || "Unknown Slot",
-            timeStart: startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            timeEnd: endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timeStart: startDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
+            timeEnd: endDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
           });
         });
       });
