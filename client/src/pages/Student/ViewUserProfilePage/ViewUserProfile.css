@@ -1,0 +1,242 @@
+.profile-page {
+    background-color: #3e632e;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.banner-container {
+    height: 45vh;
+    width: 100%;
+    background-image: url(../../../assets/yellow_cover.jpg);
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.layout {
+    max-width: 1100px;
+    margin: -150px auto 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 5;
+}
+
+.grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.avatar {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 10px solid #3e632e; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.details {
+    margin-top: 160px;
+    color: white;
+}
+
+.label {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.8rem;
+    display: block;
+    opacity: 0.9;
+}
+
+.name {
+    font-family: 'League Spartan', sans-serif;
+    font-size: 5.5rem;
+    font-weight: 800;
+    line-height: 0.9;
+    margin: 10px 0;
+}
+
+.description {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-btn {
+    background-color: #e0eadd;
+    color: #3e632e;
+    border: none;
+    padding: 12px 0;
+    width: 100%;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.action-btn-delete {
+    background-color: #ff4d4d;
+    color: #e0eadd;
+    border: none;
+    padding: 12px 0;
+    width: 100%;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+
+.action-btn:hover {
+    background-color: #ffffff;
+}
+
+.reservations {
+    margin: 2.4rem 0 0 0;
+    padding: 0.5rem 2rem;
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.1);
+    background-color: #557C45;
+    border-radius: 0.7rem;
+}
+
+.reservations h1 {
+    text-align: center;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    padding: 1.2rem 0;
+}
+
+.header {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.entry-label {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.reservationSlots {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+}
+
+.reservationSlot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.pill {
+  background-color: #E2E8DC;
+  color: #385E33;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 0.35rem 0.7rem 0.35rem 0.35rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  color: #333;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group input,
+.input-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  color: black;
+  background-color: white;
+}
+
+.input-group textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.save-btn, .cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-btn {
+  background-color: #008000;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.save-btn:hover { background-color: #006400; }
+.cancel-btn:hover { background-color: #ccc; }

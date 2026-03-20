@@ -37,7 +37,7 @@ export async function getUserById(req: Request, res: Response) {
     }
 }
 
-export async function getUserByName(req: Request, res: Response) {
+export async function getUsersByName(req: Request, res: Response) {
     try {
         const search = req.query.search as string;
         const user = await User.find({ 
@@ -61,11 +61,13 @@ export async function getUserByName(req: Request, res: Response) {
 
 export async function getUserReservations(req: Request, res: Response) {
     try {
-        const user = req.params.id;
+        const filters = req.body || {}
+        const id = req.params.id;
 
-        const reservations = await Reservation.find({
-            user: user
-        }).populate('user', 'givenName lastName username')
+        const body = {user: id, ...filters}
+        
+        const reservations = await Reservation.find(body)
+            .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
             .populate('reservedSlots.slot', 'name');
 
@@ -123,10 +125,10 @@ export async function deleteUser(req: Request, res: Response) {
     }
 }
 
-export async function getUserByEmail(req: Request, res: Response) {
+export async function getUserByUsername(req: Request, res: Response) {
     try {
-        const email = req.params.email;
-        const user = await User.findOne({ email: email });
+        const username = req.params.user;
+        const user = await User.findOne({ username: username });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });

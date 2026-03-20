@@ -12,6 +12,7 @@ const ViewSlots = () => {
     
     const [reservedSlots, setReservedSlots] = useState<string[]>([]);
     const [reservedNames, setReservedNames] = useState<Record<string, string>>({});
+    const [reservedUserNames, setReservedUserNames] = useState<Record<string, string>>({});
     const [error, setError] = useState("");
 
     const handleViewSlots = async () => {
@@ -41,12 +42,16 @@ const ViewSlots = () => {
                 const takenSlots = reservations.map((res: any) => res.slot); 
 
                 const namesDictionary: Record<string, string> = {};
+                const userNamesDictionary: Record<string, string> = {};
+
                 reservations.forEach((res: any) => {
                     namesDictionary[res.slot] = res.reserverName;
+                    userNamesDictionary[res.slot] = res.reserverUserName
                 });
 
                 setReservedSlots(takenSlots);
                 setReservedNames(namesDictionary); 
+                setReservedUserNames(userNamesDictionary);
             } else {
                 setError("No reservations found for this time.");
                 setReservedSlots([]);
@@ -63,7 +68,10 @@ const ViewSlots = () => {
     };
 
     const getSlotName = (deskId: string) => {
-        return reservedNames[deskId];
+        return {
+            name: reservedNames[deskId],
+            username: reservedUserNames[deskId]
+        };
     };
 
     return (
