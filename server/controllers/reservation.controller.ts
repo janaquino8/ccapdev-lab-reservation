@@ -51,7 +51,8 @@ export async function getFilteredReservations(req: Request, res: Response) {
 
                 return { 
                     slot: rs.slot.name,
-                    reserverName: res.isAnonymous ? "Anonymous" : `${firstName} ${lastName}`
+                    reserverName: res.isAnonymous ? "Anonymous" : `${firstName} ${lastName}`,
+                    reserverUserName: res.isAnonymous ? "" : populatedUser?.username,
                 };
             })
         );

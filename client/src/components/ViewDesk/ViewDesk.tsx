@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import ViewSlot from '../ViewSlot/ViewSlot.tsx';
 import styles from '../Desk/Desk.module.css';
 
+interface UserData {
+  name: string,
+  username: string
+}
+
 interface SlotData {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
-  reservedBy?: string; 
+  reservedBy: UserData
 }
 
 interface ViewDeskProps {

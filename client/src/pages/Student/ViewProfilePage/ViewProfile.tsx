@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ViewProfile.css";
 import blankPicture from "../../../assets/blank-dp.png";
-import ReservationCard from "../../../components/ReservationCard/ReservationCard";
 
 interface UserProfile {
   _id: string;
@@ -49,13 +48,14 @@ const ViewProfile: React.FC = () => {
 
   const fetchUserReservations = async () => {
     if (!user) {
-      return setError("User does not exist.");
+      return;
     }
 
     try {
       const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
-          method: 'GET', 
+          method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
       });
 
       if (response.ok) {
@@ -156,30 +156,34 @@ const ViewProfile: React.FC = () => {
 
         <div className="reservations">
           <h1>{user.givenName}'s Current Reservations</h1>
-          {reservations.map((item, index) => (
-            <div key={index}>
-              <div className="header">
-                <h2 className="entry-label">
-                  {`${index + 1}. ${item.laboratory} | ${new Date(item.reservedSlots[0].timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
-                </h2>
-              </div>
-              
-              <div className="reservationSlots">
-                {item.reservedSlots.map((item, index2) => (
-                  <div className="reservationSlot">
-                    <div key={index2} className="pill">
-                      {item.slot}
+          {reservations.length === 0 ? (
+            <p>You have not made a reservation. Book now!</p>
+          ) : (
+            reservations.map((item, index) => (
+              <div key={index}>
+                <div className="header">
+                  <h2 className="entry-label">
+                    {`${index + 1}. ${item.laboratory} | ${new Date(item.reservedSlots[0].timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                  </h2>
+                </div>
+                
+                <div className="reservationSlots">
+                  {item.reservedSlots.map((slotItem, index2) => (
+                    <div className="reservationSlot" key={index2}>
+                      <div className="pill">
+                        {slotItem.slot}
+                      </div>
+                      <p>
+                        {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                        &nbsp;-&nbsp;
+                        {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                      </p>
                     </div>
-                    <p>
-                      {`${new Date(item.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
-                      &nbsp;-&nbsp;
-                      {`${new Date(item.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 

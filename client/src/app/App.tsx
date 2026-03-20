@@ -14,6 +14,7 @@ import AdminCreateReservationPage from '../pages/Admin/CreateReservationPage/Cre
 import AdminEditReservationPage from '../pages/Admin/EditReservationPage/EditReservationPage.tsx';
 import DeleteReservation from '../pages/Admin/DeleteReservationPage/DeleteReservationPage.tsx';
 import ViewProfile from '../pages/Student/ViewProfilePage/ViewProfile.tsx';
+import ViewUserProfile from '../pages/Student/ViewUserProfilePage/ViewUserProfile.tsx';
 import ProfileNavbar from '../components/Navbar/profilenavbar.tsx';
 import Previous from '../components/HomeTabs/Previous.tsx';
 import SlotReserve from '../pages/Student/SlotReserve/SlotReservePage.tsx'
@@ -74,11 +75,11 @@ function App() {
           </div>
         } />
 
-        <Route path="/profile/:id" element={
+        <Route path="/profile/:username" element={
           <div className="mainlayout">
             <Navbar />
             <div className="contentArea">
-              <ViewProfile />
+              <ViewUserProfile />
             </div> 
           </div>
         } />
