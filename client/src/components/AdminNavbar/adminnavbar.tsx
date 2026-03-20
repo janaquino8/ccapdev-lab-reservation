@@ -11,8 +11,7 @@ const AdminNavbar = () => {
   const navLinks = [
     { name: 'Home', href: '/admin/home' },
     { name: 'Create Reservation', href: '/admin/create' },
-    { name: 'Edit Reservation', href: '/admin/edit' },
-    { name: 'Delete Reservation', href: '/admin/delete' },
+    { name: 'Edit Reservations', href: '/admin/edit' },
   ];
 
   const handleSignOut = () => {

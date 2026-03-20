@@ -123,16 +123,6 @@ function App() {
           </div>
         } />
 
-        <Route path="/admin/delete" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <DeleteReservation />
-            </div>
-          </div>
-
-        } />
-
         <Route path="/admin/reserve" element={
           <div className="mainlayout">
             <AdminNavbar />
