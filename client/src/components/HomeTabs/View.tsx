@@ -17,9 +17,9 @@ const View = () => {
             <strong>DLSU Comp. Labs</strong> have three laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“View Slots”</strong> on the desired computer laboratory.
         </span>
       </p>
-      <RoomBar roomName="Gokongwei Room 307A" onReserve={() => handleView("307A")} buttonText="View Laboratory" />
-      <RoomBar roomName="Gokongwei Room 307B" onReserve={() => handleView("307B")} buttonText="View Laboratory"/>
-      <RoomBar roomName="Gokongwei Room 404A" onReserve={() => handleView("404A")} buttonText="View Laboratory"/>
+      <RoomBar roomName="Gokongwei Room 307A" onReserve={() => handleView("Gokongwei 307A")} buttonText="View Laboratory" />
+      <RoomBar roomName="Gokongwei Room 307B" onReserve={() => handleView("Gokongwei 307B")} buttonText="View Laboratory"/>
+      <RoomBar roomName="Gokongwei Room 404A" onReserve={() => handleView("Gokongwei 404A")} buttonText="View Laboratory"/>
     </div>
   );
 };

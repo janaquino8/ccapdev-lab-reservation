@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom'
 import ViewDesk from '../../../components/ViewDesk/ViewDesk.tsx';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
@@ -6,7 +7,9 @@ import dlsuLABS from '../../../assets/dlsuLABS.png';
 import './ViewSlotsPage.css';
 
 const ViewSlots = () => {
-    const [selectedLab, setSelectedLab] = useState("Gokongwei 307A");
+    const location = useLocation();
+
+    const [selectedLab, setSelectedLab] = useState(location.state?.laboratory || "Gokongwei 307A");
     const [selectedDate, setSelectedDate] = useState(""); 
     const [selectedTime, setSelectedTime] = useState("07:30 AM - 08:00 AM");
     
