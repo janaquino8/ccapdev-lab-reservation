@@ -122,6 +122,22 @@ export async function getAllReservations(req: Request, res: Response) {
     }
 }
 
+export async function getAllActiveReservations(req: Request, res: Response) {
+    try {
+        const reservations = await Reservation.find({
+            status: "active"
+        })
+            .populate('user', 'givenName lastName username')
+            .populate('laboratory', 'name')
+            .populate('reservedSlots.slot', 'name'); 
+
+        res.status(200).send(reservations);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({error: err.message});
+    }
+}
+
 export async function getReservationById(req: Request, res: Response) {
     try {
         const id = req.params.id;

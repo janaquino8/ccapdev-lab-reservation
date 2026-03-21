@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import type { ChangeEvent } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Desk from '../../../components/Desk/Desk.tsx';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
 import styles from '../../../components/Board/Board.module.css';
 import "./CreateReservationPage.css";
 
-const CreateReservation: React.FC = () => {
-  const [selectedLab, setSelectedLab] = useState("Gokongwei 307A");
+interface FinalReservedSlots {
+  slot: string,
+  timeStart: string,
+  timeEnd: string
+}
+
+interface SelectedSlotData {
+  slot: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+}
+
+interface CreateReservationProps {
+  labProps?: string
+}
+
+const CreateReservation: React.FC<CreateReservationProps> = ({ labProps = "Gokongwei 307A" }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [selectedLab, setSelectedLab] = useState(location.state?.laboratory || labProps || "Gokongwei 307A");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("07:30 AM - 08:00 AM");
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [reservedSlots, setReservedSlots] = useState<string[]>([]);
+  const [selectedSlots, setSelectedSlots] = useState<SelectedSlotData[]>(location.state?.selectedSlots || []);
+  const [isAnonymousToggle, setIsAnonymousToggle] = useState(false);
   const [error, setError] = useState("");
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -71,10 +92,85 @@ const CreateReservation: React.FC = () => {
     navigate('/reserve', { 
       state: { 
         laboratory: selectedLab, 
-        slot: deskId 
+        slot: deskId,
+        selectedSlots: selectedSlots 
       } 
     });
   };
+
+  const handleLabChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedLab(e.target.value);
+    setSelectedSlots([]);
+  }
+
+  const convertToUTC = (dateStr: string, timeStr: string) => {
+    let [hours, minAmPm] = timeStr.split(':');
+    let minutes = minAmPm.substring(0, 2);
+    let modifier = minAmPm.substring(2); 
+
+    let hoursInt = parseInt(hours, 10);
+    if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
+    if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
+
+    const paddedHours = hoursInt.toString().padStart(2, '0');
+    return new Date(`${dateStr}T${paddedHours}:${minutes}:00.000Z`);
+  };
+
+  const handleReservation = async () => {
+    const storedUser = localStorage.getItem('user'); 
+      if (!storedUser) {
+        alert("You must be logged in to make a reservation!");
+        return;
+      }
+
+      let currentUserId = "";
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        currentUserId = parsedUser._id || parsedUser.id;
+      } catch (e) {
+        currentUserId = storedUser; 
+      }
+
+      if (selectedSlots.length === 0) {
+        alert("Select a slot first.");
+        return;
+      }
+
+      const confirmBooking = window.confirm(`Create reservation ${isAnonymousToggle ? ' anonymously' : ''}?`);
+      if (!confirmBooking) return;
+
+      const finalSlots: FinalReservedSlots[] = selectedSlots.map((item) => ({
+        slot: item.slot,
+        timeStart: convertToUTC(item.date, item.timeStart).toISOString(),
+        timeEnd: convertToUTC(item.date, item.timeEnd).toISOString()
+      }))
+
+      try {
+        const response = await fetch('http://localhost:3000/reservations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user: currentUserId, 
+            laboratory: selectedLab,
+            isReservedByAdmin: false,
+            isAnonymous: isAnonymousToggle, 
+            status: 'active',
+            reservedSlots: finalSlots
+          })
+        });
+
+        if (response.ok) {
+          alert("🎉 Reservation successfully created!");
+          navigate('/viewprofile');
+        } else {
+          const errorData = await response.json();
+          alert(`Failed to reserve: ${errorData.error || errorData.message}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Network error. Please try again.");
+      }
+  }
 
   return (
     <>
@@ -88,7 +184,7 @@ const CreateReservation: React.FC = () => {
                   <h3 style={{ marginTop: 0 }}>Select Laboratory</h3>
                   <select 
                     value={selectedLab}
-                    onChange={(e) => setSelectedLab(e.target.value)}
+                    onChange={handleLabChange}
                     style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
                   >
                     <option value="Gokongwei 307A">Gokongwei 307A</option>
@@ -96,6 +192,16 @@ const CreateReservation: React.FC = () => {
                     <option value="Gokongwei 404A">Gokongwei 404A</option>
                   </select>
                 </div>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#fff', marginBottom: '1rem'}}>
+                  <input
+                    type="checkbox"
+                    checked={isAnonymousToggle}
+                    onChange={(e) => setIsAnonymousToggle(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  Reserve Anonymously
+                </label>
 
                 <div className="howToBox">
                   <h2>How to Reserve?</h2>
@@ -109,97 +215,113 @@ const CreateReservation: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="remindersBox">
-                  <h3>Reminders</h3>
-                  <ul>
-                    <li>One reservation per day. Creating another reservation for a different lab on the same date.</li>
-                  </ul>
+                <h3>Current Selections:</h3>
+                <div className="currentSelectionSlots">
+                  {selectedSlots.length === 0 ? (
+                    <p>
+                      No seats selected yet. Click a desk to start!
+                    </p>
+                  ) : (
+                    selectedSlots.map((item: any, index: number) => (
+                      <div key={index}>
+                        <p>
+                          {index + 1}. Slot {item.slot} | {item.date} | {item.timeStart} - {item.timeEnd}
+                        </p>
+                      </div>
+                    ))
+                  )}
                 </div>
 
                 <div className="currentTimeBox">
                   <h4>Current Time:</h4>
                   <p className="timeDisplay">{currentTime}</p>
                 </div>
-
+                
                 <button className="otherLabsBtn"><a href="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Back to Home</a></button>
               </section>
 
               <div className="deskGridArea"> <br />
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'A1', status: getSlotStatus('A1') }, { id: 'A2', status: getSlotStatus('A2') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'A3', status: getSlotStatus('A3') }, { id: 'A4', status: getSlotStatus('A4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'A1', status: getSlotStatus('A1') }, { id: 'A2', status: getSlotStatus('A2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'A3', status: getSlotStatus('A3') }, { id: 'A4', status: getSlotStatus('A4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'A5', status: getSlotStatus('A5') }, { id: 'A6', status: getSlotStatus('A6') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'A7', status: getSlotStatus('A7') }, { id: 'A8', status: getSlotStatus('A8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'A5', status: getSlotStatus('A5') }, { id: 'A6', status: getSlotStatus('A6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'A7', status: getSlotStatus('A7') }, { id: 'A8', status: getSlotStatus('A8') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'B1', status: getSlotStatus('B1') }, { id: 'B2', status: getSlotStatus('B2') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'B3', status: getSlotStatus('B3') }, { id: 'B4', status: getSlotStatus('B4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'B1', status: getSlotStatus('B1') }, { id: 'B2', status: getSlotStatus('B2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'B3', status: getSlotStatus('B3') }, { id: 'B4', status: getSlotStatus('B4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'B5', status: getSlotStatus('B5') }, { id: 'B6', status: getSlotStatus('B6') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'B7', status: getSlotStatus('B7') }, { id: 'B8', status: getSlotStatus('B8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'B5', status: getSlotStatus('B5') }, { id: 'B6', status: getSlotStatus('B6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'B7', status: getSlotStatus('B7') }, { id: 'B8', status: getSlotStatus('B8') }]} />
                   </div>
                 </div>
 
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'C1', status: getSlotStatus('C1') }, { id: 'C2', status: getSlotStatus('C2') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'C3', status: getSlotStatus('C3') }, { id: 'C4', status: getSlotStatus('C4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'C1', status: getSlotStatus('C1') }, { id: 'C2', status: getSlotStatus('C2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'C3', status: getSlotStatus('C3') }, { id: 'C4', status: getSlotStatus('C4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'C5', status: getSlotStatus('C5') }, { id: 'C6', status: getSlotStatus('C6') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'C7', status: getSlotStatus('C7') }, { id: 'C8', status: getSlotStatus('C8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'C5', status: getSlotStatus('C5') }, { id: 'C6', status: getSlotStatus('C6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'C7', status: getSlotStatus('C7') }, { id: 'C8', status: getSlotStatus('C8') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'D1', status: getSlotStatus('D1') }, { id: 'D2', status: getSlotStatus('D2') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'D3', status: getSlotStatus('D3') }, { id: 'D4', status: getSlotStatus('D4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'D1', status: getSlotStatus('D1') }, { id: 'D2', status: getSlotStatus('D2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'D3', status: getSlotStatus('D3') }, { id: 'D4', status: getSlotStatus('D4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'D5', status: getSlotStatus('D5') }, { id: 'D6', status: getSlotStatus('D6') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'D7', status: getSlotStatus('D7') }, { id: 'D8', status: getSlotStatus('D8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'D5', status: getSlotStatus('D5') }, { id: 'D6', status: getSlotStatus('D6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'D7', status: getSlotStatus('D7') }, { id: 'D8', status: getSlotStatus('D8') }]} />
                   </div>
                 </div>
 
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'E1', status: getSlotStatus('E1') }, { id: 'E2', status: getSlotStatus('E2') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'E3', status: getSlotStatus('E3') }, { id: 'E4', status: getSlotStatus('E4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'E1', status: getSlotStatus('E1') }, { id: 'E2', status: getSlotStatus('E2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'E3', status: getSlotStatus('E3') }, { id: 'E4', status: getSlotStatus('E4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'E5', status: getSlotStatus('E5') }, { id: 'E6', status: getSlotStatus('E6') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'E7', status: getSlotStatus('E7') }, { id: 'E8', status: getSlotStatus('E8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'E5', status: getSlotStatus('E5') }, { id: 'E6', status: getSlotStatus('E6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'E7', status: getSlotStatus('E7') }, { id: 'E8', status: getSlotStatus('E8') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'F1', status: getSlotStatus('F1') }, { id: 'F2', status: getSlotStatus('F2') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'F3', status: getSlotStatus('F3') }, { id: 'F4', status: getSlotStatus('F4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'F1', status: getSlotStatus('F1') }, { id: 'F2', status: getSlotStatus('F2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'F3', status: getSlotStatus('F3') }, { id: 'F4', status: getSlotStatus('F4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'F5', status: getSlotStatus('F5') }, { id: 'F6', status: getSlotStatus('F6') }]} />
-                    <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'F7', status: getSlotStatus('F7') }, { id: 'F8', status: getSlotStatus('F8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'F5', status: getSlotStatus('F5') }, { id: 'F6', status: getSlotStatus('F6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'F7', status: getSlotStatus('F7') }, { id: 'F8', status: getSlotStatus('F8') }]} />
                   </div>
                 </div>
 
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'G1', status: getSlotStatus('G1') }, { id: 'G2', status: getSlotStatus('G2') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'G3', status: getSlotStatus('G3') }, { id: 'G4', status: getSlotStatus('G4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'G1', status: getSlotStatus('G1') }, { id: 'G2', status: getSlotStatus('G2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'G3', status: getSlotStatus('G3') }, { id: 'G4', status: getSlotStatus('G4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'G5', status: getSlotStatus('G5') }, { id: 'G6', status: getSlotStatus('G6') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'G7', status: getSlotStatus('G7') }, { id: 'G8', status: getSlotStatus('G8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'G5', status: getSlotStatus('G5') }, { id: 'G6', status: getSlotStatus('G6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'G7', status: getSlotStatus('G7') }, { id: 'G8', status: getSlotStatus('G8') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'H1', status: getSlotStatus('H1') }, { id: 'H2', status: getSlotStatus('H2') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'H3', status: getSlotStatus('H3') }, { id: 'H4', status: getSlotStatus('H4') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'H1', status: getSlotStatus('H1') }, { id: 'H2', status: getSlotStatus('H2') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'H3', status: getSlotStatus('H3') }, { id: 'H4', status: getSlotStatus('H4') }]} />
                   </div>
                   <div className={styles.deskPair}>
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'H5', status: getSlotStatus('H5') }, { id: 'H6', status: getSlotStatus('H6') }]} />
-                    <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'H7', status: getSlotStatus('H7') }, { id: 'H8', status: getSlotStatus('H8') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'H5', status: getSlotStatus('H5') }, { id: 'H6', status: getSlotStatus('H6') }]} />
+                    <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'H7', status: getSlotStatus('H7') }, { id: 'H8', status: getSlotStatus('H8') }]} />
                   </div>
                 </div>
+                <button
+                  className="bookSlotsButton"
+                  onClick={handleReservation}
+                >
+                  Book Slots
+                </button>
               </div>
             </div>
           </Board>

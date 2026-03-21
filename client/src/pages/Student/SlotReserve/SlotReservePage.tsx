@@ -3,7 +3,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
 import "./SlotReservePage.css";
 
-const SlotAvailability: React.FC = () => {
+// NEW: Added an interface so the parent component can pass an 'onSelectionSubmit' function
+interface SelectedSlotData {
+  slot: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+}
+
+interface SlotAvailabilityProps {
+  laboratoryProp?: string;
+  slotProp?: string;
+  onSelectionSubmit?: (selectedSlots: SelectedSlotData[]) => void;
+}
+
+const SlotAvailability: React.FC<SlotAvailabilityProps> = ({ laboratoryProp, slotProp, onSelectionSubmit }) => {
   const timeSlots = [
     "7:30am - 8:00am", "8:00am - 8:30am", "8:30am - 9:00am", "9:00am - 9:30am",
     "9:30am - 10:00am", "10:00am - 10:30am", "10:30am - 11:00am", "11:00am - 11:30am",
@@ -14,32 +28,59 @@ const SlotAvailability: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { laboratory, slot } = location.state || { laboratory: "Select a Lab", slot: "None" };
+  
+  const laboratory = laboratoryProp || location.state?.laboratory || "Select a Lab";
+  const slot = slotProp || location.state?.slot || "None";
+
+  const masterSlots: SelectedSlotData[] = location.state?.selectedSlots || [];
+
+  const otherDesksSlots = masterSlots.filter(item => item.slot !== slot);
+  const currentDeskSlots = masterSlots.filter(item => item.slot === slot);
+
+  const initialSelectedSet = new Set<string>(
+    currentDeskSlots.map(item => `${item.date}_${item.timeStart} - ${item.timeEnd}`)
+  );
 
   const [scheduleDays, setScheduleDays] = useState<{dayName: string, dateString: string}[]>([]);
   const [reservedCells, setReservedCells] = useState<Set<string>>(new Set());
   
-  const [isAnonymousToggle, setIsAnonymousToggle] = useState(false);
+  const [selectedCells, setSelectedCells] = useState<Set<string>>(initialSelectedSet);
+  
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  const formatTime = (isoStr: string) => {
+    const timePart = isoStr.split('T')[1];
+    let hour = parseInt(timePart.substring(0, 2), 10);
+    const minute = timePart.substring(3, 5);
+    const ampm = hour >= 12 ? 'pm' : 'am';
+    hour = hour % 12 || 12;
+    return `${hour}:${minute}${ampm}`;
+  };
+
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`
+  }
 
   useEffect(() => {
     const daysArray = [];
     let daysOffset = 0;
 
+    if (currentTime.getHours() * 60 + currentTime.getMinutes() >= 990) {
+      daysOffset++;
+    }
+
     while (daysArray.length < 7) {
       const d = new Date();
       d.setDate(d.getDate() + daysOffset);
-      
       daysOffset++;
 
-      // exclude sundays
       if (d.getDay() === 0) continue; 
 
       const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      
-      daysArray.push({ dayName, dateString: `${year}-${month}-${day}` });
+      daysArray.push({ dayName, dateString: formatDate(d) });
     }
     setScheduleDays(daysArray);
   }, []);
@@ -47,20 +88,12 @@ const SlotAvailability: React.FC = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('http://localhost:3000/reservations');
+        const res = await fetch('http://localhost:3000/reservations/active');
         if (res.ok) {
           const data = await res.json();
           const taken = new Set<string>();
 
           const formatDBTimeToGridTime = (isoStart: string, isoEnd: string) => {
-            const formatTime = (isoStr: string) => {
-              const timePart = isoStr.split('T')[1];
-              let hour = parseInt(timePart.substring(0, 2), 10);
-              const minute = timePart.substring(3, 5);
-              const ampm = hour >= 12 ? 'pm' : 'am';
-              hour = hour % 12 || 12;
-              return `${hour}:${minute}${ampm}`;
-            };
             return `${formatTime(isoStart)} - ${formatTime(isoEnd)}`;
           };
 
@@ -89,101 +122,100 @@ const SlotAvailability: React.FC = () => {
   }, [laboratory, slot]);
   
   const getCellStatus = (dateString: string, time: string) => {
-    return reservedCells.has(`${dateString}_${time}`) ? "status-reserved" : "status-available";
+    const cellKey = `${dateString}_${time}`;
+    const startTime = time.split(" - ")[0].replace("am", ":AM").replace("pm", ":PM").split(":");
+    const hours = Number(startTime[0]) + ((startTime.includes("PM") && Number(startTime[0]) < 12) ? 12 : 0);
+    const minutes = Number(startTime[1])
+
+    if (formatDate(currentTime) === dateString && (currentTime.getHours() * 60 + currentTime.getMinutes() >= hours * 60 + minutes)) {
+      return "status-unavailable";
+    }
+    if (reservedCells.has(cellKey)) return "status-reserved";
+    if (selectedCells.has(cellKey)) return "status-selected"; // NEW: check if user selected it
+    
+    return "status-available";
   };
 
-  const handleCreateReservation = async (dateString: string, timeString: string) => {
-    if (getCellStatus(dateString, timeString) === "status-reserved") {
+  const handleToggleSelection = (dateString: string, timeString: string) => {
+    const status = getCellStatus(dateString, timeString);
+    
+    if (status === "status-reserved") {
       alert("This slot is already reserved!");
       return;
     }
-
-    const storedUser = localStorage.getItem('user'); 
-    if (!storedUser) {
-      alert("You must be logged in to make a reservation!");
+    if (status === "status-unavailable") {
+      alert("This slot is unavailable.");
       return;
     }
 
-    let currentUserId = "";
-    try {
-      const parsedUser = JSON.parse(storedUser);
-      currentUserId = parsedUser._id || parsedUser.id;
-    } catch (e) {
-      currentUserId = storedUser; 
-    }
-
-    const confirmBooking = window.confirm(`Reserve ${slot} in ${laboratory} on ${dateString} at ${timeString}${isAnonymousToggle ? ' anonymously' : ''}?`);
-    if (!confirmBooking) return;
-
-    const [startStr, endStr] = timeString.split(' - ');
-
-    const convertToUTC = (dateStr: string, timeStr: string) => {
-      let [hours, minAmPm] = timeStr.split(':');
-      let minutes = minAmPm.substring(0, 2);
-      let modifier = minAmPm.substring(2); 
-
-      let hoursInt = parseInt(hours, 10);
-      if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
-      if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
-
-      const paddedHours = hoursInt.toString().padStart(2, '0');
-      return new Date(`${dateStr}T${paddedHours}:${minutes}:00.000Z`);
-    };
-
-    try {
-      const response = await fetch('http://localhost:3000/reservations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user: currentUserId, 
-          laboratory: laboratory,
-          isReservedByAdmin: false,
-          isAnonymous: isAnonymousToggle, 
-          status: 'active',
-          reservedSlots: [
-            {
-              slot: slot,
-              timeStart: convertToUTC(dateString, startStr).toISOString(),
-              timeEnd: convertToUTC(dateString, endStr).toISOString()
-            }
-          ]
-        })
-      });
-
-      if (response.ok) {
-        alert("🎉 Reservation successfully created!");
-        setReservedCells(prev => new Set(prev).add(`${dateString}_${timeString}`));
+    const cellKey = `${dateString}_${timeString}`;
+    setSelectedCells(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cellKey)) {
+        newSet.delete(cellKey); 
       } else {
-        const errorData = await response.json();
-        alert(`Failed to reserve: ${errorData.error || errorData.message}`);
+        newSet.add(cellKey); 
       }
-    } catch (err) {
-      console.error(err);
-      alert("Network error. Please try again.");
+      return newSet;
+    });
+  };
+
+  const handleBacktoSeatSelection = () => {
+    if (onSelectionSubmit) {
+      onSelectionSubmit(masterSlots);
+    } else {
+      navigate('/create', { state: { selectedSlots: masterSlots, laboratory: laboratory } });
+    }
+  }
+
+  // LIFTS STATE
+  const handleConfirmSelection = () => {
+    const newCurrentDeskSlots = Array.from(selectedCells).map(cellKey => {
+      const [date, timeRange] = cellKey.split('_');
+      const [timeStart, timeEnd] = timeRange.split(' - ');
+      return { 
+        slot: slot,
+        date, 
+        timeStart, 
+        timeEnd 
+      };
+    });
+
+    const updatedMasterSlots = [...otherDesksSlots, ...newCurrentDeskSlots];
+
+    if (onSelectionSubmit) {
+      onSelectionSubmit(updatedMasterSlots);
+    } else {
+      navigate('/create', { state: { selectedSlots: updatedMasterSlots, laboratory: laboratory } });
     }
   };
 
   return (
     <div className="pageContainer">
-      <Board title="Create Reservation" room={laboratory} slot={`Slot ${slot}`}>
+      <Board title="Select Timeslots" room={laboratory} slot={`Slot ${slot}`}>
         
         <div className="topControls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
           <button 
-            className="backToSelectionBtn" 
-            onClick={() => navigate('/create')}
+            className="backToSelectionBtn" // just using the style of the back button; not sure where it is
+            onClick={handleBacktoSeatSelection}
           >
             ← Back to Seat Selection
           </button>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#fff' }}>
-            <input 
-              type="checkbox" 
-              checked={isAnonymousToggle} 
-              onChange={(e) => setIsAnonymousToggle(e.target.checked)} 
-              style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-            />
-            Reserve Anonymously
-          </label>
+          <button 
+            className="confirmSelectionBtn"
+            onClick={handleConfirmSelection}
+            style={{ 
+              padding: '10px 20px', 
+              backgroundColor: '#d1dfcd',
+              color: "#2e7d32",
+              border: 'none', 
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Confirm Selected Slots ({selectedCells.size})
+          </button>
         </div>
 
         <div className="timetableContainer">
@@ -200,8 +232,8 @@ const SlotAvailability: React.FC = () => {
               {scheduleDays.map(dayObj => (
                 <tr key={dayObj.dateString}>
                   <td className="sticky-col dayLabel">
-                    <div style={{ color: '#000'}}>{dayObj.dayName}</div>
-                    <div style={{ fontSize: '0.8em', color: '#666' }}>{dayObj.dateString}</div>
+                    <div style={{ fontSize: '1.3em', color: '#2d5a27'}}>{dayObj.dayName}</div>
+                    <div style={{ fontSize: '0.9em', color: '#666' }}>{dayObj.dateString}</div>
                   </td>
                   {timeSlots.map(timeSlot => {
                     const status = getCellStatus(dayObj.dateString, timeSlot);
@@ -209,8 +241,8 @@ const SlotAvailability: React.FC = () => {
                       <td 
                         key={`${dayObj.dateString}_${timeSlot}`}
                         className={`timeCell ${status}`}
-                        style={{ cursor: status === 'status-available' ? 'pointer' : 'not-allowed' }}
-                        onClick={() => handleCreateReservation(dayObj.dateString, timeSlot)}
+                        style={{ cursor: status === 'status-unavailable' || status === 'status-reserved' ? 'not-allowed' : 'pointer' }}
+                        onClick={() => handleToggleSelection(dayObj.dateString, timeSlot)}
                       ></td>
                     );
                   })}
