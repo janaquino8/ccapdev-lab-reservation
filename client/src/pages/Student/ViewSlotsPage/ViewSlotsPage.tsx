@@ -176,6 +176,8 @@ const ViewSlots = () => {
                             value={selectedLab}
                             onChange={(e) => setSelectedLab(e.target.value)}
                         >
+                            <option value="Gokongwei 301">Gokongwei 301</option>
+                            <option value="Gokongwei 302">Gokongwei 302</option>
                             <option value="Gokongwei 307A">Gokongwei 307A</option>
                             <option value="Gokongwei 307B">Gokongwei 307B</option>
                             <option value="Gokongwei 404A">Gokongwei 404A</option>
