@@ -14,12 +14,14 @@ const Create = () => {
     <div>
       <p>
         <span className={styles.description}>
-            <strong>DLSU Comp. Labs</strong> have three laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“Reserve a Slot”</strong> on the desired computer laboratory.
+            <strong>DLSU Comp. Labs</strong> have five laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“Reserve a Slot”</strong> on the desired computer laboratory.
         </span>
       </p>
-      <RoomBar roomName="Gokongwei Room 307A" onReserve={() => handleReserve("307A")} buttonText="Reserve a Slot" />
-      <RoomBar roomName="Gokongwei Room 307B" onReserve={() => handleReserve("307B")} buttonText="Reserve a Slot"/>
-      <RoomBar roomName="Gokongwei Room 404A" onReserve={() => handleReserve("404A")} buttonText="Reserve a Slot"/>
+      <RoomBar roomName="Gokongwei Room 301" onReserve={() => handleReserve("Gokongwei 301")} buttonText="Delete Reservation"/>
+      <RoomBar roomName="Gokongwei Room 302" onReserve={() => handleReserve("Gokongwei 302")} buttonText="Delete Reservation"/>
+      <RoomBar roomName="Gokongwei Room 307A" onReserve={() => handleReserve("Gokongwei 307A")} buttonText="Delete Reservation"/>
+      <RoomBar roomName="Gokongwei Room 307B" onReserve={() => handleReserve("Gokongwei 307B")} buttonText="Delete Reservation"/>
+      <RoomBar roomName="Gokongwei Room 404A" onReserve={() => handleReserve("Gokongwei 404A")} buttonText="Delete Reservation"/>
     </div>
   );
 };

@@ -19,6 +19,7 @@ interface UserSlot {
 
 interface UserReservation {
   laboratory: string;
+  status: string;
   reservedSlots: [UserSlot];
 }
 
@@ -60,9 +61,10 @@ const ViewProfile: React.FC = () => {
 
       if (response.ok) {
           const userReservations = await response.json();
-          
+          console.log(userReservations)
           const finalReservations = userReservations.map((reservation: any) => ({
             laboratory: reservation.laboratory.name,
+            status: reservation.status,
             reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
               slot: slotData.slot.name,
               timeStart: slotData.timeStart,
@@ -163,7 +165,7 @@ const ViewProfile: React.FC = () => {
               <div key={index}>
                 <div className="header">
                   <h2 className="entry-label">
-                    {`${index + 1}. ${item.laboratory} | ${new Date(item.reservedSlots[0].timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                    {`${index + 1}. ${item.laboratory} | ${item.status.toUpperCase()}`}
                   </h2>
                 </div>
                 
@@ -174,6 +176,8 @@ const ViewProfile: React.FC = () => {
                         {slotItem.slot}
                       </div>
                       <p>
+                        {`${new Date(slotItem.timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                        &nbsp; | &nbsp; 
                         {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
                         &nbsp;-&nbsp;
                         {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
