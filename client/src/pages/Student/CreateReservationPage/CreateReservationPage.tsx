@@ -221,7 +221,7 @@ const CreateReservation: React.FC<CreateReservationProps> = ({ labProps = "Gokon
                 <div className="currentSelectionSlots">
                   {selectedSlots.length === 0 ? (
                     <p>
-                      No seats selected yet. Click a desk to start!
+                      No seats selected yet. Click a slot to start!
                     </p>
                   ) : (
                     selectedSlots.map((item: any, index: number) => (
