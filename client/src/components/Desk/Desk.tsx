@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import Slot from './../Slot/Slot';
 import styles from './Desk.module.css';
 
+interface SelectedSlotData {
+  slot: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+}
+
 interface SlotData {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
@@ -10,10 +17,10 @@ interface SlotData {
 interface DeskProps {
   topSlots?: SlotData[];   
   bottomSlots?: SlotData[];
-  onSlotClick: (id: string) => void;
+  onSelectionSubmit: (deskId: string) => void;
 }
 
-const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots, onSlotClick }) => {
+const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots, onSelectionSubmit }) => {
   const [openSlotId, setOpenSlotId] = useState<string | null>(null);
 
   const handleToggle = (id: string) => {
@@ -31,7 +38,7 @@ const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots, onSlotClick }) => {
               status={slot.status} 
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
-              onSlotClick={onSlotClick}
+              onSelectionSubmit={onSelectionSubmit}
             />
           ))}
         </div>
@@ -48,7 +55,7 @@ const Desk: React.FC<DeskProps> = ({ topSlots, bottomSlots, onSlotClick }) => {
               status={slot.status} 
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
-              onSlotClick={onSlotClick}
+              onSelectionSubmit={onSelectionSubmit}
             />
           ))}
         </div>

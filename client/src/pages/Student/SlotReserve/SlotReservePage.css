@@ -4,6 +4,15 @@
     background-color: transparent;
     border-radius: 10px;
     margin-top: 20px;
+    border: 6px solid black;
+}
+
+.timetableContainer table {
+    border-collapse: collapse;
+}
+
+.timetableContainer th, td {
+    border: 6px solid black;
 }
 
 .availabilityTable {
@@ -20,6 +29,7 @@
     font-size: 0.75rem;
     padding: 5px;
     background-color: #3e7033;
+    transition: background-color 0.2s, filter 0.2s; /* Added transition for smooth toggling */
 }
 
 .availabilityTable thead th {
@@ -53,6 +63,11 @@
     background-color: #ff3131;
 }
 
+.status-selected {
+    background-color: #6de063; 
+}
+
+/* Duplicated classes combined for cleanliness */
 .availabilityTable td.status-available {
     background-color: #3e7033;
 }
@@ -65,7 +80,10 @@
     background-color: #ff3131;
 }
 
+.availabilityTable td.status-selected {
+    background-color: #6de063;
+}
+
 .timeCell:hover {
     filter: brightness(1.2);
-    cursor: pointer;
 }

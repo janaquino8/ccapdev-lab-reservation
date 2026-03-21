@@ -155,7 +155,7 @@ const ViewProfile: React.FC = () => {
         </div>
 
         <div className="reservations">
-          <h1>{user.givenName}'s Current Reservations</h1>
+          <h1>Reservation History</h1>
           {reservations.length === 0 ? (
             <p>You have not made a reservation. Book now!</p>
           ) : (

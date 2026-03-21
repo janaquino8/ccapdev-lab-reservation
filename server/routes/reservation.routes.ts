@@ -6,6 +6,7 @@ const router = Router();
 // Routes for the /reservations endpoint
 router.post('/', ReservationController.createReservation);
 router.get('/', ReservationController.getAllReservations);
+router.get('/active', ReservationController.getAllActiveReservations);
 
 // Routes for the /reservations/:id endpoint
 router.get('/:id', ReservationController.getReservationById);

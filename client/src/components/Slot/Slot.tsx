@@ -1,36 +1,33 @@
 import React from 'react';
 import styles from './Slot.module.css';
 
+interface SelectedSlotData {
+  slot: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+}
+
 interface SlotProps {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
   /* Available: Green, Reserved: Yellow, Unavailable: Red */
   isOpen: boolean;
   onToggle: (id: string) => void;
-  onSlotClick: (id: string) => void;
+  onSelectionSubmit: (deskId: string) => void;
 }
 
-const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, onSlotClick }) => {
+const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, onSelectionSubmit }) => {
   const statusClass = styles[status];
 
   return (
     <div className={styles.slotContainer}>
       <button
         className={`${styles.slotButton} ${statusClass}`}
-        onClick={() => onToggle(id)}
+        onClick={() => onSelectionSubmit(id)}
       >
         {id}
       </button>
-
-      {isOpen && (
-        <div className={styles.dropdown} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.dropdownItem} onClick={() => onSlotClick(id)}>
-            Reserve {id}
-          </div>
-          <div className={styles.dropdownItem}>View Specs</div>
-          <div className={styles.dropdownItem} onClick={() => onToggle('')}>Close</div>
-        </div>
-      )}
     </div>
   );
 };
