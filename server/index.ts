@@ -16,7 +16,14 @@ const app = express();
 const port = process.env.PORT || 3000; 
 const host = process.env.DB_HOST || 'localhost:';
 
-app.use(cors())
+const frontendURL = 'http://localhost:5173';
+
+app.use(cors({
+    origin: frontendURL, 
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 app.use(express.json({ limit : '10mb'}));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
