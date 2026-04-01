@@ -187,6 +187,8 @@ const CreateReservation: React.FC<CreateReservationProps> = ({ labProps = "Gokon
                     onChange={handleLabChange}
                     style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
                   >
+                    <option value="Gokongwei 301">Gokongwei 301</option>
+                    <option value="Gokongwei 302">Gokongwei 302</option>
                     <option value="Gokongwei 307A">Gokongwei 307A</option>
                     <option value="Gokongwei 307B">Gokongwei 307B</option>
                     <option value="Gokongwei 404A">Gokongwei 404A</option>
@@ -219,7 +221,7 @@ const CreateReservation: React.FC<CreateReservationProps> = ({ labProps = "Gokon
                 <div className="currentSelectionSlots">
                   {selectedSlots.length === 0 ? (
                     <p>
-                      No seats selected yet. Click a desk to start!
+                      No seats selected yet. Click a slot to start!
                     </p>
                   ) : (
                     selectedSlots.map((item: any, index: number) => (

@@ -43,12 +43,6 @@ const HomePage = () => {
                     Edit Reservation
                     </button>
                     <button 
-                    className={activeTab === 'previous' ? 'tabActive' : 'tab'} 
-                    onClick={() => setActiveTab('previous')}
-                    >
-                    Previous Reservations
-                    </button>
-                    <button 
                     className={activeTab === 'view' ? 'tabActive' : 'tab'} 
                     onClick={() => setActiveTab('view')}
                     >

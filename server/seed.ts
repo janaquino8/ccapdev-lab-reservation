@@ -18,7 +18,7 @@ async function seedDatabase() {
 
         const myUserId = new mongoose.Types.ObjectId("69b845426fa0c10654dbbcbf"); 
         const sections = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        const labNames = ["Gokongwei 307A", "Gokongwei 307B", "Gokongwei 404A"];
+        const labNames = ["Gokongwei 301", "Gokongwei 302", "Gokongwei 307A", "Gokongwei 307B", "Gokongwei 404A"];
 
         let gokongwei307A_id = null;
         let slotA1_id = null;
