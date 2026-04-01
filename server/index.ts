@@ -1,13 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/auth.routes';
 import laboratoryRouter from './routes/laboratory.routes';
 import reservationRouter from './routes/reservation.routes';
 import slotRouter from './routes/slot.routes';
 import userRouter from './routes/user.routes';
-import connect_db from './config/db.ts'
+import connect_db from './config/db.ts';
+
 
 dotenv.config();
 const app = express();
@@ -16,6 +18,7 @@ const host = process.env.DB_HOST || 'localhost:';
 
 app.use(cors())
 app.use(express.json({ limit : '10mb'}));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 connect_db();
