@@ -3,12 +3,14 @@ import User from "../models/User.ts";
 import { Request, Response } from "express";
 import axios from "axios";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 export async function login(req: Request, res: Response) {
     try {
         const {
             email,
-            password
+            password,
+            rememberMe
         } = req.body;
 
         // can be fixed later
@@ -37,7 +39,24 @@ export async function login(req: Request, res: Response) {
             return res.status(404).send({ error: "User profile missing from database." });
         }
 
+        const secretKey = process.env.JWT_SECRET || "super_secret_key_change_me";
+        
+        const tokenExpiration = rememberMe ? '21d' : '1d'; 
+        
+        const token = jwt.sign({ id: userProfile._id }, secretKey, { 
+            expiresIn: tokenExpiration 
+        });
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict' as const,
+            maxAge: rememberMe ? 21 * 24 * 60 * 60 * 1000 : undefined 
+        };
+
+        res.cookie('jwt', token, cookieOptions);
         res.status(200).send(userProfile);
+
     } catch (err: any) {
         console.error(err);
         res.status(500).send({ error: "Error on authentication: " + err.message });
@@ -93,4 +112,12 @@ export async function register(req: Request, res: Response) {
 
         res.status(500).send({error: "Error on authentication: " + err.message});
     }
+}
+
+export async function logout(req: Request, res: Response) {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0) 
+    });
+    res.status(200).json({ message: "Successfully logged out." });
 }

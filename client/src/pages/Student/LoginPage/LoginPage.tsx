@@ -10,6 +10,7 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
 
     const handleLogin = async () => {
         setErrorMessage('');
@@ -20,18 +21,17 @@ function LoginPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: email, password: password }),
+                credentials: 'include', 
+                body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Login successful! (Status 200)
                 console.log("Logged in user:", data);
                 localStorage.setItem('user', JSON.stringify(data));
                 navigate('/home');
             } else {
-                // Login failed (Status 400, 401, 404)
                 setErrorMessage(data.error || "Login failed.");
             }
         } catch (error) {
@@ -74,7 +74,16 @@ function LoginPage() {
                         />
 
                         <LPButton text="Login" variant="primary" onClick={handleLogin} />
-                        <input type="checkbox" className="remember"/> <span className="rememberme">Remember me</span>
+                        <input 
+                            type="checkbox" 
+                            className="remember" 
+                            id="rememberMe"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                        /> 
+                        <label htmlFor="rememberMe" className="rememberme" style={{ cursor: 'pointer' }}>
+                            Remember me
+                        </label>
 
                         <a href="/register" className="signup">Don't have an account? Sign up.</a>
 
