@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // <-- Added useEffect here!
 import LPInput from '../../../components/LPInput/LPInput';
 import LPButton from '../../../components/LPButton/LPButton';
 import './LoginPage.css';
@@ -11,6 +11,26 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+
+    // auto redirect
+    useEffect(() => {
+        const verifyCookie = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/auth/check', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (response.ok) {
+                    navigate('/home');
+                }
+            } catch (error) {
+                console.error("Session check failed.");
+            }
+        };
+
+        verifyCookie();
+    }, [navigate]);
 
     const handleLogin = async () => {
         setErrorMessage('');

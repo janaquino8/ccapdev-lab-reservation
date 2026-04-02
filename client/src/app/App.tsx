@@ -1,5 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
 import Footer from '../components/Footer/Footer.tsx'
@@ -24,9 +25,33 @@ import EditBoardSelection from '../pages/Student/EditBoardSelection/EditBoardSel
 import EditTimetable from '../pages/Student/EditTimeTable/EditTimeTable.tsx';
 import AdminEditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
 
-function App() {
+function AppRoutes() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifySession = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/auth/check', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          localStorage.removeItem('user');
+          navigate('/');
+        }
+      } catch (error) {
+        console.error("Failed to verify session:", error);
+      }
+    };
+
+    verifySession();
+  }, [navigate]);
+
   return (
-    <Router>
       <Routes>
         {/* Student routes */}
         <Route path="/" element={<LoginPage />} />
@@ -176,6 +201,13 @@ function App() {
         } />
 
       </Routes>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }

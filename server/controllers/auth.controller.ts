@@ -4,6 +4,22 @@ import { Request, Response } from "express";
 import axios from "axios";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
+import { AuthRequest } from "./auth.middleware.ts";
+
+export async function checkAuth(req: AuthRequest, res: Response) {
+    try {
+        const userId = req.user.id;
+        const userProfile = await User.findById(userId);
+
+        if (!userProfile) {
+            return res.status(404).json({ error: "User not found." });
+        }
+        res.status(200).send(userProfile);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({ error: "Error verifying session." });
+    }
+}
 
 export async function login(req: Request, res: Response) {
     try {
