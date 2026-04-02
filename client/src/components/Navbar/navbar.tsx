@@ -29,10 +29,23 @@ const Navbar = () => {
     { name: 'View Slots', href: '/view' },
   ];
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     console.log("Signing out...");
-    localStorage.removeItem('user');
-    navigate('/');
+    
+    try {
+      await fetch('http://localhost:3000/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error("Error logging out from server:", error);
+    } finally {
+      localStorage.removeItem('user');
+      navigate('/');
+    }
   };
 
   const handleViewProfile = () => {

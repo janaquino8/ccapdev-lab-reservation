@@ -6,6 +6,7 @@ const router = Router();
 // Routes for the /auth endpoint
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
+router.post('/logout', AuthController.logout);
 
 // get routes can be done in frontend(???)
 
