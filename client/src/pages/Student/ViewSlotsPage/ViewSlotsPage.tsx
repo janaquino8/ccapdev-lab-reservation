@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import ViewDesk from '../../../components/ViewDesk/ViewDesk.tsx';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
@@ -18,53 +18,53 @@ const ViewSlots = () => {
     const [reservedUserNames, setReservedUserNames] = useState<Record<string, string>>({});
     const [error, setError] = useState("");
 
-    const handleViewSlots = async () => {
-        setError("");
-        
-        if (!selectedDate) {
-            setError("Please select a date first.");
-            return;
-        }
+    useEffect(() => {
+        const fetchSlots = async () => {
+            setError("");
+            
+            if (!selectedDate) return; 
 
-        console.log(`Searching for ${selectedLab} on ${selectedDate} at ${selectedTime}...`);
+            console.log(`Searching for ${selectedLab} on ${selectedDate} at ${selectedTime}...`);
 
-        try {
-            const response = await fetch('http://localhost:3000/reservations/search', {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    laboratory: selectedLab, 
-                    date: selectedDate,
-                    time: selectedTime 
-                }),
-            });
-
-            if (response.ok) {
-                const reservations = await response.json();
-
-                const takenSlots = reservations.map((res: any) => res.slot); 
-
-                const namesDictionary: Record<string, string> = {};
-                const userNamesDictionary: Record<string, string> = {};
-
-                reservations.forEach((res: any) => {
-                    namesDictionary[res.slot] = res.reserverName;
-                    userNamesDictionary[res.slot] = res.reserverUserName
+            try {
+                const response = await fetch('http://localhost:3000/reservations/search', {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        laboratory: selectedLab, 
+                        date: selectedDate,
+                        time: selectedTime 
+                    }),
                 });
 
-                setReservedSlots(takenSlots);
-                setReservedNames(namesDictionary); 
-                setReservedUserNames(userNamesDictionary);
-            } else {
-                setError("No reservations found for this time.");
-                setReservedSlots([]);
-                setReservedNames({});
+                if (response.ok) {
+                    const reservations = await response.json();
+
+                    const takenSlots = reservations.map((res: any) => res.slot); 
+                    const namesDictionary: Record<string, string> = {};
+                    const userNamesDictionary: Record<string, string> = {};
+
+                    reservations.forEach((res: any) => {
+                        namesDictionary[res.slot] = res.reserverName;
+                        userNamesDictionary[res.slot] = res.reserverUserName;
+                    });
+
+                    setReservedSlots(takenSlots);
+                    setReservedNames(namesDictionary); 
+                    setReservedUserNames(userNamesDictionary);
+                } else {
+                    setReservedSlots([]);
+                    setReservedNames({});
+                    setReservedUserNames({});
+                }
+            } catch (err) {
+                console.error(err);
+                setError("Cannot connect to server.");
             }
-        } catch (err) {
-            console.error(err);
-            setError("Cannot connect to server.");
-        }
-    };
+        };
+
+        fetchSlots();
+    }, [selectedLab, selectedDate, selectedTime]);
 
     const getSlotStatus = (deskId: string) => {
         return reservedSlots.includes(deskId) ? 'reserved' : 'available';
@@ -224,7 +224,6 @@ const ViewSlots = () => {
                         </select>
                     </div>
 
-                    <button className="createBtn" onClick={handleViewSlots}>Search</button>
                 </div>
 
                 <button className="otherLabsBtn"><a href="/home" style={{textDecoration: 'none', color: 'inherit'}}>Back to Home</a></button>
