@@ -16,10 +16,21 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const loadUser = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    };
+
+    loadUser();
+    window.addEventListener('userProfileUpdated', loadUser);
+
+    return () => {
+      window.removeEventListener('userProfileUpdated', loadUser);
+    };
   }, []);
 
   const navLinks = [

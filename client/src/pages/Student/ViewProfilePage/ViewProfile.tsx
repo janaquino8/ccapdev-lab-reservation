@@ -103,6 +103,7 @@ const ViewProfile: React.FC = () => {
         const updatedUser = await response.json();
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('userProfileUpdated'));
         setIsEditing(false);
       } else {
         const data = await response.json();
