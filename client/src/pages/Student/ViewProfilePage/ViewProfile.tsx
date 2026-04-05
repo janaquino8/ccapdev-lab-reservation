@@ -192,8 +192,13 @@ const ViewProfile: React.FC = () => {
               <div key={index}>
                 <div className="header">
                   <h2 className="entry-label">
-                    {`${index + 1}. ${item.laboratory} | ${item.status.toUpperCase()}`}
+                    {`${index + 1}. ${item.laboratory} |`}
                   </h2>
+                  <div className={`status-label ${item.status}`}>
+                    <h2 className="entry-label">
+                      {`${item.status.toUpperCase()}`}
+                    </h2>
+                  </div>
                 </div>
                 
                 <div className="reservationSlots">
