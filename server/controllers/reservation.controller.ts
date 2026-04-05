@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Laboratory from '../models/Laboratory.ts';
-import Slot from '../models/Slot.ts';
-import Reservation from '../models/Reservation.ts';
+import Laboratory from '../models/Laboratory.js';
+import Slot from '../models/Slot.js';
+import Reservation from '../models/Reservation.js';
 
 export async function getFilteredReservations(req: Request, res: Response) {
     try {

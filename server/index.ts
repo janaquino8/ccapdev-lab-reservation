@@ -8,7 +8,7 @@ import laboratoryRouter from './routes/laboratory.routes';
 import reservationRouter from './routes/reservation.routes';
 import slotRouter from './routes/slot.routes';
 import userRouter from './routes/user.routes';
-import connect_db from './config/db.ts';
+import connect_db from './config/db.js';
 
 
 dotenv.config();

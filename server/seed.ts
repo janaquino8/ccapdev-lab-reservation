@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import Laboratory from "./models/Laboratory.ts"; 
-import Slot from "./models/Slot.ts";
-import Reservation from "./models/Reservation.ts";
+import Laboratory from "./models/Laboratory.js"; 
+import Slot from "./models/Slot.js";
+import Reservation from "./models/Reservation.js";
 
 const MONGO_URI = "mongodb://localhost/labDB"; 
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { checkAuth } from '../controllers/auth.controller.ts';
-import { verifyAndRollSession } from '../controllers/auth.middleware.ts';
+import { checkAuth } from '../controllers/auth.controller.js';
+import { verifyAndRollSession } from '../controllers/auth.middleware.js';
 import * as AuthController from '../controllers/auth.controller';
 
 const router = Router();

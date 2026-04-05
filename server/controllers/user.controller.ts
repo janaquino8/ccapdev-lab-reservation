@@ -1,5 +1,5 @@
-import User from '../models/User.ts';
-import Reservation from '../models/Reservation.ts';
+import User from '../models/User.js';
+import Reservation from '../models/Reservation.js';
 import { Request, Response } from "express";
 
 export async function createUser(req: Request, res: Response) {

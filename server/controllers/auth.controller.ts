@@ -1,10 +1,10 @@
-import Auth from '../models/Auth.ts';
-import User from "../models/User.ts";
+import Auth from '../models/Auth.js';
+import User from "../models/User.js";
 import { Request, Response } from "express";
 import axios from "axios";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import { AuthRequest } from "./auth.middleware.ts";
+import { AuthRequest } from "./auth.middleware.js";
 
 export async function checkAuth(req: AuthRequest, res: Response) {
     try {

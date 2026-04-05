@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Slot from '../models/Slot.ts';
-import Laboratory from '../models/Laboratory.ts';
-import Reservation from '../models/Reservation.ts';
+import Slot from '../models/Slot.js';
+import Laboratory from '../models/Laboratory.js';
+import Reservation from '../models/Reservation.js';
 
 export async function createSlot(req: Request, res: Response) {
     try {

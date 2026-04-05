@@ -1,5 +1,5 @@
-import Laboratory from '../models/Laboratory.ts';
-import Reservation from '../models/Reservation.ts';
+import Laboratory from '../models/Laboratory.js';
+import Reservation from '../models/Reservation.js';
 import { Request, Response } from "express";
 
 export async function createLaboratory(req: Request, res: Response) {
