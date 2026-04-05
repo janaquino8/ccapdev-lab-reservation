@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ViewProfile.css";
 import blankPicture from "../../../assets/blank-dp.png";
 
@@ -24,6 +25,7 @@ interface UserReservation {
 }
 
 const ViewProfile: React.FC = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [reservations, setReservations] = useState<[UserReservation] | []>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -129,6 +131,28 @@ const ViewProfile: React.FC = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm("Are you sure? This will cancel all your active reservations.");
+    if (!confirmDelete || !user) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/users/${user._id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        localStorage.removeItem('user');
+        alert("Account deleted successfully.");
+        navigate('/');
+      } else {
+        setError("Failed to delete account.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Could not connect to server.");
+    }
+  };
+
   if (!user) {
     return <div className="profile-page"><h2>Loading profile...</h2></div>;
   }
@@ -147,7 +171,7 @@ const ViewProfile: React.FC = () => {
             
             <div className="buttons">
               <button className="action-btn" onClick={() => setIsEditing(true)}>Edit Profile</button>
-              <button className="action-btn-delete">Delete Account</button>
+              <button className="action-btn-delete" onClick={handleDeleteAccount}>Delete Account</button>
             </div>
           </div>
 
