@@ -43,7 +43,7 @@ const SlotAvailability: React.FC = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('http://localhost:3000/reservations');
+        const res = await fetch('/reservations');
         if (res.ok) {
           const data = await res.json();
           const taken = new Set<string>();
@@ -97,7 +97,7 @@ const SlotAvailability: React.FC = () => {
 
     let fetchedUser = null;
     try {
-      const userRes = await fetch(`http://localhost:3000/users/email/${encodeURIComponent(studentEmail)}`);
+      const userRes = await fetch(`/users/email/${encodeURIComponent(studentEmail)}`);
       if (!userRes.ok) {
         alert("Student not found! Please check the email and try again.");
         return;
@@ -124,7 +124,7 @@ const SlotAvailability: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/reservations', {
+      const response = await fetch('/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

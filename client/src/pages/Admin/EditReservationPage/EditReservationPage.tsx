@@ -37,7 +37,7 @@ const EditReservation: React.FC = () => {
     const username = email.split('@')[0];
 
     try {
-      const userRes = await fetch(`http://localhost:3000/users/username/${encodeURIComponent(username)}`);
+      const userRes = await fetch(`/users/username/${encodeURIComponent(username)}`);
       
       if (!userRes.ok) {
         alert("Student not found.");
@@ -47,7 +47,7 @@ const EditReservation: React.FC = () => {
       
       const user = await userRes.json();
 
-      const resResponse = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+      const resResponse = await fetch(`/users/${user._id}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ const EditReservation: React.FC = () => {
     
     if (isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:3000/reservations/${id}`, {
+        const response = await fetch(`/reservations/${id}`, {
           method: 'DELETE',
         });
 

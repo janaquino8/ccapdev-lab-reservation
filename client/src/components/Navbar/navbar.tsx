@@ -10,7 +10,6 @@ interface UserProfile {
   profilePicture: string;
 }
 
-// Added an interface for what the search returns
 interface SearchResult {
   username: string;
   givenName: string;
@@ -54,7 +53,7 @@ const Navbar = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/users/searchusers?q=${searchQuery}`);
+        const response = await fetch(`/users/searchusers?q=${searchQuery}`);
         if (response.ok) {
           const data = await response.json();
           console.log("Backend returned:", data);

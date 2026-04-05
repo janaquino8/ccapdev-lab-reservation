@@ -46,7 +46,7 @@ const EditTimetable: React.FC = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('http://localhost:3000/reservations');
+        const res = await fetch('/reservations');
         if (res.ok) {
           const data = await res.json();
           const taken = new Set<string>();

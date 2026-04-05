@@ -34,7 +34,7 @@ const ViewUserProfile: React.FC = () => {
       if (!username) return; 
 
       try {
-        const response = await fetch(`http://localhost:3000/users/username/${username}`, {
+        const response = await fetch(`/users/username/${username}`, {
             method: 'GET', 
             headers: { 'Content-Type': 'application/json' },
         });
@@ -64,7 +64,7 @@ const ViewUserProfile: React.FC = () => {
     if (!user) return; 
 
     try {
-      const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+      const response = await fetch(`/users/${user._id}/reservations`, {
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

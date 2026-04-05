@@ -53,7 +53,7 @@ const ViewProfile: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+      const response = await fetch(`/users/${user._id}/reservations`, {
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({})
@@ -88,7 +88,7 @@ const ViewProfile: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch(`http://localhost:3000/users/${user._id}`, {
+      const response = await fetch(`/users/${user._id}`, {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',

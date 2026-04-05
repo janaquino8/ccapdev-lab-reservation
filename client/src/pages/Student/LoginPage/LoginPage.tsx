@@ -16,7 +16,7 @@ function LoginPage() {
     useEffect(() => {
         const verifyCookie = async () => {
             try {
-                const response = await fetch('http://localhost:3000/auth/check', {
+                const response = await fetch('/auth/check', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -36,7 +36,7 @@ function LoginPage() {
         setErrorMessage('');
 
         try {
-            const response = await fetch('http://localhost:3000/auth/login', {
+            const response = await fetch('/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
