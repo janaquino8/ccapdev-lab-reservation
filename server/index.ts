@@ -9,7 +9,11 @@ import reservationRouter from './routes/reservation.routes.js';
 import slotRouter from './routes/slot.routes.js';
 import userRouter from './routes/user.routes.js';
 import connect_db from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -35,6 +39,12 @@ app.use('/laboratories', laboratoryRouter);
 app.use('/reservations', reservationRouter);
 app.use('/slots', slotRouter);
 app.use('/users', userRouter);
+
+app.use(express.static(path.join(__dirname, '/../client/')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/../client/index.html'));
+});
 
 app.listen(port, () => {
     console.log(`api is live on http://${host}:${port}`);
