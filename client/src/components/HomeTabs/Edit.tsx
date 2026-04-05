@@ -70,7 +70,7 @@ const Edit = () => {
     <div>
       <p>
         <span className={styles.description}>
-            <strong>DLSU Comp. Labs</strong> allow students to view and edit their reservations. 
+            <strong>DLSULabs</strong> allow students to view and edit their reservations. 
             Students can change slots, laboratories and time of reservation. 
             Click on <strong>“Edit Reservation”</strong> to edit a reservation,
             or <strong>"View Profile"</strong> to view your profile page, including your reservations.

@@ -16,7 +16,7 @@ const Create = () => {
     <div>
       <p>
         <span className={styles.description}>
-            <strong>DLSU Comp. Labs</strong> have five laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“Reserve a Slot”</strong> on the desired computer laboratory.
+            <strong>DLSULabs</strong> have five laboratories with <strong>32 slots</strong> that students can reserve in advance. Click on <strong>“Reserve a Slot”</strong> on the desired computer laboratory.
         </span>
       </p>
       <RoomBar roomName="Gokongwei Room 301" onReserve={() => handleReserve("Gokongwei 301")} buttonText="Reserve a Slot"/>
