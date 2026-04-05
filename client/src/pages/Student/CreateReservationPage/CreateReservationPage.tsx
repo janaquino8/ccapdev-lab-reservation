@@ -27,14 +27,42 @@ const CreateReservation: React.FC<CreateReservationProps> = ({ labProps = "Gokon
   const navigate = useNavigate();
   const location = useLocation();
 
+  const sortReservations = (reservations: SelectedSlotData[]): SelectedSlotData[] => {
+    return [...reservations].sort((a, b) => {
+      const dateComparison = a.date.localeCompare(b.date);
+      if (dateComparison !== 0) return dateComparison;
+
+      const parseTime = (timeStr: string) => {
+        let [hours, minAmPm] = timeStr.split(':');
+        let minutes = parseInt(minAmPm.substring(0, 2), 10);
+        let modifier = minAmPm.substring(2).toLowerCase();
+        
+        let hoursInt = parseInt(hours, 10);
+        if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
+        if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
+        
+        return hoursInt * 60 + minutes; 
+      };
+
+      const timeComparison = parseTime(a.timeStart) - parseTime(b.timeStart);
+      if (timeComparison !== 0) return timeComparison;
+
+      return a.slot.localeCompare(b.slot);
+    });
+  };
+
   const [selectedLab, setSelectedLab] = useState(location.state?.laboratory || labProps || "Gokongwei 307A");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("07:30 AM - 08:00 AM");
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [reservedSlots, setReservedSlots] = useState<string[]>([]);
-  const [selectedSlots, setSelectedSlots] = useState<SelectedSlotData[]>(location.state?.selectedSlots || []);
+  const [selectedSlots, setSelectedSlots] = useState<SelectedSlotData[]>(sortReservations(location.state?.selectedSlots || []));
   const [isAnonymousToggle, setIsAnonymousToggle] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+      setSelectedSlots(sortReservations(selectedSlots));
+    }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
