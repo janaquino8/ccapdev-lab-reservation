@@ -10,10 +10,22 @@ interface UserProfile {
   profilePicture: string;
 }
 
+// Added an interface for what the search returns
+interface SearchResult {
+  username: string;
+  givenName: string;
+  lastName: string;
+  profilePicture: string;
+}
+
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     const loadUser = () => {
@@ -32,6 +44,30 @@ const Navbar = () => {
       window.removeEventListener('userProfileUpdated', loadUser);
     };
   }, []);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchQuery.trim() === '') {
+        setSearchResults([]);
+        setIsSearchOpen(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/users/searchusers?q=${searchQuery}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Backend returned:", data);
+          setSearchResults(data);
+          setIsSearchOpen(true);
+        }
+      } catch (error) {
+        console.error("Failed to fetch search results", error);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
 
   const navLinks = [
     { name: 'Home', href: '/home' },
@@ -72,7 +108,41 @@ const Navbar = () => {
         {navLinks.map((link) => (
           <a key={link.name} href={link.href} className={styles.navLink}>{link.name}</a>
         ))}
-        
+
+        <div className={styles.searchContainer}>
+          <input 
+            type="text" 
+            placeholder="Search users..." 
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => { if (searchResults.length > 0) setIsSearchOpen(true) }}
+            onBlur={() => setTimeout(() => setIsSearchOpen(false), 200)} 
+          />
+          
+          {isSearchOpen && searchResults.length > 0 && (
+            <div className={styles.searchResultsDropdown}>
+              {searchResults.map((result) => (
+                <div 
+                  key={result.username} 
+                  className={styles.searchResultItem}
+                  onClick={() => {
+                    setSearchQuery('');
+                    navigate(`/profile/${result.username}`);
+                  }}
+                >
+                  <img 
+                    src={result.profilePicture || blankImage} 
+                    alt="profile" 
+                    className={styles.searchResultImage} 
+                  />
+                  <span>{result.givenName} {result.lastName}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div
           className={styles.profileCircle}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}

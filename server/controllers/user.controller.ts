@@ -139,3 +139,26 @@ export async function getUserByUsername(req: Request, res: Response) {
         res.status(500).send({error: err.message});
     }
 }
+
+export async function searchUsers(req: Request, res: Response) {
+    try {
+        const query = req.query.q as string;
+        
+        if (!query) {
+            return res.status(200).json([]);
+        }
+
+        const users = await User.find({
+            $or: [
+                { givenName: { $regex: query, $options: 'i' } },
+                { lastName: { $regex: query, $options: 'i' } },
+                { username: { $regex: query, $options: 'i' } }
+            ]
+        }).select('username givenName lastName profilePicture').limit(10);
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to search users." });
+    }
+}

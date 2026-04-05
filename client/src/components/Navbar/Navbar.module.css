@@ -108,3 +108,59 @@
 .signOutBtn:hover {
   background-color: #fff5f5;
 }
+
+.searchContainer {
+  position: relative;
+  margin-right: 20px;
+}
+
+.searchInput {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-family: inherit;
+  color: #000 !important;
+  background-color: #fff !important;
+}
+
+.searchResultsDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 250px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 5px;
+  color: #000;
+}
+
+.searchResultItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  color: #ffffff !important;
+  transition: background 0.2s;
+}
+
+.searchResultItem span {
+  color: #000000 !important; 
+}
+
+.searchResultItem:hover {
+  background: #f0f0f0;
+}
+
+.searchResultImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
