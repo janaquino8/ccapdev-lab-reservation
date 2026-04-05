@@ -9,6 +9,11 @@ import { AuthRequest } from "./auth.middleware.ts";
 export async function checkAuth(req: AuthRequest, res: Response) {
     try {
         const userId = req.user.id;
+
+        if (userId === "admin") {
+            return res.status(200).send({ givenName: "admin", lastName: "admin", username: "admin" });
+        }
+
         const userProfile = await User.findById(userId);
 
         if (!userProfile) {
@@ -29,14 +34,25 @@ export async function login(req: Request, res: Response) {
             rememberMe
         } = req.body;
 
-        // can be fixed later
-        if (email === "admin" && password === "BZC-PDRK456crynoob") {
+        if (email === "admin" && password === "admin1234") {
+            const secretKey = process.env.JWT_SECRET || "super_secret_key";
+            const token = jwt.sign({ id: "admin" }, secretKey, { 
+                expiresIn: '1d' 
+            });
+
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', 
+                sameSite: 'strict' as const
+            });
+
             return res.status(200).send({ givenName: "admin", lastName: "admin", username: "admin" });
         }
 
         if (!email.includes("@dlsu.edu.ph")) {
             return res.status(400).send({ error: "Email must be a DLSU Email." });
         }
+        
         const userName = email.replace("@dlsu.edu.ph", "");
         
         const authRecord = await Auth.findOne({ username: userName });
@@ -136,4 +152,32 @@ export async function logout(req: Request, res: Response) {
         expires: new Date(0) 
     });
     res.status(200).json({ message: "Successfully logged out." });
+}
+
+// for creating admin account in db
+export async function setupAdmin(req: Request, res: Response) {
+    try {
+        const existingAdmin = await Auth.findOne({ username: "admin" });
+        if (existingAdmin) {
+            return res.status(400).send({ message: "Admin account already exists!" });
+        }
+
+        const passwordHash = await bcrypt.hash("admin1234", 10);
+
+        await User.create({
+            givenName: "System",
+            lastName: "Admin",
+            username: "admin",
+            email: "admin@dlsu.edu.ph"
+        });
+        await Auth.create({
+            username: "admin",
+            password: passwordHash
+        });
+
+        res.status(201).send({ message: "Admin account successfully generated!" });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({ error: "Failed to create admin: " + err.message });
+    }
 }

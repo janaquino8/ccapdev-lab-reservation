@@ -22,7 +22,14 @@ function LoginPage() {
                 });
 
                 if (response.ok) {
-                    navigate('/home');
+                    const userData = await response.json();
+                    
+                    // --- NEW: Smart auto-redirect based on username ---
+                    if (userData.username === 'admin') {
+                        navigate('/admin/home');
+                    } else {
+                        navigate('/home');
+                    }
                 }
             } catch (error) {
                 console.error("Session check failed.");
@@ -50,7 +57,13 @@ function LoginPage() {
             if (response.ok) {
                 console.log("Logged in user:", data);
                 localStorage.setItem('user', JSON.stringify(data));
-                navigate('/home');
+                
+                if (data.username === 'admin') {
+                    navigate('/admin/home');
+                } else {
+                    navigate('/home');
+                }
+                
             } else {
                 setErrorMessage(data.error || "Login failed.");
             }
@@ -58,10 +71,6 @@ function LoginPage() {
             console.error("Network error:", error);
             setErrorMessage("Could not connect to the server.");
         }
-    }
-
-    const handleAdminLogin = () => {
-        navigate('/admin/home');   
     }
 
     return (
@@ -106,10 +115,6 @@ function LoginPage() {
                         </label>
 
                         <a href="/register" className="signup">Don't have an account? Sign up.</a>
-
-                        <div className="tempAdmin">
-                            <LPButton text="Login as Admin" variant="primary" onClick={handleAdminLogin} />
-                        </div>
                     </div>
                 </div>
             </div>
