@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import ViewDesk from '../../../components/ViewDesk/ViewDesk.tsx';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
-import dlsuLABS from '../../../assets/dlsuLABS.png'; 
+import dlsuLABS from '../../../assets/dlsulabs.png'; 
 import './ViewSlotsPage.css';
 
 const ViewSlots = () => {

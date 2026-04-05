@@ -14,9 +14,23 @@ const AdminNavbar = () => {
     { name: 'Edit Reservations', href: '/admin/edit' },
   ];
 
-  const handleSignOut = () => {
-    console.log("Signing out...");
-    navigate('/');
+  const handleSignOut = async () => {
+    console.log("Signing out admin...");
+    
+    try {
+      await fetch('/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', 
+      });
+    } catch (error) {
+      console.error("Error logging out from server:", error);
+    } finally {
+      localStorage.removeItem('user');
+      navigate('/');
+    }
   };
 
   return (
@@ -34,6 +48,7 @@ const AdminNavbar = () => {
         >
           <img 
             src={blankImage}
+            alt="Admin Profile"
           />
         </div>
 

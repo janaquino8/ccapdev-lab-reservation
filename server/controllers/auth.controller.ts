@@ -34,17 +34,22 @@ export async function login(req: Request, res: Response) {
             rememberMe
         } = req.body;
 
-        if (email === "admin" && password === "admin1234") {
-            const secretKey = process.env.JWT_SECRET || "super_secret_key";
-            const token = jwt.sign({ id: "admin" }, secretKey, { 
-                expiresIn: '1d' 
-            });
+        const secretKey = process.env.JWT_SECRET || "super_secret_key";
+        const tokenExpiration = rememberMe ? '21d' : '1d'; 
+        const cookieMaxAge = rememberMe ? 21 * 24 * 60 * 60 * 1000 : undefined;
 
-            res.cookie('jwt', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production', 
-                sameSite: 'strict' as const
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict' as const,
+            maxAge: cookieMaxAge 
+        };
+
+        if (email === "admin" && password === "admin1234") {
+            const token = jwt.sign({ id: "admin", rememberMe: rememberMe }, secretKey, { 
+                expiresIn: tokenExpiration 
             });
+            res.cookie('jwt', token, cookieOptions);
 
             return res.status(200).send({ givenName: "admin", lastName: "admin", username: "admin" });
         }
@@ -70,21 +75,10 @@ export async function login(req: Request, res: Response) {
         if (!userProfile) {
             return res.status(404).send({ error: "User profile missing from database." });
         }
-
-        const secretKey = process.env.JWT_SECRET || "super_secret_key";
-        
-        const tokenExpiration = rememberMe ? '21d' : '1d'; 
         
         const token = jwt.sign({ id: userProfile._id, rememberMe: rememberMe }, secretKey, { 
             expiresIn: tokenExpiration 
         });
-
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: 'strict' as const,
-            maxAge: rememberMe ? 21 * 24 * 60 * 60 * 1000 : undefined 
-        };
 
         res.cookie('jwt', token, cookieOptions);
         res.status(200).send(userProfile);
