@@ -52,155 +52,155 @@ function AppRoutes() {
   }, [navigate]);
 
   return (
-      <Routes>
-        {/* Student routes */}
-        <Route path="/" element={<LoginPage />} />
+    <Routes>
+      {/* Student routes */}
+      <Route path="/" element={<LoginPage />} />
 
-        <Route path="/register" element={<RegisterPage />} />
-        
-        <Route path="/home" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <HomePage />
-            </div>
-            <Footer />
+      <Route path="/register" element={<RegisterPage />} />
+
+      <Route path="/home" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <HomePage />
           </div>
-        } />
+          <Footer />
+        </div>
+      } />
 
-        <Route path="/create" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <CreateReservationPage />
-            </div> 
+      <Route path="/create" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <CreateReservationPage />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/edit" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <EditReservationPage />
-            </div> 
+      <Route path="/edit" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <EditReservationPage />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/view" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <ViewSlotsPage />
-            </div> 
+      <Route path="/view" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <ViewSlotsPage />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/viewprofile" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <ViewProfile />
-            </div> 
+      <Route path="/viewprofile" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <ViewProfile />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/profile/:username" element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <ViewUserProfile />
-            </div> 
+      <Route path="/profile/:username" element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <ViewUserProfile />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path='/reserve' element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <SlotReserve />
-            </div> 
-            <Footer />
+      <Route path='/reserve' element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <SlotReserve />
           </div>
-        } />
+          <Footer />
+        </div>
+      } />
 
-        <Route path='/edit-board' element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <EditBoardSelection />
-            </div> 
-            <Footer />
+      <Route path='/edit-board' element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <EditBoardSelection />
           </div>
-        } />
+          <Footer />
+        </div>
+      } />
 
-        <Route path='/edit-timetable' element={
-          <div className="mainlayout">
-            <Navbar />
-            <div className="contentArea">
-              <EditTimetable />
-            </div> 
-            <Footer />
+      <Route path='/edit-timetable' element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <EditTimetable />
           </div>
-        } />
+          <Footer />
+        </div>
+      } />
 
-        {/* Admin routes */}
+      {/* Admin routes */}
 
-        <Route path="/admin/home" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminHomePage />
-            </div>
-            <Footer />
+      <Route path="/admin/home" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminHomePage />
           </div>
-        } />
+          <Footer />
+        </div>
+      } />
 
-        <Route path="/admin/create" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminCreateReservationPage />
-            </div> 
+      <Route path="/admin/create" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminCreateReservationPage />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/admin/edit" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminEditReservationPage />
-            </div> 
+      <Route path="/admin/edit" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminEditReservationPage />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/admin/reserve" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminSlotReserve />
-            </div>
+      <Route path="/admin/reserve" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminSlotReserve />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/admin/edit-board" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminEditBoardSelection />
-            </div>
+      <Route path="/admin/edit-board" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminEditBoardSelection />
           </div>
-        } />
+        </div>
+      } />
 
-        <Route path="/admin/edit-timetable" element={
-          <div className="mainlayout">
-            <AdminNavbar />
-            <div className="contentArea">
-              <AdminEditTimetable />
-            </div>
+      <Route path="/admin/edit-timetable" element={
+        <div className="mainlayout">
+          <AdminNavbar />
+          <div className="contentArea">
+            <AdminEditTimetable />
           </div>
-        } />
+        </div>
+      } />
 
-      </Routes>
+    </Routes>
   );
 }
 
