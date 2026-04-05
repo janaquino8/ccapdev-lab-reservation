@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as SlotController from '../controllers/slot.controller';
+import * as SlotController from '../controllers/slot.controller.js';
 
 const router = Router();
 

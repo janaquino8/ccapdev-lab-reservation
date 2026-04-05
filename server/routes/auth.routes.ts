@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkAuth } from '../controllers/auth.controller.js';
 import { verifyAndRollSession } from '../controllers/auth.middleware.js';
-import * as AuthController from '../controllers/auth.controller';
+import * as AuthController from '../controllers/auth.controller.js';
 
 const router = Router();
 

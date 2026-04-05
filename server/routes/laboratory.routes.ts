@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as LaboratoryController from '../controllers/laboratory.controller';
+import * as LaboratoryController from '../controllers/laboratory.controller.js';
 
 const router = Router();
 

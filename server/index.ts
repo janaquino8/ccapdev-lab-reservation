@@ -3,11 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import authRouter from './routes/auth.routes';
-import laboratoryRouter from './routes/laboratory.routes';
-import reservationRouter from './routes/reservation.routes';
-import slotRouter from './routes/slot.routes';
-import userRouter from './routes/user.routes';
+import authRouter from './routes/auth.routes.js';
+import laboratoryRouter from './routes/laboratory.routes.js';
+import reservationRouter from './routes/reservation.routes.js';
+import slotRouter from './routes/slot.routes.js';
+import userRouter from './routes/user.routes.js';
 import connect_db from './config/db.js';
 
 
