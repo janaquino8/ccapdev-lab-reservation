@@ -1,231 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import type { ChangeEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Desk from '../../../components/Desk/Desk.tsx';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
 import styles from '../../../components/Board/Board.module.css';
-import "./EditBoardSelection.css";
-
-interface FinalReservedSlots {
-  slot: string,
-  timeStart: string,
-  timeEnd: string
-}
-
-interface SelectedSlotData {
-  slot: string;
-  date: string;
-  timeStart: string;
-  timeEnd: string;
-}
+import "./../CreateReservationPage/CreateReservationPage.css"; 
 
 const EditBoardSelection: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  
+  const { targetReservation } = location.state || {};
 
-  const { originalReservation } = location.state || {};
-
-  const [selectedLab, setSelectedLab] = useState(originalReservation.laboratory || location.state?.laboratory || "Gokongwei 307A");
+  const [selectedLab, setSelectedLab] = useState(targetReservation?.laboratory || "Gokongwei 307A");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("07:30 AM - 08:00 AM");
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [reservedSlots, setReservedSlots] = useState<string[]>([]);
-  const [selectedSlots, setSelectedSlots] = useState<SelectedSlotData[]>(location.state?.selectedSlots || []);
-  const [isAnonymousToggle, setIsAnonymousToggle] = useState(originalReservation.isAnonymous || location.state?.isAnonymous || false);
-  const [reservationId, setReservationId] = useState(originalReservation._id || location.state?.reservationId || null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log(originalReservation)
-    if (reservationId === null) {
-      setError("Reservation not found.");
+    if (!targetReservation) {
+        navigate('/edit');
     }
-
-    if (Object.keys(originalReservation).length) {
-      handleSlotRetrieval();
-    }
-
-
-  }, [originalReservation, navigate]);
+  }, [targetReservation, navigate]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-
+    const timer = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const formatTime = (isoStr: string) => {
-    const timePart = isoStr.split('T')[1];
-    let hour = parseInt(timePart.substring(0, 2), 10);
-    const minute = timePart.substring(3, 5);
-    const ampm = hour >= 12 ? 'pm' : 'am';
-    hour = hour % 12 || 12;
-    return `${hour}:${minute}${ampm}`;
-  };
+  useEffect(() => {
+    if (selectedDate) handleViewSlots();
+  }, [selectedLab, selectedDate, selectedTime]);
 
-  const formatDate = (d: Date) => {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`
-  }
+  const handleViewSlots = async () => {
+    setError("");
+    if (!selectedDate) return;
 
-  const handleSlotRetrieval = () => {
-    const currentSelections = originalReservation.reservedSlots;
-    console.log(currentSelections)
+    try {
+      const response = await fetch('http://localhost:3000/reservations/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ laboratory: selectedLab, date: selectedDate, time: selectedTime }),
+      });
 
-    const formattedSelections = currentSelections.map((item: any) => {
-      return {
-        slot: item.slot,
-        date: formatDate(new Date(item.timeStart)),
-        timeStart: formatTime(item.timeStart),
-        timeEnd: formatTime(item.timeEnd)
+      if (response.ok) {
+        const reservations = await response.json();
+        const takenSlots = reservations.map((res: any) => res.slot);
+        setReservedSlots(takenSlots);
+      } else {
+        setReservedSlots([]);
       }
-    });
-
-    setSelectedSlots([...formattedSelections, ...selectedSlots]);
-  }
-
-  const getSlotStatus = (deskId: string) => {
-    return reservedSlots.includes(deskId) ? 'reserved' : 'available';
+    } catch (err) {
+      setError("Cannot connect to server.");
+    }
   };
+
+  const getSlotStatus = (deskId: string) => reservedSlots.includes(deskId) ? 'reserved' : 'available';
 
   const handleSlotClick = (deskId: string) => {
     if (getSlotStatus(deskId) === 'reserved') {
-      alert("This slot is already taken for the selected time!");
+      alert("This slot is already taken for the selected time preview!");
       return;
     }
 
     navigate('/edit-timetable', { 
       state: { 
-        laboratory: selectedLab, 
-        slot: deskId,
-        selectedSlots: selectedSlots,
-        reservationId: reservationId,
-        isAnonymous: isAnonymousToggle
+        targetReservation: targetReservation,
+        newLaboratory: selectedLab, 
+        newSlot: deskId 
       } 
     });
   };
 
-  const convertToUTC = (dateStr: string, timeStr: string) => {
-    let [hours, minAmPm] = timeStr.split(':');
-    let minutes = minAmPm.substring(0, 2);
-    let modifier = minAmPm.substring(2); 
-
-    let hoursInt = parseInt(hours, 10);
-    if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
-    if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
-
-    const paddedHours = hoursInt.toString().padStart(2, '0');
-    return new Date(`${dateStr}T${paddedHours}:${minutes}:00.000Z`);
-  };
-
-  const handleReservation = async () => {
-    const storedUser = localStorage.getItem('user'); 
-      if (!storedUser) {
-        alert("You must be logged in to make a reservation!");
-        return;
-      }
-
-      let currentUserId = "";
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        currentUserId = parsedUser._id || parsedUser.id;
-      } catch (e) {
-        currentUserId = storedUser; 
-      }
-
-      if (selectedSlots.length === 0) {
-        alert("Select a slot first.");
-        return;
-      }
-
-      const confirmBooking = window.confirm(`Edit reservation?`);
-      if (!confirmBooking) return;
-
-      const finalSlots: FinalReservedSlots[] = selectedSlots.map((item) => ({
-        slot: item.slot,
-        timeStart: convertToUTC(item.date, item.timeStart).toISOString(),
-        timeEnd: convertToUTC(item.date, item.timeEnd).toISOString()
-      }))
-
-      try {
-        const response = await fetch(`http://localhost:3000/reservations/${reservationId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            isAnonymous: isAnonymousToggle, 
-            status: 'active',
-            reservedSlots: finalSlots
-          })
-        });
-
-        if (response.ok) {
-          alert("🎉 Reservation successfully edited!");
-          navigate('/viewprofile');
-        } else {
-          const errorData = await response.json();
-          alert(`Failed to edit: ${errorData.error || errorData.message}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Network error. Please try again.");
-      }
-  }
+  if (!targetReservation) return null;
 
   return (
-    <>
-      <div className="pageContainer">
-        <div className="boardSection">
-          <Board title="Edit Reservation" room={selectedLab}>
-            <div className="boardInternalLayout">
-              <section className="instructionSectionInside">
+    <div className="pageContainer">
+      <div className="boardSection">
+        <Board title={`Modifying Reservation`} room={selectedLab}>
+          <div className="boardInternalLayout">
+            <section className="instructionSectionInside">
+              
+              <div className="labSelectionBox" style={{ marginBottom: '20px' }}>
+                <h3 style={{ marginTop: 0 }}>Select New Laboratory</h3>
+                <select 
+                  value={selectedLab}
+                  onChange={(e) => setSelectedLab(e.target.value)}
+                  style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
+                >
+                  <option value="Gokongwei 307A">Gokongwei 307A</option>
+                  <option value="Gokongwei 307B">Gokongwei 307B</option>
+                  <option value="Gokongwei 404A">Gokongwei 404A</option>
+                </select>
+              </div>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#fff', marginBottom: '1rem'}}>
-                  <input
-                    type="checkbox"
-                    checked={isAnonymousToggle}
-                    onChange={(e) => setIsAnonymousToggle(e.target.checked)}
-                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                  />
-                  Reserve Anonymously
-                </label>
+              <div className="howToBox">
+                <h2>Edit Mode</h2>
+                <p>
+                  Select a new laboratory and click on an available seat to proceed to the timetable selection.
+                </p>
+              </div>
 
-                <div className="howToBox">
-                  <h2>Edit Mode</h2>
-                  <p>
-                    Select an available seat to proceed to the timetable selection.
-                  </p>
-                </div>
+              <div className="currentTimeBox">
+                <h4>Current Time:</h4>
+                <p className="timeDisplay">{currentTime}</p>
+              </div>
 
-                <h3>Current Selections:</h3>
-                <div className="currentSelectionSlots">
-                  {selectedSlots.length === 0 ? (
-                    <p>
-                      No seats selected yet. Click a slot to start!
-                    </p>
-                  ) : (
-                    selectedSlots.map((item: any, index: number) => (
-                      <div key={index}>
-                        <p>
-                          {index + 1}. Slot {item.slot} | {item.date} | {item.timeStart} - {item.timeEnd}
-                        </p>
-                      </div>
-                    ))
-                  )}
-                </div>
+              <button className="otherLabsBtn" onClick={() => navigate('/edit')}>
+                Cancel Edit
+              </button>
+            </section>
 
-                <div className="currentTimeBox">
-                  <h4>Current Time:</h4>
-                  <p className="timeDisplay">{currentTime}</p>
-                </div>
-                
-                <button className="otherLabsBtn"><a href="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Back to Home</a></button>
-              </section>
-
-              <div className="deskGridArea"> <br />
+            <div className="deskGridArea"> <br />
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
                     <Desk onSelectionSubmit={handleSlotClick} topSlots={[{ id: 'A1', status: getSlotStatus('A1') }, { id: 'A2', status: getSlotStatus('A2') }]} />
@@ -301,18 +188,11 @@ const EditBoardSelection: React.FC = () => {
                     <Desk onSelectionSubmit={handleSlotClick} bottomSlots={[{ id: 'H7', status: getSlotStatus('H7') }, { id: 'H8', status: getSlotStatus('H8') }]} />
                   </div>
                 </div>
-                <button
-                  className="bookSlotsButton"
-                  onClick={handleReservation}
-                >
-                  Book Slots
-                </button>
-              </div>
             </div>
-          </Board>
-        </div>
+          </div>
+        </Board>
       </div>
-    </>
+    </div>
   );
 };
 

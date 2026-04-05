@@ -6,7 +6,7 @@ import "./EditReservationPage.css";
 
 const EditReservation: React.FC = () => {
   const navigate = useNavigate();
-  const [realReservations, setRealReservations] = useState<any[]>([]);
+  const [reservations, setReservations] = useState<any[]>([]);
 
   useEffect(() => {
     fetchMyReservations();
@@ -24,7 +24,7 @@ const EditReservation: React.FC = () => {
       
       const user = JSON.parse(storedUser);
 
-      const resResponse = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+      const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -34,34 +34,26 @@ const EditReservation: React.FC = () => {
         }) 
       });
       
-      if (!resResponse.ok) {
-        setRealReservations([]);
+      if (!response.ok) {
+        setReservations([]);
         return;
       }
 
-      const reservationsData = await resResponse.json();
-      const formattedData: any[] = [];
-      
-      reservationsData.forEach((resDoc: any) => {
-        resDoc.reservedSlots.forEach((slotData: any) => {
-          const startDate = new Date(slotData.timeStart);
-          const endDate = new Date(slotData.timeEnd);
+      const userReservations = await response.json();
+      console.log(userReservations)
+          
+        const finalReservations = userReservations.map((reservation: any) => ({
+          _id: reservation._id,
+          laboratory: reservation.laboratory.name,
+          isAnonymous: reservation.isAnonymous,
+          reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
+            slot: slotData.slot.name,
+            timeStart: slotData.timeStart,
+            timeEnd: slotData.timeEnd
+          }))
+        }));
 
-          formattedData.push({
-            id: resDoc._id,
-            userId: user._id,
-            email: user.email,    
-            date: startDate.toLocaleDateString(),
-            name: `${user.givenName} ${user.lastName}`, 
-            laboratory: resDoc.laboratory?.name || "Unknown Lab",
-            slot: slotData.slot?.name || "Unknown Slot",
-            timeStart: startDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
-            timeEnd: endDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
-          });
-        });
-      });
-
-      setRealReservations(formattedData);
+        setReservations(finalReservations);
 
     } catch (error) {
       console.error("Error fetching reservations:", error);
@@ -69,26 +61,57 @@ const EditReservation: React.FC = () => {
     }
   };
 
-  const handleEditClick = (id: string) => { 
-    const reservationToEdit = realReservations.find(res => res.id === id);
-    navigate('/edit-board', { state: { targetReservation: reservationToEdit } });
+  const handleEditClick = (index: any) => { 
+    navigate('/edit-board', { state: { 
+      originalReservation: reservations[index] 
+    }});
   };
 
   return (
     <>
       <div className="pageContainer">
-        <Board title="Edit My Reservations">
-            <div className="description" style={{ marginBottom: '20px' }}>
-                <p>Click "Edit" to modify your schedule, or "Cancel" to permanently delete a reservation.</p>
-            </div>
-
-          <div className="entries">
-            <ReservationCard 
-                type={"student"}
-                entry="Your Active Reservations" 
-                content={realReservations}
-                onEdit={handleEditClick}
-            /> 
+        <Board title="Edit Reservations">
+          <p>Click "EDIT" to continue</p>
+          <div className="reservations">
+            {reservations.length === 0 ? (
+              <p style={{display: 'flex', justifyContent: 'center', fontSize: '25px'}}>You have no active reservations. Create a reservation now!</p>
+            ) : (
+              <>
+                {reservations.map((item, index) => (
+                  <div key={index} className="reservationContainer">
+                    <div className="header">
+                      <h2 className="entry-label">
+                        {`${index + 1}. ${item.laboratory}`}
+                      </h2>
+                      <button
+                        onClick={() => handleEditClick(index)}
+                      >
+                        EDIT
+                      </button>
+                    </div>
+                    
+                    <div className="reservationSlots">
+                      {
+                      item.reservedSlots.map((slotItem: any, index2: number) => (
+                        <div className="reservationSlot" key={index2}>
+                          <div className="pill">
+                            {slotItem.slot}
+                          </div>
+                          <p>
+                            {`${new Date(slotItem.timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                            &nbsp; | &nbsp; 
+                            {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                            &nbsp;-&nbsp;
+                            {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                          </p>
+                        </div>
+                      ))
+                      }
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </Board>
       </div>
