@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ViewDesk from '../../../components/AdminViewDesk/AdminDeleteViewDesk';
 import Board from '../../../components/Board/Board.tsx';
 import styles from '../../../components/Board/Board.module.css';
-import dlsuLABS from '../../../assets/dlsuLABS.png'; 
+import dlsuLABS from '../../../assets/dlsulabs.png'; 
 import './DeleteReservationPage.css';
 
 const ViewSlots = () => {
