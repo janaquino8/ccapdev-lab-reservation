@@ -55,11 +55,11 @@ export async function login(req: Request, res: Response) {
             return res.status(404).send({ error: "User profile missing from database." });
         }
 
-        const secretKey = process.env.JWT_SECRET || "super_secret_key_change_me";
+        const secretKey = process.env.JWT_SECRET || "super_secret_key";
         
         const tokenExpiration = rememberMe ? '21d' : '1d'; 
         
-        const token = jwt.sign({ id: userProfile._id }, secretKey, { 
+        const token = jwt.sign({ id: userProfile._id, rememberMe: rememberMe }, secretKey, { 
             expiresIn: tokenExpiration 
         });
 

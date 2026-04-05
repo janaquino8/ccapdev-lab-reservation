@@ -69,7 +69,8 @@ export async function getUserReservations(req: Request, res: Response) {
         const reservations = await Reservation.find(body)
             .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
-            .populate('reservedSlots.slot', 'name');
+            .populate('reservedSlots.slot', 'name')
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
 
         if (reservations.length === 0) {
             return res.status(404).send({ message: "User has no reservations" });
@@ -142,5 +143,28 @@ export async function getUserByUsername(req: Request, res: Response) {
     } catch (err: any) {
         console.error(err);
         res.status(500).send({error: err.message});
+    }
+}
+
+export async function searchUsers(req: Request, res: Response) {
+    try {
+        const query = req.query.q as string;
+        
+        if (!query) {
+            return res.status(200).json([]);
+        }
+
+        const users = await User.find({
+            $or: [
+                { givenName: { $regex: query, $options: 'i' } },
+                { lastName: { $regex: query, $options: 'i' } },
+                { username: { $regex: query, $options: 'i' } }
+            ]
+        }).select('username givenName lastName profilePicture').limit(10);
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to search users." });
     }
 }

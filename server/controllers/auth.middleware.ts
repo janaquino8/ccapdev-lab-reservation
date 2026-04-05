@@ -13,17 +13,22 @@ export const verifyAndRollSession = (req: AuthRequest, res: Response, next: Next
     }
 
     try {
-        const secretKey = process.env.JWT_SECRET || "super_secret_key_change_me";
-        const verified = jwt.verify(token, secretKey);
+        const secretKey = process.env.JWT_SECRET || "super_secret_key";
+        const verified = jwt.verify(token, secretKey) as any;
         
         req.user = verified;
 
-        res.cookie('jwt', token, {
+        const cookieOptions: any = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 21 * 24 * 60 * 60 * 1000
-        });
+            sameSite: 'strict'
+        };
+
+        if (verified.rememberMe) {
+            cookieOptions.maxAge = 21 * 24 * 60 * 60 * 1000;
+        }
+
+        res.cookie('jwt', token, cookieOptions);
 
         next();
     } catch (err) {

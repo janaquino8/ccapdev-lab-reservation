@@ -113,7 +113,8 @@ export async function getAllReservations(req: Request, res: Response) {
         const reservations = await Reservation.find({})
             .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
-            .populate('reservedSlots.slot', 'name'); 
+            .populate('reservedSlots.slot', 'name')
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
 
         res.status(200).send(reservations);
     } catch (err: any) {
@@ -129,7 +130,8 @@ export async function getAllActiveReservations(req: Request, res: Response) {
         })
             .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
-            .populate('reservedSlots.slot', 'name'); 
+            .populate('reservedSlots.slot', 'name')
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
 
         res.status(200).send(reservations);
     } catch (err: any) {
