@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
-import "./../SlotReserve/SlotReservePage.css"; 
+import "./EditTimeTable.css";
 
-const EditTimetable: React.FC = () => {
+// NEW: Added an interface so the parent component can pass an 'onSelectionSubmit' function
+interface SelectedSlotData {
+  slot: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+}
+
+interface SlotAvailabilityProps {
+  laboratoryProp?: string;
+  slotProp?: string;
+  onSelectionSubmit?: (selectedSlots: SelectedSlotData[]) => void;
+}
+
+const EditTimetable: React.FC<SlotAvailabilityProps> = ({ laboratoryProp, slotProp, onSelectionSubmit }) => {
   const timeSlots = [
     "7:30am - 8:00am", "8:00am - 8:30am", "8:30am - 9:00am", "9:00am - 9:30am",
     "9:30am - 10:00am", "10:00am - 10:30am", "10:30am - 11:00am", "11:00am - 11:30am",
@@ -15,30 +29,58 @@ const EditTimetable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { targetReservation, newLaboratory, newSlot } = location.state || {};
+  const laboratory = laboratoryProp || location.state?.laboratory || "Select a Lab";
+  const slot = slotProp || location.state?.slot || "None";
+
+  const masterSlots: SelectedSlotData[] = location.state?.selectedSlots || [];
+
+  const otherDesksSlots = masterSlots.filter(item => item.slot !== slot);
+  const currentDeskSlots = masterSlots.filter(item => item.slot === slot);
+
+  const initialSelectedSet = new Set<string>(
+    currentDeskSlots.map(item => `${item.date}_${item.timeStart} - ${item.timeEnd}`)
+  );
 
   const [scheduleDays, setScheduleDays] = useState<{dayName: string, dateString: string}[]>([]);
   const [reservedCells, setReservedCells] = useState<Set<string>>(new Set());
+  const [selectedCells, setSelectedCells] = useState<Set<string>>(initialSelectedSet);
+  const [reservationId, setReservationId] = useState(location.state?.reservationId || null);
+  const [isAnonymous, setIsAnonymous] = useState(location.state?.isAnonymous || null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  useEffect(() => {
-    if (!targetReservation) navigate('/edit');
-  }, [targetReservation, navigate]);
+  const formatTime = (isoStr: string) => {
+    const timePart = isoStr.split('T')[1];
+    let hour = parseInt(timePart.substring(0, 2), 10);
+    const minute = timePart.substring(3, 5);
+    const ampm = hour >= 12 ? 'pm' : 'am';
+    hour = hour % 12 || 12;
+    return `${hour}:${minute}${ampm}`;
+  };
+
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`
+  }
 
   useEffect(() => {
     const daysArray = [];
     let daysOffset = 0;
+
+    if (currentTime.getHours() * 60 + currentTime.getMinutes() >= 990) {
+      daysOffset++;
+    }
+
     while (daysArray.length < 7) {
       const d = new Date();
       d.setDate(d.getDate() + daysOffset);
       daysOffset++;
+
       if (d.getDay() === 0) continue; 
 
       const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      
-      daysArray.push({ dayName, dateString: `${year}-${month}-${day}` });
+      daysArray.push({ dayName, dateString: formatDate(d) });
     }
     setScheduleDays(daysArray);
   }, []);
@@ -46,29 +88,20 @@ const EditTimetable: React.FC = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('http://localhost:3000/reservations');
+        const res = await fetch('http://localhost:3000/reservations/active');
         if (res.ok) {
           const data = await res.json();
+          console.log(data)
           const taken = new Set<string>();
 
           const formatDBTimeToGridTime = (isoStart: string, isoEnd: string) => {
-            const formatTime = (isoStr: string) => {
-              const timePart = isoStr.split('T')[1];
-              let hour = parseInt(timePart.substring(0, 2), 10);
-              const minute = timePart.substring(3, 5);
-              const ampm = hour >= 12 ? 'pm' : 'am';
-              hour = hour % 12 || 12;
-              return `${hour}:${minute}${ampm}`;
-            };
             return `${formatTime(isoStart)} - ${formatTime(isoEnd)}`;
           };
 
           data.forEach((reservation: any) => {
-            if (reservation._id === targetReservation?.id) return;
-
-            if (reservation.laboratory?.name === newLaboratory) {
+            if (reservation.laboratory?.name === laboratory && reservation._id !== reservationId) {
               reservation.reservedSlots.forEach((rs: any) => {
-                if (rs.slot?.name === newSlot) {
+                if (rs.slot?.name === slot) {
                   const dateString = rs.timeStart.split('T')[0];
                   const gridTime = formatDBTimeToGridTime(rs.timeStart, rs.timeEnd);
                   taken.add(`${dateString}_${gridTime}`);
@@ -76,93 +109,132 @@ const EditTimetable: React.FC = () => {
               });
             }
           });
-          setReservedCells(taken);
+
+          const reservedMinusSelected = new Set<string>([...taken].filter(cell => !selectedCells.has(cell)));
+          setReservedCells(reservedMinusSelected);
         }
       } catch (err) {
         console.error("Failed to fetch reservations", err);
       }
     };
-    if (newLaboratory && newSlot) fetchReservations();
-  }, [newLaboratory, newSlot, targetReservation]);
 
+    if (laboratory !== "Select a Lab" && slot !== "None") {
+      fetchReservations();
+    }
+  }, [laboratory, slot, selectedCells]);
+  
   const getCellStatus = (dateString: string, time: string) => {
-    return reservedCells.has(`${dateString}_${time}`) ? "status-reserved" : "status-available";
+    const cellKey = `${dateString}_${time}`;
+    const startTime = time.split(" - ")[0].replace("am", ":AM").replace("pm", ":PM").split(":");
+    const hours = Number(startTime[0]) + ((startTime.includes("PM") && Number(startTime[0]) < 12) ? 12 : 0);
+    const minutes = Number(startTime[1])
+
+    if (formatDate(currentTime) === dateString && (currentTime.getHours() * 60 + currentTime.getMinutes() >= hours * 60 + minutes)) {
+      return "status-unavailable";
+    }
+    if (reservedCells.has(cellKey)) return "status-reserved";
+    if (selectedCells.has(cellKey)) return "status-selected"; // NEW: check if user selected it
+    
+    return "status-available";
   };
 
-  const handleUpdateReservation = async (dateString: string, timeString: string) => {
-    if (getCellStatus(dateString, timeString) === "status-reserved") {
-      alert("This slot is currently occupied by someone else!");
+  const handleToggleSelection = (dateString: string, timeString: string) => {
+    const status = getCellStatus(dateString, timeString);
+    
+    if (status === "status-reserved") {
+      alert("This slot is already reserved!");
+      return;
+    }
+    if (status === "status-unavailable") {
+      alert("This slot is unavailable.");
       return;
     }
 
-    const confirmBooking = window.confirm(
-      `Update your reservation to ${newSlot} in ${newLaboratory} on ${dateString} at ${timeString}?`
-    );
-    if (!confirmBooking) return;
-
-    const [startStr, endStr] = timeString.split(' - ');
-    const convertToUTC = (dateStr: string, timeStr: string) => {
-      let [hours, minAmPm] = timeStr.split(':');
-      let minutes = minAmPm.substring(0, 2);
-      let modifier = minAmPm.substring(2); 
-      let hoursInt = parseInt(hours, 10);
-      if (modifier === 'pm' && hoursInt < 12) hoursInt += 12;
-      if (modifier === 'am' && hoursInt === 12) hoursInt = 0;
-      return new Date(`${dateStr}T${hoursInt.toString().padStart(2, '0')}:${minutes}:00.000Z`);
-    };
-
-    try {
-      const response = await fetch(`http://localhost:3000/reservations/${targetReservation.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          laboratory: newLaboratory,
-          reservedSlots: [
-            {
-              slot: newSlot,
-              timeStart: convertToUTC(dateString, startStr).toISOString(),
-              timeEnd: convertToUTC(dateString, endStr).toISOString()
-            }
-          ]
-        })
-      });
-
-      if (response.ok) {
-        alert("🎉 Reservation successfully updated!");
-        navigate('/edit');
+    const cellKey = `${dateString}_${timeString}`;
+    setSelectedCells(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cellKey)) {
+        newSet.delete(cellKey); 
       } else {
-        const errorData = await response.json();
-        alert(`Failed to update: ${errorData.error || errorData.message}`);
+        newSet.add(cellKey); 
       }
-    } catch (err) {
-      console.error(err);
-      alert("Network error. Please try again.");
+      return newSet;
+    });
+  };
+
+  const handleBacktoSeatSelection = () => {
+    if (onSelectionSubmit) {
+      onSelectionSubmit(masterSlots);
+    } else {
+      navigate('/edit-board', { 
+        state: { 
+          selectedSlots: masterSlots, 
+          laboratory: laboratory,
+          reservationId: reservationId,
+          originalReservation: {},
+          isAnonymous: isAnonymous
+      }});
+    }
+  }
+
+  // LIFTS STATE
+  const handleConfirmSelection = () => {
+    const newCurrentDeskSlots = Array.from(selectedCells).map(cellKey => {
+      const [date, timeRange] = cellKey.split('_');
+      const [timeStart, timeEnd] = timeRange.split(' - ');
+      return { 
+        slot: slot,
+        date, 
+        timeStart, 
+        timeEnd 
+      };
+    });
+
+    console.log(otherDesksSlots)
+    console.log(newCurrentDeskSlots)
+
+    const updatedMasterSlots = [...otherDesksSlots, ...newCurrentDeskSlots];
+
+    if (onSelectionSubmit) {
+      onSelectionSubmit(updatedMasterSlots);
+    } else {
+      navigate('/edit-board', { 
+        state: { 
+          selectedSlots: updatedMasterSlots, 
+          laboratory: laboratory,
+          reservationId: reservationId,
+          originalReservation: {},
+          isAnonymous: isAnonymous
+      }});
     }
   };
 
-  if (!targetReservation) return null;
-
   return (
     <div className="pageContainer">
-      <Board title="Reschedule Reservation" room={newLaboratory} slot={`Slot ${newSlot}`}>
+      <Board title="Select Timeslots" room={laboratory} slot={`Slot ${slot}`}>
+        
+        <div className="topControls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+          <button 
+            className="backToSelectionBtn" // just using the style of the back button; not sure where it is
+            onClick={handleBacktoSeatSelection}
+          >
+            ← Back to Seat Selection
+          </button>
 
-        <div className="howToBox" style={{ 
-          marginBottom: '20px', 
-          backgroundColor: 'rgba(255, 255, 255, 0.15)', 
-          backdropFilter: 'blur(8px)', 
-          padding: '18px 24px', 
-          borderRadius: '12px',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
-          color: '#ffffff', 
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
-          <h3 style={{ color: '#f6d365', marginTop: 0, marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '8px' }}>
-            Modifying Schedule
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '1rem' }}>
-            <p style={{ margin: 0 }}><strong>Previous Lab & Seat:</strong> {targetReservation.laboratory} - {targetReservation.slot}</p>
-            <p style={{ margin: 0 }}><strong>Previous Time:</strong> {targetReservation.date} | {targetReservation.timeStart} - {targetReservation.timeEnd}</p>
-          </div>
+          <button 
+            className="confirmSelectionBtn"
+            onClick={handleConfirmSelection}
+            style={{ 
+              padding: '10px 20px', 
+              backgroundColor: '#d1dfcd',
+              color: "#2e7d32",
+              border: 'none', 
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Confirm Selected Slots ({selectedCells.size})
+          </button>
         </div>
 
         <div className="timetableContainer">
@@ -179,8 +251,8 @@ const EditTimetable: React.FC = () => {
               {scheduleDays.map(dayObj => (
                 <tr key={dayObj.dateString}>
                   <td className="sticky-col dayLabel">
-                    <div style={{ color: '#000'}}>{dayObj.dayName}</div>
-                    <div style={{ fontSize: '0.8em', color: '#666' }}>{dayObj.dateString}</div>
+                    <div style={{ fontSize: '1.3em', color: '#2d5a27'}}>{dayObj.dayName}</div>
+                    <div style={{ fontSize: '0.9em', color: '#666' }}>{dayObj.dateString}</div>
                   </td>
                   {timeSlots.map(timeSlot => {
                     const status = getCellStatus(dayObj.dateString, timeSlot);
@@ -188,8 +260,8 @@ const EditTimetable: React.FC = () => {
                       <td 
                         key={`${dayObj.dateString}_${timeSlot}`}
                         className={`timeCell ${status}`}
-                        style={{ cursor: status === 'status-available' ? 'pointer' : 'not-allowed' }}
-                        onClick={() => handleUpdateReservation(dayObj.dateString, timeSlot)}
+                        style={{ cursor: status === 'status-unavailable' || status === 'status-reserved' ? 'not-allowed' : 'pointer' }}
+                        onClick={() => handleToggleSelection(dayObj.dateString, timeSlot)}
                       ></td>
                     );
                   })}
@@ -197,15 +269,6 @@ const EditTimetable: React.FC = () => {
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="topControls" style={{ marginTop: '20px' }}>
-          <button 
-            className="backToSelectionBtn" 
-            onClick={() => navigate('/edit-board', { state: { targetReservation } })}
-          >
-            ← Back to Seat Selection
-          </button>
         </div>
       </Board>
     </div>
