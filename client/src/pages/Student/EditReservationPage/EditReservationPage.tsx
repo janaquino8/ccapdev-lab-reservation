@@ -84,6 +84,7 @@ const EditReservation: React.FC = () => {
                         {`${index + 1}. ${item.laboratory}`}
                       </h2>
                       <button
+                        className="editButton"
                         onClick={() => handleEditClick(index)}
                       >
                         EDIT

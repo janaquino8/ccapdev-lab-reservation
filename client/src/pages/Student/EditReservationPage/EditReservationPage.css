@@ -68,6 +68,10 @@
   padding-right: 1.5rem;
 }
 
+.editButton {
+    margin-left: 1rem;
+}
+
 .reservationSlots {
     display: flex;
     flex-direction: column;

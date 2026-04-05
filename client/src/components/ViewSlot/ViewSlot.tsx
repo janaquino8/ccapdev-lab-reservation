@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Viewslot.module.css';
 
@@ -20,9 +20,27 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy}) 
   const statusClass = styles[status];
   const navigate = useNavigate(); 
 
+  const [user, setUser] = useState<String>("");
+
+  useEffect(() => {
+    const storedUser: any = localStorage.getItem('user');
+
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser.username)
+      console.log(user)
+    }
+  }, [])
+
+
   const handleViewProfile = () => {
     onToggle('');
-    navigate(`/profile/${reservedBy.username}`)
+
+    if (user === reservedBy.username) {
+      navigate('/viewprofile')
+    } else {
+      navigate(`/profile/${reservedBy.username}`)
+    }
   }
 
   const handleReserve = () => {
