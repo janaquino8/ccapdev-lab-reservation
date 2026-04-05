@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // <-- Added useEffect here!
+import { useState, useEffect } from 'react';
 import LPInput from '../../../components/LPInput/LPInput';
 import LPButton from '../../../components/LPButton/LPButton';
 import './LoginPage.css';

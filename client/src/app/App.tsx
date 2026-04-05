@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate , useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
 import Footer from '../components/Footer/Footer.tsx'
@@ -27,11 +27,12 @@ import AdminEditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
 
 function AppRoutes() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const verifySession = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check', {
+        const response = await fetch('/auth/check', {
           method: 'GET',
           credentials: 'include',
         });
@@ -39,9 +40,17 @@ function AppRoutes() {
         if (response.ok) {
           const userData = await response.json();
           localStorage.setItem('user', JSON.stringify(userData));
+          
+          if (location.pathname === '/' || location.pathname === '/register') {
+             navigate('/home'); 
+          }
+          
         } else {
           localStorage.removeItem('user');
-          navigate('/');
+
+          if (location.pathname !== '/' && location.pathname !== '/register') {
+             navigate('/');
+          }
         }
       } catch (error) {
         console.error("Failed to verify session:", error);
@@ -49,7 +58,7 @@ function AppRoutes() {
     };
 
     verifySession();
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   return (
     <Routes>

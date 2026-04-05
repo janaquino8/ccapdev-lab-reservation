@@ -95,6 +95,7 @@ const ViewProfile: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           description: editDescription,
           profilePicture: editProfilePicture
@@ -136,8 +137,9 @@ const ViewProfile: React.FC = () => {
     if (!confirmDelete || !user) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/users/${user._id}`, {
+      const response = await fetch(`/users/${user._id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
 
       if (response.ok) {
