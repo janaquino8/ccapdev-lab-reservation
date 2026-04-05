@@ -40,7 +40,7 @@ const HomePage = () => {
                     className={activeTab === 'edit' ? 'tabActive' : 'tab'} 
                     onClick={() => setActiveTab('edit')}
                     >
-                    Edit Reservation
+                    View Reservations
                     </button>
                     <button 
                     className={activeTab === 'view' ? 'tabActive' : 'tab'} 
