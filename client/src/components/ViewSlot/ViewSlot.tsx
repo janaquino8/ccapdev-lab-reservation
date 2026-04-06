@@ -7,6 +7,12 @@ interface UserData {
   username: string
 }
 
+interface ReserveData {
+  date: string,
+  time: string,
+  lab: string
+}
+
 interface SlotProps {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
@@ -15,9 +21,10 @@ interface SlotProps {
   reservedBy: UserData;
   isAnonymous?: boolean;
   isAllSelected: boolean;
+  reserveInfo: ReserveData
 }
 
-const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, isAllSelected }) => {
+const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, isAllSelected, reserveInfo }) => {
   const statusClass = styles[status];
   const navigate = useNavigate(); 
 
@@ -46,7 +53,22 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, i
 
   const handleReserve = () => {
     onToggle('');
-    navigate(`/reserve`);
+
+    let [ timeStart, timeEnd ] = reserveInfo.time.replaceAll(" AM", "am").replaceAll(" PM", "pm").split(" - ").map(item => {
+      if (item[0] === '0') {
+        item = item.slice(1)
+      }
+      return item
+    })
+
+    const selectedSlot = {
+      slot: id,
+      date: reserveInfo.date,
+      timeStart: timeStart,
+      timeEnd: timeEnd
+    }
+
+    navigate(`/create`, { state: { selectedSlots: [selectedSlot], laboratory: reserveInfo.lab } });
   };
 
   const getDisplayName = () => {
@@ -58,6 +80,22 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, i
 
     return reservedBy.name;
   };
+
+  const isDateTimeValid = () => {
+    const [ year, month, day ] = reserveInfo.date.split("-").map(item => Number(item));
+    const [ hour, minute ] = reserveInfo.time.split(" - ")[0].replace(" AM", "").replace(" PM", "").split(":").map(item => Number(item))
+
+    const now = new Date()
+    const selected = new Date(
+      year, 
+      month - 1, 
+      day,
+      hour + (reserveInfo.time[6] === 'P' && hour < 12 ? 12 : 0),
+      minute
+    )
+
+    return now < selected
+  }
 
   return (
     <div className={styles.slotContainer}>
@@ -77,7 +115,7 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, i
           {reservedBy.username && status === 'reserved' && (
             <div className={styles.profileLink} onClick={handleViewProfile}>View Profile</div>
           )}
-          {status === 'available' && (
+          {status === 'available' && isDateTimeValid() && (
             <div className={styles.reserveActionBtn} onClick={handleReserve}>Reserve Slot</div>
           )}
           <button className={styles.closeBtn} onClick={() => onToggle('')}>X</button>

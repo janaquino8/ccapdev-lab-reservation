@@ -7,11 +7,18 @@ interface UserData {
   username: string
 }
 
+interface ReserveData {
+  date: string,
+  time: string,
+  lab: string
+}
+
 interface SlotData {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
   reservedBy: UserData,
-  isAllSelected: boolean
+  isAllSelected: boolean,
+  reserveInfo: ReserveData
 }
 
 interface ViewDeskProps {
@@ -39,6 +46,7 @@ const ViewDesk: React.FC<ViewDeskProps> = ({ topSlots, bottomSlots }) => {
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
               isAllSelected={slot.isAllSelected}
+              reserveInfo={slot.reserveInfo}
             />
           ))}
         </div>
@@ -57,6 +65,7 @@ const ViewDesk: React.FC<ViewDeskProps> = ({ topSlots, bottomSlots }) => {
               isOpen={openSlotId === slot.id} 
               onToggle={handleToggle} 
               isAllSelected={slot.isAllSelected}
+              reserveInfo={slot.reserveInfo}
             />
           ))}
         </div>
