@@ -91,13 +91,13 @@ const SlotAvailability: React.FC = () => {
     }
 
     if (!studentEmail) {
-      alert("Please enter the student's email first.");
+      alert("Please enter a student email first.");
       return;
     }
 
     let fetchedUser = null;
     try {
-      const userRes = await fetch(`/users/email/${encodeURIComponent(studentEmail)}`);
+      const userRes = await fetch(`/users/username/${studentEmail.replace("@dlsu.edu.ph", "")}`);
       if (!userRes.ok) {
         alert("Student not found! Please check the email and try again.");
         return;

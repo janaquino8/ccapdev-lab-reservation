@@ -17,20 +17,10 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, onSlotClick }
     <div className={styles.slotContainer}>
       <button
         className={`${styles.slotButton} ${statusClass}`}
-        onClick={() => onToggle(id)}
+        onClick={() => onSlotClick(id)}
       >
         {id}
       </button>
-
-      {isOpen && (
-        <div className={styles.dropdown} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.dropdownItem} onClick={() => onSlotClick(id)}>
-            Reserve {id}
-          </div>
-          <div className={styles.dropdownItem}>View Specs</div>
-          <div className={styles.dropdownItem} onClick={() => onToggle('')}>Close</div>
-        </div>
-      )}
     </div>
   );
 };
