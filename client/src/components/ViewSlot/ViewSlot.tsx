@@ -14,9 +14,10 @@ interface SlotProps {
   onToggle: (id: string) => void;
   reservedBy: UserData;
   isAnonymous?: boolean;
+  isAllSelected: boolean;
 }
 
-const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy}) => {
+const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, isAllSelected }) => {
   const statusClass = styles[status];
   const navigate = useNavigate(); 
 
@@ -67,7 +68,7 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy}) 
         {id}
       </button>
 
-      {isOpen && (
+      {isOpen && isAllSelected && (
         <div className={styles.infoPopup} onClick={(e) => e.stopPropagation()}>
           <div className={styles.infoTitle}>Seat {id}</div>
           <div className={styles.infoContent}>
