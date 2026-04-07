@@ -30,16 +30,21 @@ const ViewProfile: React.FC = () => {
   const [reservations, setReservations] = useState<[UserReservation] | []>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
   const [editProfilePicture, setEditProfilePicture] = useState("");
+  const [originalProfilePicture, setOriginalProfilePicture] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
+      
       setUser(parsedUser);
       setEditDescription(parsedUser.description || "");
+      setOriginalDescription(parsedUser.description || "");
       setEditProfilePicture(parsedUser.profilePicture || "");
+      setOriginalProfilePicture(parsedUser.profilePicture || "");
     }
   }, []);
 
@@ -89,6 +94,11 @@ const ViewProfile: React.FC = () => {
     if (!user) return;
     setError("");
 
+    if (!editDescription || !editProfilePicture) {
+      setError("Insufficient update fields provided.");
+      return;
+    }
+
     try {
       const response = await fetch(`/users/${user._id}`, {
         method: 'PUT', 
@@ -108,6 +118,8 @@ const ViewProfile: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
         window.dispatchEvent(new Event('userProfileUpdated'));
         setIsEditing(false);
+        setOriginalDescription(editDescription);
+        setOriginalProfilePicture(editProfilePicture)
       } else {
         const data = await response.json();
         setError(data.message || "Failed to update profile.");
@@ -118,8 +130,20 @@ const ViewProfile: React.FC = () => {
     }
   };
 
+  const handleCancelChanges = () => {
+    setIsEditing(false);
+    setEditProfilePicture(originalProfilePicture);
+    setEditDescription(originalDescription);
+  }
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log(file);
+
+    if (!file?.type.includes("image")) {
+      setError("Invalid file type.");
+      return;
+    }
     
     if (file) {
       const reader = new FileReader();
@@ -257,7 +281,7 @@ const ViewProfile: React.FC = () => {
 
             <div className="modal-actions">
               <button className="save-btn" onClick={handleSaveChanges}>Save</button>
-              <button className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+              <button className="cancel-btn" onClick={handleCancelChanges}>Cancel</button>
             </div>
           </div>
         </div>
