@@ -142,12 +142,16 @@ export async function deleteUser(req: Request, res: Response) {
 
         await Auth.deleteOne({ username: deletedUser.username });
 
-        await Reservation.updateMany(
-            { user: deletedUser._id, status: { $in: [ "active", "ongoing" ] } },
-            {
-                $set: { status: "cancelled" },
-                $currentDate: { lastModified: true }
-            }
+        // await Reservation.updateMany(
+        //     { user: deletedUser._id, status: { $in: [ "active", "ongoing" ] } },
+        //     {
+        //         $set: { status: "cancelled" },
+        //         $currentDate: { lastModified: true }
+        //     }
+        // )
+
+        await Reservation.deleteMany(
+            { user: deletedUser._id },
         )
 
         res.cookie('jwt', '', {
