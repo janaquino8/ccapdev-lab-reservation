@@ -23,7 +23,8 @@ The terminals used to run the project are provided by VSCode on Windows 11.
    
 8. Go back to the main directory: **cd ..** 
 9. Change your directory to the project's client folder to start downloading client dependencies: **cd client**
-10. Run the website: **npm run dev** <br>
+10. Download client dependencies: **npm install**
+11. Run the website: **npm run dev** <br>
    If successful: <br>
     <img width="577" height="178" alt="image" src="https://github.com/user-attachments/assets/f7934f29-8729-48b9-9d94-c1f54b7931c7" />
     
