@@ -24,6 +24,7 @@ import AdminEditBoardSelection from '../pages/Admin/EditBoardSelection/EditBoard
 import EditBoardSelection from '../pages/Student/EditBoardSelection/EditBoardSelection.tsx';
 import EditTimetable from '../pages/Student/EditTimeTable/EditTimeTable.tsx';
 import AdminEditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
+import AboutUs from '../pages/Student/AboutPage/AboutPage.tsx';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -161,6 +162,16 @@ function AppRoutes() {
           <Navbar />
           <div className="contentArea">
             <EditTimetable />
+          </div>
+          <Footer />
+        </div>
+      } />
+
+      <Route path='/about' element={
+        <div className="mainlayout">
+          <Navbar />
+          <div className="contentArea">
+            <AboutUs />
           </div>
           <Footer />
         </div>

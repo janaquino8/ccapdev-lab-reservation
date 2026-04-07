@@ -75,6 +75,7 @@ const Navbar = () => {
     { name: 'Create Reservation', href: '/create' },
     { name: 'Edit Reservation', href: '/edit' },
     { name: 'View Slots', href: '/view' },
+    { name: 'About Us', href: '/about' },
   ];
 
   const handleSignOut = async () => {

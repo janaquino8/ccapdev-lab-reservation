@@ -7,7 +7,7 @@ const Footer = () => {
       
       <div className={styles.footerContent}>
         <div className={styles.faqSection}>
-          <span>Check the <a href="/faq">FAQs</a> page</span>
+          <span>Check the <a href="/about">About</a> page</span>
         </div>
 
         <div className={styles.divider}>or</div>
