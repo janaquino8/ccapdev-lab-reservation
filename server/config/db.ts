@@ -2,11 +2,17 @@ import mongoose from "mongoose";
 
 const connect_db = async function() {
     try {
-        // localhost for now, create a .env in the future?
-        await mongoose.connect("mongodb://localhost/labDB");
-        console.log("Connected to database.");
+        const dbURI = process.env.MONGO_URI || "mongodb://localhost/labDB";
+
+        if (!process.env.MONGO_URI) {
+            console.warn("MONGO_URI is missing. Falling back to localhost.");
+        }
+        await mongoose.connect(dbURI);
+        console.log("Connected to Database :)");
+        
     } catch (error) {
-        console.log("Error when connecting to database");
+        console.error("MongoDB Connection Failed:");
+        console.error(error);
     }
 };
 
