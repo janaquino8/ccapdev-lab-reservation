@@ -62,11 +62,17 @@ function RegisterPage() {
         navigate('/');   
     }
 
+    const handleKeyDown = (e: { key: string; }) => {
+        if (e.key === 'Enter') {
+            handleRegister();
+        }
+    };
+
     return (
         <div className="register">
             <div className="overlay">
                 <div className="content-wrapper">
-                    <div className="card1">
+                    <div className="card1" onKeyDown={handleKeyDown}>
                         <h2>Register</h2>
                         
                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

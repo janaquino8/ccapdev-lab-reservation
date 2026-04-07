@@ -24,7 +24,6 @@ function LoginPage() {
                 if (response.ok) {
                     const userData = await response.json();
                     
-                    // --- NEW: Smart auto-redirect based on username ---
                     if (userData.username === 'admin') {
                         navigate('/admin/home');
                     } else {
@@ -73,6 +72,12 @@ function LoginPage() {
         }
     }
 
+    const handleKeyDown = (e: { key: string; }) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
+
     return (
         <div className="login">
             <div className="overlay">
@@ -84,7 +89,8 @@ function LoginPage() {
                         </header>
                     </div>
                     
-                    <div className="card">
+                    {/* --- NEW: Attached the onKeyDown listener here --- */}
+                    <div className="card" onKeyDown={handleKeyDown}>
                         <h2>Login</h2>
 
                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
