@@ -33,7 +33,8 @@ export async function getFilteredReservations(req: Request, res: Response) {
         const reservations = await Reservation.find({
             laboratory: labDoc._id,
             "reservedSlots.timeStart": { $lt: searchEndTime },
-            "reservedSlots.timeEnd": { $gt: searchStartTime }
+            "reservedSlots.timeEnd": { $gt: searchStartTime },
+            status: { $ne: "cancelled" }
         }).populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
             .populate('reservedSlots.slot', 'name'); 
@@ -123,10 +124,44 @@ export async function getAllReservations(req: Request, res: Response) {
     }
 }
 
+export async function getAllActiveAndOngoingReservations(req: Request, res: Response) {
+    try {
+        const reservations = await Reservation.find({
+            status: { $in: ["active", "ongoing"] }
+        })
+            .populate('user', 'givenName lastName username')
+            .populate('laboratory', 'name')
+            .populate('reservedSlots.slot', 'name')
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
+
+        res.status(200).send(reservations);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({error: err.message});
+    }
+}
+
 export async function getAllActiveReservations(req: Request, res: Response) {
     try {
         const reservations = await Reservation.find({
             status: "active"
+        })
+            .populate('user', 'givenName lastName username')
+            .populate('laboratory', 'name')
+            .populate('reservedSlots.slot', 'name')
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
+
+        res.status(200).send(reservations);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send({error: err.message});
+    }
+}
+
+export async function getAllNonCancelledReservations(req: Request, res: Response) {
+    try {
+        const reservations = await Reservation.find({
+            status: { $ne: "cancelled" }
         })
             .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')

@@ -3,51 +3,45 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Desk from '../../../components/AdminDesk/AdminDesk.tsx';
 import Board from '../../../components/CreateBoard/CreateBoard.tsx';
 import styles from '../../../components/Board/Board.module.css';
-import "./CreateReservationPage.css";
+import "./../CreateReservationPage/CreateReservationPage.css"; 
 
-const CreateReservation: React.FC = () => {
-  const location = useLocation(); 
+const EditBoardSelection: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const { originalReservation } = location.state || {};
 
-  const [selectedLab, setSelectedLab] = useState(location.state?.laboratory || "Gokongwei 307A");
+  const [selectedLab, setSelectedLab] = useState(originalReservation?.laboratory || "Gokongwei 307A");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("07:30 AM - 08:00 AM");
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [reservedSlots, setReservedSlots] = useState<string[]>([]);
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!originalReservation) {
+        navigate('/admin/edit');
+    }
+  }, [originalReservation, navigate]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-
+    const timer = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Triggers search when state changes
   useEffect(() => {
-    if (selectedDate) {
-      handleViewSlots();
-    }
+    if (selectedDate) handleViewSlots();
   }, [selectedLab, selectedDate, selectedTime]);
 
   const handleViewSlots = async () => {
     setError("");
-
-    if (!selectedDate) {
-      return;
-    }
+    if (!selectedDate) return;
 
     try {
       const response = await fetch('/reservations/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          laboratory: selectedLab,
-          date: selectedDate,
-          time: selectedTime
-        }),
+        body: JSON.stringify({ laboratory: selectedLab, date: selectedDate, time: selectedTime }),
       });
 
       if (response.ok) {
@@ -58,75 +52,70 @@ const CreateReservation: React.FC = () => {
         setReservedSlots([]);
       }
     } catch (err) {
-      console.error(err);
       setError("Cannot connect to server.");
     }
   };
 
-  const getSlotStatus = (deskId: string) => {
-    return reservedSlots.includes(deskId) ? 'reserved' : 'available';
-  };
+  const getSlotStatus = (deskId: string) => reservedSlots.includes(deskId) ? 'reserved' : 'available';
 
   const handleSlotClick = (deskId: string) => {
     if (getSlotStatus(deskId) === 'reserved') {
-      alert("This slot is already taken for the selected time!");
+      alert("This slot is already taken for the selected time preview!");
       return;
     }
 
-    // Admin Navigation
-    navigate('/admin/reserve', { 
+    navigate('/admin/edit-timetable', { 
       state: { 
-        laboratory: selectedLab, 
-        slot: deskId 
+        originalReservation: originalReservation,
+        newLaboratory: selectedLab, 
+        newSlot: deskId 
       } 
     });
   };
 
+  if (!originalReservation) return null;
+
   return (
-    <>
-      <div className="pageContainer">
-        <div className="boardSection">
-          <Board title="Create Reservation" room={selectedLab}>
-            <div className="boardInternalLayout">
-              <section className="instructionSectionInside">
+    <div className="pageContainer">
+      <div className="boardSection">
+        <Board title={`Editing: ${originalReservation.name}`} room={selectedLab}>
+          <div className="boardInternalLayout">
+            <section className="instructionSectionInside">
+              
+              <div className="labSelectionBox" style={{ marginBottom: '20px' }}>
+                <h3 style={{ marginTop: 0 }}>Select New Laboratory</h3>
+                <select 
+                  value={selectedLab}
+                  onChange={(e) => setSelectedLab(e.target.value)}
+                  style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
+                >
+                  <option value="Gokongwei 307A">Gokongwei 307A</option>
+                  <option value="Gokongwei 307B">Gokongwei 307B</option>
+                  <option value="Gokongwei 404A">Gokongwei 404A</option>
+                </select>
+              </div>
 
-                {/* Left Sidebar perfectly matched to Student layout */}
-                <div className="labSelectionBox" style={{ marginBottom: '20px' }}>
-                  <h3 style={{ marginTop: 0 }}>Select Laboratory</h3>
-                  <select 
-                    value={selectedLab}
-                    onChange={(e) => setSelectedLab(e.target.value)}
-                    style={{ padding: '8px', width: '100%', fontSize: '16px', color: 'black' }}
-                  >
-                    <option value="Gokongwei 301">Gokongwei 301</option>
-                    <option value="Gokongwei 302">Gokongwei 302</option>
-                    <option value="Gokongwei 307A">Gokongwei 307A</option>
-                    <option value="Gokongwei 307B">Gokongwei 307B</option>
-                    <option value="Gokongwei 404A">Gokongwei 404A</option>
-                  </select>
-                </div>
+              <div className="howToBox">
+                <h2>Edit Mode</h2>
+                <p>
+                  <strong>Currently editing:</strong> {originalReservation.name} ({originalReservation.email})
+                </p>
+                <p>
+                  Select a new laboratory and click on an available seat to proceed to the timetable selection.
+                </p>
+              </div>
 
-                <div className="howToBox">
-                  <h2>How to Reserve?</h2>
-                  <p>
-                    Click on the seat student would like to reserve. You will be sent to a table
-                    of availability for the seat you have selected.
-                  </p>
-                  <p>
-                    <strong>Input the student's email.</strong> Mind the availability of the time and day indicated on the table. To
-                    secure the reservation, click on the desired schedule.
-                  </p>
-                </div>
+              <div className="currentTimeBox">
+                <h4>Current Time:</h4>
+                <p className="timeDisplay">{currentTime}</p>
+              </div>
 
-                <div className="currentTimeBox">
-                  <h4>Current Time:</h4>
-                  <p className="timeDisplay">{currentTime}</p>
-                </div>
+              <button className="otherLabsBtn" onClick={() => navigate('/admin/edit')}>
+                Cancel Edit
+              </button>
+            </section>
 
-                <button className="otherLabsBtn"><a href="/admin/home" style={{ textDecoration: 'none', color: 'inherit' }}>Back to Home</a></button>
-              </section>
-
-              <div className="deskGridArea"> <br />
+            <div className="deskGridArea"> <br />
                 <div className={styles.deskRow}>
                   <div className={styles.deskPair}>
                     <Desk onSlotClick={handleSlotClick} topSlots={[{ id: 'A1', status: getSlotStatus('A1') }, { id: 'A2', status: getSlotStatus('A2') }]} />
@@ -202,13 +191,12 @@ const CreateReservation: React.FC = () => {
                     <Desk onSlotClick={handleSlotClick} bottomSlots={[{ id: 'H7', status: getSlotStatus('H7') }, { id: 'H8', status: getSlotStatus('H8') }]} />
                   </div>
                 </div>
-              </div>
             </div>
-          </Board>
-        </div>
+          </div>
+        </Board>
       </div>
-    </>
+    </div>
   );
 };
 
-export default CreateReservation;
+export default EditBoardSelection;

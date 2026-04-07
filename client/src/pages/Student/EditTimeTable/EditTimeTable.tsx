@@ -88,7 +88,7 @@ const EditTimetable: React.FC<SlotAvailabilityProps> = ({ laboratoryProp, slotPr
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('/reservations/active');
+        const res = await fetch('/reservations/active-ongoing');
         if (res.ok) {
           const data = await res.json();
           console.log(data)

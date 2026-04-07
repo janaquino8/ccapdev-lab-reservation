@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import Slot from './../Slot/Slot';
 import styles from './Desk.module.css';
 
-interface SelectedSlotData {
-  slot: string;
-  date: string;
-  timeStart: string;
-  timeEnd: string;
-}
-
 interface SlotData {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
