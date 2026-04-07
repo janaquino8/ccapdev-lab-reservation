@@ -126,13 +126,16 @@ export async function getAllReservations(req: Request, res: Response) {
 
 export async function getAllActiveAndOngoingReservations(req: Request, res: Response) {
     try {
+        const limit = Number(req.query.limit) || 0;
+
         const reservations = await Reservation.find({
             status: { $in: ["active", "ongoing"] }
         })
             .populate('user', 'givenName lastName username')
             .populate('laboratory', 'name')
             .populate('reservedSlots.slot', 'name')
-            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
+            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 })
+            .limit(limit); 
 
         res.status(200).send(reservations);
     } catch (err: any) {

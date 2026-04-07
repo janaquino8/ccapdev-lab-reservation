@@ -39,13 +39,7 @@ const AdminHomePage = () => {
                     className={activeTab === 'edit' ? 'tabActive' : 'tab'} 
                     onClick={() => setActiveTab('edit')}
                     >
-                    Edit Reservation
-                    </button>
-                    <button 
-                    className={activeTab === 'delete' ? 'tabActive' : 'tab'} 
-                    onClick={() => setActiveTab('delete')}
-                    >
-                    Delete Reservation
+                    Upcoming Reservations
                     </button>
                 </div>
 
