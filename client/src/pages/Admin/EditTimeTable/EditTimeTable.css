@@ -1,0 +1,89 @@
+.timetableContainer {
+    width: 100%;
+    overflow-x: auto;
+    background-color: transparent;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 6px solid black;
+}
+
+.timetableContainer table {
+    border-collapse: collapse;
+}
+
+.timetableContainer th, td {
+    border: 6px solid black;
+}
+
+.availabilityTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    color: #2d5a27;
+}
+
+.availabilityTable th, .availabilityTable td {
+    min-width: 80px;
+    height: 50px;
+    text-align: center;
+    font-size: 0.75rem;
+    padding: 5px;
+    background-color: #3e7033;
+    transition: background-color 0.2s, filter 0.2s; /* Added transition for smooth toggling */
+}
+
+.availabilityTable thead th {
+    background-color: white;
+    color: #2d5a27;
+    font-weight: bold;
+}
+
+.dayLabel {
+    background-color: white !important;
+    color: #2d5a27;
+    font-weight: bold;
+}
+
+.sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-right: 2px solid #2d5a27;
+}
+
+.status-available {
+    background-color: #3e7033;
+}
+
+.status-reserved {
+    background-color: #ffde59;
+}
+
+.status-unavailable {
+    background-color: #ff3131;
+}
+
+.status-selected {
+    background-color: #6de063; 
+}
+
+/* Duplicated classes combined for cleanliness */
+.availabilityTable td.status-available {
+    background-color: #3e7033;
+}
+
+.availabilityTable td.status-reserved {
+    background-color: #ffde59;
+}
+
+.availabilityTable td.status-unavailable {
+    background-color: #ff3131;
+}
+
+.availabilityTable td.status-selected {
+    background-color: #6de063;
+}
+
+.timeCell:hover {
+    filter: brightness(1.2);
+}

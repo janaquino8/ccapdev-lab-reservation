@@ -7,6 +7,8 @@ const router = Router();
 router.post('/', ReservationController.createReservation);
 router.get('/', ReservationController.getAllReservations);
 router.get('/active', ReservationController.getAllActiveReservations);
+router.get('/active-ongoing', ReservationController.getAllActiveAndOngoingReservations);
+router.get('/non-cancelled', ReservationController.getAllNonCancelledReservations);
 
 // Routes for the /reservations/:id endpoint
 router.get('/:id', ReservationController.getReservationById);

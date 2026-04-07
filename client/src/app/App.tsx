@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate , useLocation, ScrollRestoration } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate , useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
 import Footer from '../components/Footer/Footer.tsx'

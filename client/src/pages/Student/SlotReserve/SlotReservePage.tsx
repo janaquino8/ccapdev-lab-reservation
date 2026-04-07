@@ -88,7 +88,7 @@ const SlotAvailability: React.FC<SlotAvailabilityProps> = ({ laboratoryProp, slo
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const res = await fetch('/reservations/active');
+        const res = await fetch('/reservations/active-ongoing');
         if (res.ok) {
           const data = await res.json();
           const taken = new Set<string>();

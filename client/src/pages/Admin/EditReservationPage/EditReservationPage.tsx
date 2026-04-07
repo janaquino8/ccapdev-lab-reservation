@@ -12,7 +12,7 @@ const EditReservation: React.FC = () => {
     return sessionStorage.getItem('adminEditEmail') || "";
   });
   
-  const [realReservations, setRealReservations] = useState<any[]>([]);
+  const [reservations, setReservations] = useState<any[]>([]);
 
   useEffect(() => {
     sessionStorage.setItem('adminEditEmail', email);
@@ -41,62 +41,53 @@ const EditReservation: React.FC = () => {
       
       if (!userRes.ok) {
         alert("Student not found.");
-        setRealReservations([]);
+        setReservations([]);
         return;
       }
       
       const user = await userRes.json();
 
-      const resResponse = await fetch(`/users/${user._id}/reservations`, {
+      const response = await fetch(`/users/${user._id}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status: 'active'
+          status: { $in: ["active", "ongoing", "completed"] }
         })
       });
       
-      if (!resResponse.ok) {
-        setRealReservations([]);
+      if (!response.ok) {
+        setReservations([]);
         return;
       }
 
-      const reservationsData = await resResponse.json();
-
-      const formattedData: any[] = [];
+      const userReservations = await response.json();
       
-      reservationsData.forEach((resDoc: any) => {
-        resDoc.reservedSlots.forEach((slotData: any) => {
-          const startDate = new Date(slotData.timeStart);
-          const endDate = new Date(slotData.timeEnd);
-
-          formattedData.push({
-            id: resDoc._id,
-            userId: user._id,
-            email: email,
-            date: startDate.toLocaleDateString(),
-            name: `${user.givenName} ${user.lastName}`, 
-            laboratory: resDoc.laboratory?.name || "Unknown Lab",
-            slot: slotData.slot?.name || "Unknown Slot",
-            timeStart: startDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
-            timeEnd: endDate.toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"}),
-          });
-        });
-      });
-
-      setRealReservations(formattedData);
-
+      const finalReservations = userReservations.map((reservation: any) => ({
+        _id: reservation._id,
+        username: username,
+        laboratory: reservation.laboratory.name,
+        isAnonymous: reservation.isAnonymous,
+        reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
+          slot: slotData.slot.name,
+          timeStart: slotData.timeStart,
+          timeEnd: slotData.timeEnd
+        }))
+      }));
+      
+      setReservations(finalReservations);
+      console.log(finalReservations)
     } catch (error) {
       console.error("Error fetching reservations:", error);
       alert("Network error. Could not connect to the server.");
     }
   };
 
-  const handleEditClick = (id: string) => { 
-    const reservationToEdit = realReservations.find(res => res.id === id);
-    
-    navigate('/admin/edit-board', { state: { targetReservation: reservationToEdit } });
+  const handleEditClick = (index: any) => {     
+    navigate('/admin/edit-board', { state: { 
+      originalReservation: reservations[index]  
+    }});
   };
 
   const handleCancelClick = async (id: string) => {
@@ -110,7 +101,7 @@ const EditReservation: React.FC = () => {
 
         if (response.ok) {
           alert("✅ Reservation successfully deleted!");
-          setRealReservations(prev => prev.filter(res => res.id !== id));
+          setReservations(prev => prev.filter(res => res.id !== id));
         } else {
           const errorData = await response.json();
           alert(`❌ Failed to delete: ${errorData.error || errorData.message}`);
@@ -161,15 +152,48 @@ const EditReservation: React.FC = () => {
               </button>
             </div>
 
-          <div className="entries">
-            <ReservationCard 
-                type={"student"}
-                entry="Previous Reservations" 
-                content={realReservations}
-                onEdit={handleEditClick}
-                onCancel={handleCancelClick}
-            /> 
-          </div>
+            <div className="reservations">
+              {reservations.length === 0 ? (
+                <p style={{display: 'flex', justifyContent: 'center', fontSize: '25px'}}>You have no active reservations. Create a reservation now!</p>
+              ) : (
+                <>
+                  {reservations.map((item, index) => (
+                    <div key={index} className="reservationContainer">
+                      <div className="header">
+                        <h2 className="entry-label">
+                          {`${index + 1}. ${item.laboratory}`}
+                        </h2>
+                        <button
+                          className="editButton"
+                          onClick={() => handleEditClick(index)}
+                        >
+                          EDIT
+                        </button>
+                      </div>
+                      
+                      <div className="reservationSlots">
+                        {
+                        item.reservedSlots.map((slotItem: any, index2: number) => (
+                          <div className="reservationSlot" key={index2}>
+                            <div className="pill">
+                              {slotItem.slot}
+                            </div>
+                            <p>
+                              {`${new Date(slotItem.timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                              &nbsp; | &nbsp; 
+                              {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                              &nbsp;-&nbsp;
+                              {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                            </p>
+                          </div>
+                        ))
+                        }
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
         </Board>
       </div>
     </>

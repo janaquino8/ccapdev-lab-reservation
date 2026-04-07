@@ -1,13 +1,6 @@
 import React from 'react';
 import styles from './Slot.module.css';
 
-interface SelectedSlotData {
-  slot: string;
-  date: string;
-  timeStart: string;
-  timeEnd: string;
-}
-
 interface SlotProps {
   id: string;
   status: 'available' | 'reserved' | 'unavailable';
