@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Reservation from '../models/Reservation.js';
 import { Request, Response } from "express";
+import Auth from '../models/Auth.js';
 
 export async function createUser(req: Request, res: Response) {
     try {
@@ -110,6 +111,8 @@ export async function deleteUser(req: Request, res: Response) {
         if (deletedUser === null) {
             return res.status(404).json({ message: 'User not found.' });
         }
+
+        await Auth.deleteOne({ username: deletedUser.username });
 
         await Reservation.updateMany(
             { user: deletedUser._id, status: { $in: [ "active", "ongoing" ] } },
