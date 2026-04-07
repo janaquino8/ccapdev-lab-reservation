@@ -18,12 +18,13 @@ const SlotAvailability: React.FC = () => {
 
   const [scheduleDays, setScheduleDays] = useState<{dayName: string, dateString: string}[]>([]);
   const [reservedCells, setReservedCells] = useState<Set<string>>(new Set());
-
   const [studentEmail, setStudentEmail] = useState("");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const daysArray = [];
     let daysOffset = 0;
+    
     while (daysArray.length < 7) {
       const d = new Date();
       d.setDate(d.getDate() + daysOffset);
@@ -80,24 +81,47 @@ const SlotAvailability: React.FC = () => {
     if (laboratory !== "Select a Lab" && slot !== "None") fetchReservations();
   }, [laboratory, slot]);
 
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`
+  }
+
   const getCellStatus = (dateString: string, time: string) => {
+    const cellKey = `${dateString}_${time}`;
+    const startTime = time.split(" - ")[0].replace("am", ":AM").replace("pm", ":PM").split(":");
+    const hours = Number(startTime[0]) + ((startTime.includes("PM") && Number(startTime[0]) < 12) ? 12 : 0);
+    const minutes = Number(startTime[1])
+
+    if (formatDate(currentTime) === dateString && (currentTime.getHours() * 60 + currentTime.getMinutes() >= hours * 60 + minutes)) {
+      return "status-unavailable";
+    }
+
     return reservedCells.has(`${dateString}_${time}`) ? "status-reserved" : "status-available";
   };
 
   const handleCreateReservation = async (dateString: string, timeString: string) => {
-    if (getCellStatus(dateString, timeString) === "status-reserved") {
+    const status = getCellStatus(dateString, timeString);
+
+    if (status === "status-reserved") {
       alert("This slot is already reserved!");
       return;
     }
 
+    if (status === "status-unavailable") {
+      alert("This slot is unavailable.");
+      return;
+    }
+
     if (!studentEmail) {
-      alert("Please enter the student's email first.");
+      alert("Please enter a student email first.");
       return;
     }
 
     let fetchedUser = null;
     try {
-      const userRes = await fetch(`/users/email/${encodeURIComponent(studentEmail)}`);
+      const userRes = await fetch(`/users/username/${studentEmail.replace("@dlsu.edu.ph", "")}`);
       if (!userRes.ok) {
         alert("Student not found! Please check the email and try again.");
         return;

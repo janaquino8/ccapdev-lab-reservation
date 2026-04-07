@@ -30,7 +30,8 @@ const EditReservation: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status: 'active'
+          status: 'active',
+          isReservedByAdmin: false
         }) 
       });
       
@@ -84,6 +85,7 @@ const EditReservation: React.FC = () => {
                         {`${index + 1}. ${item.laboratory}`}
                       </h2>
                       <button
+                        className="editButton"
                         onClick={() => handleEditClick(index)}
                       >
                         EDIT

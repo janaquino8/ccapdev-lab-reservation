@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate , useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate , useLocation, ScrollRestoration } from 'react-router-dom';
 import Navbar from '../components/Navbar/navbar.tsx'
 import AdminNavbar from '../components/AdminNavbar/adminnavbar.tsx'
 import Footer from '../components/Footer/Footer.tsx'
@@ -24,6 +24,20 @@ import AdminEditBoardSelection from '../pages/Admin/EditBoardSelection/EditBoard
 import EditBoardSelection from '../pages/Student/EditBoardSelection/EditBoardSelection.tsx';
 import EditTimetable from '../pages/Student/EditTimeTable/EditTimeTable.tsx';
 import AdminEditTimetable from '../pages/Admin/EditTimeTable/EditTimeTable.tsx';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    document.documentElement.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant",
+  });
+  }, [pathname]);
+
+  return null;
+}
 
 function AppRoutes() {
   const navigate = useNavigate();
@@ -216,6 +230,7 @@ function AppRoutes() {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AppRoutes />
     </Router>
   );

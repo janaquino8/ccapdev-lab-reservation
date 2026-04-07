@@ -5,6 +5,7 @@ import blankImage from '../../assets/blank-dp.png';
 import dlsuLABS from '../../assets/dlsulabs.png'
 
 interface UserProfile {
+  username: string;
   givenName: string;
   lastName: string;
   profilePicture: string;
@@ -31,6 +32,7 @@ const Navbar = () => {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
+        console.log(user)
       } else {
         setUser(null);
       }
@@ -127,7 +129,14 @@ const Navbar = () => {
                   className={styles.searchResultItem}
                   onClick={() => {
                     setSearchQuery('');
-                    navigate(`/profile/${result.username}`);
+                    console.log(result)
+                    console.log(user)
+
+                    if (user?.username === result.username) {
+                      navigate('/viewprofile')
+                    } else {
+                      navigate(`/profile/${result.username}`)
+                    }
                   }}
                 >
                   <img 
