@@ -248,7 +248,7 @@ const AdminEditBoardSelection: React.FC = () => {
                   <p className="timeDisplay">{currentTime}</p>
                 </div>
                 
-                <button className="otherLabsBtn"><a href="/home" style={{ textDecoration: 'none', color: 'inherit' }}>&nbsp; ← Go Back &nbsp;</a></button>
+                <button className="otherLabsBtn"><a href="/admin/edit" style={{ textDecoration: 'none', color: 'inherit' }}>&nbsp; ← Go Back &nbsp;</a></button>
               </section>
 
               <div className="deskGridArea"> <br />

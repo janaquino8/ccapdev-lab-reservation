@@ -261,10 +261,15 @@ export async function updateReservation(req: Request, res: Response) {
     }
 }
 
+// SOFT DELETE ONLY
 export async function deleteReservation(req: Request, res: Response) {
     try {
         const id = req.params.id;
-        const deletedReservation = await Reservation.findByIdAndDelete(id);
+        // const deletedReservation = await Reservation.findByIdAndDelete(id);
+
+        const deletedReservation = await Reservation.findByIdAndUpdate(id, {
+            status: "cancelled"
+        });
 
         if (deletedReservation === null) {
             return res.status(404).json({ message: 'Reservation not found.' });

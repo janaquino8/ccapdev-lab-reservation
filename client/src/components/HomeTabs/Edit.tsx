@@ -24,13 +24,13 @@ const Edit = () => {
       
       const user = JSON.parse(storedUser);
 
-      const response = await fetch(`/users/${user._id}/reservations`, {
+      const response = await fetch(`/users/${user._id}/reservations?limit=3`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status: 'active'
+          status: { $in: ['active', 'ongoing'] }
         }) 
       });
       
@@ -42,7 +42,7 @@ const Edit = () => {
       const userReservations = await response.json();
       console.log(userReservations)
           
-        const finalReservations = userReservations.slice(0, 3).map((reservation: any) => ({
+        const finalReservations = userReservations.map((reservation: any) => ({
           _id: reservation._id,
           laboratory: reservation.laboratory.name,
           isAnonymous: reservation.isAnonymous,
@@ -121,10 +121,14 @@ const Edit = () => {
       </div>
 
       <div className={styles.buttons}>
-        <button>
+        <button
+          onClick={() => navigate('/viewprofile')}  
+        >
           View Profile
         </button>
-        <button>
+        <button
+          onClick={() => navigate('/edit')}
+        >
           Edit Reservation
         </button>
       </div>

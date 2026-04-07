@@ -21,6 +21,7 @@ interface UserSlot {
 interface UserReservation {
   laboratory: string;
   status: string;
+  isAnonymous: boolean;
   reservedSlots: [UserSlot];
 }
 
@@ -62,8 +63,7 @@ const ViewProfile: React.FC = () => {
     try {
       const response = await fetch(`/users/${user._id}/reservations`, {
           method: 'POST', 
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({})
+          headers: { 'Content-Type': 'application/json' }
       });
 
       if (response.ok) {
@@ -72,6 +72,7 @@ const ViewProfile: React.FC = () => {
           const finalReservations = userReservations.map((reservation: any) => ({
             laboratory: reservation.laboratory.name,
             status: reservation.status,
+            isAnonymous: reservation.isAnonymous,
             reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
               slot: slotData.slot.name,
               timeStart: slotData.timeStart,
@@ -212,37 +213,40 @@ const ViewProfile: React.FC = () => {
           {reservations.length === 0 ? (
             <p>You have not made a reservation. Book now!</p>
           ) : (
-            reservations.map((item, index) => (
-              <div key={index}>
-                <div className="header">
-                  <h2 className="entry-label">
-                    {`${index + 1}. ${item.laboratory} |`}
-                  </h2>
-                  <div className={`status-label ${item.status}`}>
+            <>
+              <p>* indicates anonymous reservation</p>
+              {reservations.map((item, index) => (
+                <div key={index}>
+                  <div className="header">
                     <h2 className="entry-label">
-                      {`${item.status.toUpperCase()}`}
+                      {`${index + 1}. ${item.isAnonymous ? "*" : ""}${item.laboratory} |`}
                     </h2>
+                    <div className={`status-label ${item.status}`}>
+                      <h2 className="entry-label">
+                        {`${item.status.toUpperCase()}`}
+                      </h2>
+                    </div>
+                  </div>
+                  
+                  <div className="reservationSlots">
+                    {item.reservedSlots.map((slotItem, index2) => (
+                      <div className="reservationSlot" key={index2}>
+                        <div className="pill">
+                          {slotItem.slot}
+                        </div>
+                        <p>
+                          {`${new Date(slotItem.timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
+                          &nbsp; | &nbsp; 
+                          {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                          &nbsp;-&nbsp;
+                          {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                
-                <div className="reservationSlots">
-                  {item.reservedSlots.map((slotItem, index2) => (
-                    <div className="reservationSlot" key={index2}>
-                      <div className="pill">
-                        {slotItem.slot}
-                      </div>
-                      <p>
-                        {`${new Date(slotItem.timeStart).toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})}`}
-                        &nbsp; | &nbsp; 
-                        {`${new Date(slotItem.timeStart).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
-                        &nbsp;-&nbsp;
-                        {`${new Date(slotItem.timeEnd).toLocaleTimeString("en-US", {timeStyle: "short", timeZone: "UTC"})}`}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
+              ))}
+            </>
           )}
         </div>
       </div>

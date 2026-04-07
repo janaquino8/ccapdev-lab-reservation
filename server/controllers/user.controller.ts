@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import Reservation from '../models/Reservation.js';
 import { Request, Response } from "express";
 import Auth from '../models/Auth.js';
+import mongoose from 'mongoose';
 
 export async function createUser(req: Request, res: Response) {
     try {
@@ -63,15 +64,41 @@ export async function getUsersByName(req: Request, res: Response) {
 export async function getUserReservations(req: Request, res: Response) {
     try {
         const filters = req.body || {}
-        const id = req.params.id;
+        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+        const limit = Number(req.query.limit) || 10000;
 
-        const body = {user: id, ...filters}
+        const body = {user: new mongoose.Types.ObjectId(id), ...filters}
         
-        const reservations = await Reservation.find(body)
-            .populate('user', 'givenName lastName username')
-            .populate('laboratory', 'name')
-            .populate('reservedSlots.slot', 'name')
-            .sort({ "reservedSlots.0.timeStart": 1, "user.username": 1 }); 
+        const aggregatedReservations = await Reservation.aggregate([
+            {
+                $match: body
+            },
+            {
+                $addFields: { 
+                    sortWeight: { 
+                        $indexOfArray: [["ongoing", "active", "completed", "cancelled"], "$status"] 
+                    } 
+                }
+            },
+            {
+                $sort: { 
+                    sortWeight: 1, 
+                    "reservedSlots.0.timeStart": 1 
+                }
+            },
+            {
+                $limit: limit
+            },
+            {
+                $unset: "sortWeight"
+            }
+        ]); 
+
+        const reservations = await Reservation.populate(aggregatedReservations, [
+            { path: 'user', select: 'givenName lastName username' },
+            { path: 'laboratory', select: 'name' },
+            { path: 'reservedSlots.slot', select: 'name' }
+        ]);
 
         if (reservations.length === 0) {
             return res.status(404).send({ message: "User has no reservations" });
@@ -82,6 +109,7 @@ export async function getUserReservations(req: Request, res: Response) {
         res.status(500).send({ error: err.message })
     }
 }
+
 
 export async function updateUser(req: Request, res: Response) {
     try {

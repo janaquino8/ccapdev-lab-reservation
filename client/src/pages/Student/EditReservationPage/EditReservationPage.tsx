@@ -78,11 +78,12 @@ const EditReservation: React.FC = () => {
               <p style={{display: 'flex', justifyContent: 'center', fontSize: '25px'}}>You have no active reservations. Create a reservation now!</p>
             ) : (
               <>
+                <p>* indicates anonymous reservation</p>
                 {reservations.map((item, index) => (
                   <div key={index} className="reservationContainer">
                     <div className="header">
                       <h2 className="entry-label">
-                        {`${index + 1}. ${item.laboratory}`}
+                        {`${index + 1}. ${item.isAnonymous ? "*" : ""}${item.laboratory} |`}
                       </h2>
                       <button
                         className="editButton"

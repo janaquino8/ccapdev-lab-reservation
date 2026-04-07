@@ -57,14 +57,18 @@ function AppRoutes() {
           localStorage.setItem('user', JSON.stringify(userData));
           
           if (location.pathname === '/' || location.pathname === '/register') {
+           if (userData.username === "admin") {
+             navigate('/admin/home');
+           } else {
              navigate('/home'); 
-          }
+           }
+        }
           
         } else {
           localStorage.removeItem('user');
 
           if (location.pathname !== '/' && location.pathname !== '/register') {
-             navigate('/');
+            navigate('/');
           }
         }
       } catch (error) {

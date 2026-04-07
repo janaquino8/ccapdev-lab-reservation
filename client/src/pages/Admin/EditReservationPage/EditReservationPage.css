@@ -94,10 +94,6 @@
   padding-right: 1.5rem;
 }
 
-.editButton {
-    margin-left: 1rem;
-}
-
 .reservationSlots {
     display: flex;
     flex-direction: column;
@@ -125,4 +121,52 @@
 
 .reservationContainer {
     margin-bottom: 1.5rem;
+}
+
+.reservationContainer button {
+    margin: 0 0.5rem;
+}
+
+.entry-label {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.status-label {
+  padding: 0 0.30rem;
+  margin: 0 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  min-width: 100px;
+  min-height: 100%;
+  max-height: 100%;
+  text-align: center;
+  border: 0.2rem solid black;
+}
+
+.active {
+    background-color: #2d5a27; 
+    color: white
+}
+
+.ongoing {
+    background-color: #b6962c; 
+    color: #333;
+}
+
+.cancelled {
+    background-color: #ac0a0a;
+    color: white;
+}
+
+.cancel {
+    background-color: #a81e1e;
+    color: white;
+}
+
+.completed {
+    background-color: #557C45; 
+    color: white
 }

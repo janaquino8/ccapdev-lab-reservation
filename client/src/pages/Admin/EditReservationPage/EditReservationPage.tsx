@@ -51,10 +51,7 @@ const EditReservation: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          status: { $in: ["active", "ongoing", "completed"] }
-        })
+        }
       });
       
       if (!response.ok) {
@@ -69,6 +66,7 @@ const EditReservation: React.FC = () => {
         username: username,
         laboratory: reservation.laboratory.name,
         isAnonymous: reservation.isAnonymous,
+        status: reservation.status,
         reservedSlots: reservation.reservedSlots.map((slotData: any) => ({
           slot: slotData.slot.name,
           timeStart: slotData.timeStart,
@@ -90,6 +88,60 @@ const EditReservation: React.FC = () => {
     }});
   };
 
+  const handleStartClick = async (id: string) => {
+    const isConfirmed = window.confirm("Are you sure you want to start this reservation?");
+    
+    if (isConfirmed) {
+      try {
+        const response = await fetch(`/reservations/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: "ongoing"
+          })
+        });
+
+        if (response.ok) {
+          alert("✅ Reservation successfully started! Reservation is ongoing!");
+          handleSearch();
+        } else {
+          const errorData = await response.json();
+          alert(`❌ Failed to start: ${errorData.error || errorData.message}`);
+        }
+      } catch (err) {
+        console.error("Error starting reservation:", err);
+        alert("Network error. Could not connect to the server.");
+      }
+    }
+  };
+
+  const handleEndClick = async (id: string) => {
+    const isConfirmed = window.confirm("Are you sure you want to end this reservation?");
+    
+    if (isConfirmed) {
+      try {
+        const response = await fetch(`/reservations/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: "completed"
+          })
+        });
+
+        if (response.ok) {
+          alert("✅ Reservation successfully ended! Reservation is complete!");
+          handleSearch();
+        } else {
+          const errorData = await response.json();
+          alert(`❌ Failed to end: ${errorData.error || errorData.message}`);
+        }
+      } catch (err) {
+        console.error("Error ending reservation:", err);
+        alert("Network error. Could not connect to the server.");
+      }
+    }
+  };
+
   const handleCancelClick = async (id: string) => {
     const isConfirmed = window.confirm("Are you sure you want to cancel this reservation?");
     
@@ -101,7 +153,7 @@ const EditReservation: React.FC = () => {
 
         if (response.ok) {
           alert("✅ Reservation successfully deleted!");
-          setReservations(prev => prev.filter(res => res.id !== id));
+          handleSearch();
         } else {
           const errorData = await response.json();
           alert(`❌ Failed to delete: ${errorData.error || errorData.message}`);
@@ -112,6 +164,44 @@ const EditReservation: React.FC = () => {
       }
     }
   };
+
+  // const getDateObj = () => {
+  //   const [ year, month, day ] = reserveInfo.date.split("-").map(item => Number(item));
+  //   const [ hour, minute ] = reserveInfo.time.split(" - ")[0].replace(" AM", "").replace(" PM", "").split(":").map(item => Number(item))
+
+  //   const now = new Date()
+  //   return new Date(
+  //     year, 
+  //     month - 1, 
+  //     day,
+  //     hour + (reserveInfo.time[6] === 'P' && hour < 12 ? 12 : 0),
+  //     minute
+  //   )
+  // }
+
+  const isValidStart = (status: string, date: Date): boolean => {
+    const now = new Date();
+    date = new Date(date.getTime() - 1000 * 60 * 60 * 8);
+
+    return status === "active" 
+      && now.getTime() >= date.getTime() - (1000 * 60 * 5);
+  }
+
+  const isValidEnd = (status: string, date: Date): boolean => {
+    const now = new Date();
+    date = new Date(date.getTime() - 1000 * 60 * 60 * 8);
+
+    return status === "ongoing" 
+      && now.getTime() >= date.getTime();
+  }
+
+  const isValidCancel = (status: string, date: Date): boolean => {
+    const now = new Date();
+    date = new Date(date.getTime() - 1000 * 60 * 60 * 8);
+    
+    return ["active", "ongoing"].includes(status) 
+      && now.getTime() >= date.getTime() + (1000 * 60 * 10);
+  }
 
   return (
     <>
@@ -154,21 +244,48 @@ const EditReservation: React.FC = () => {
 
             <div className="reservations">
               {reservations.length === 0 ? (
-                <p style={{display: 'flex', justifyContent: 'center', fontSize: '25px'}}>You have no active reservations. Create a reservation now!</p>
+                <p style={{display: 'flex', justifyContent: 'center', fontSize: '25px'}}>No reservations found.</p>
               ) : (
                 <>
+                  <p>* indicates anonymous reservation</p>
                   {reservations.map((item, index) => (
                     <div key={index} className="reservationContainer">
                       <div className="header">
                         <h2 className="entry-label">
-                          {`${index + 1}. ${item.laboratory}`}
+                          {`${index + 1}. ${item.isAnonymous ? "*" : ""}${item.laboratory} |`}
                         </h2>
-                        <button
-                          className="editButton"
+                        <div className={`status-label ${item.status}`}>
+                          <h2 className="entry-label">
+                            {`${item.status.toUpperCase()}`}
+                          </h2>
+                        </div>
+                        {item.status === "active" && <button
                           onClick={() => handleEditClick(index)}
                         >
                           EDIT
-                        </button>
+                        </button>}
+                        {isValidStart(item.status, new Date(item.reservedSlots[0].timeStart)) && (
+                          <button
+                            onClick={() => handleStartClick(item._id)}
+                          >
+                            START RESERVE
+                          </button>
+                        )}
+                        {isValidEnd(item.status, new Date(item.reservedSlots.at(-1).timeStart)) && (
+                          <button
+                            onClick={() => handleEndClick(item._id)}
+                          >
+                            END RESERVE
+                          </button>
+                        )}
+                        {isValidCancel(item.status, new Date(item.reservedSlots[0].timeStart)) && (
+                          <button
+                            className="cancel"
+                            onClick={() => handleCancelClick(item._id)}
+                          >
+                            CANCEL
+                          </button>
+                        )}
                       </div>
                       
                       <div className="reservationSlots">
