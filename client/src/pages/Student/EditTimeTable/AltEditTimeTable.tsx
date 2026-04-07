@@ -112,7 +112,7 @@ const EditTimetable: React.FC = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/reservations/${targetReservation.id}`, {
+      const response = await fetch(/reservations/${targetReservation.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

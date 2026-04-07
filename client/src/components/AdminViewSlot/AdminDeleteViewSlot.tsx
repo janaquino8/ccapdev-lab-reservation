@@ -23,7 +23,7 @@ const Slot: React.FC<SlotProps> = ({ id, status, isOpen, onToggle, reservedBy, i
 
   const handleDelete = async (slotId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/reservations/${slotId}`, {
+      const response = await fetch(`/reservations/${slotId}`, {
         method: 'DELETE',
       });
 

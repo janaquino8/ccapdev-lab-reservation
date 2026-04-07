@@ -24,7 +24,7 @@ const Edit = () => {
       
       const user = JSON.parse(storedUser);
 
-      const response = await fetch(`http://localhost:3000/users/${user._id}/reservations`, {
+      const response = await fetch(`/users/${user._id}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

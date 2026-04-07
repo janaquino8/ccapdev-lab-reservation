@@ -81,7 +81,7 @@ const Navbar = () => {
     console.log("Signing out...");
     
     try {
-      await fetch('http://localhost:3000/auth/logout', {
+      await fetch('/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
