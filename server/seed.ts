@@ -1,32 +1,25 @@
 import mongoose from "mongoose";
 import Laboratory from "./models/Laboratory.js"; 
 import Slot from "./models/Slot.js";
-import Reservation from "./models/Reservation.js";
 
-const MONGO_URI = "mongodb://localhost/labDB"; 
+const MONGO_URI = "mongodb+srv://dlsulabsadmin_db_user:dlsulabsadmin1234@dlsulabs.bjnf7v8.mongodb.net/?appName=DLSULabs"; 
 
 async function seedDatabase() {
     try {
         console.log("Connecting to database...");
         await mongoose.connect(MONGO_URI);
-        console.log("Connected!");
+        console.log("✅ Connected!");
 
         console.log("Nuking old collections...");
         try { await Laboratory.collection.drop(); } catch (e) {}
         try { await Slot.collection.drop(); } catch (e) {}
-        try { await Reservation.collection.drop(); } catch (e) {}
 
-        const myUserId = new mongoose.Types.ObjectId("69b845426fa0c10654dbbcbf"); 
         const sections = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         const labNames = ["Gokongwei 301", "Gokongwei 302", "Gokongwei 307A", "Gokongwei 307B", "Gokongwei 404A"];
-
-        let gokongwei307A_id = null;
-        let slotA1_id = null;
-        let slotB4_id = null;
         
         for (const labName of labNames) {
             console.log(`Creating ${labName} and building 64 desks...`);
-            
+
             const lab = await Laboratory.create({
                 name: labName,
                 slots: []
@@ -40,12 +33,6 @@ async function seedDatabase() {
                         laboratory: lab._id
                     });
                     slotDocs.push(newSlot);
-
-                    if (labName === "Gokongwei 307A") {
-                        gokongwei307A_id = lab._id;
-                        if (newSlot.name === "A1") slotA1_id = newSlot._id;
-                        if (newSlot.name === "B4") slotB4_id = newSlot._id;
-                    }
                 }
             }
 
@@ -53,11 +40,12 @@ async function seedDatabase() {
             await lab.save();
         }
 
-        console.log("🎉 Database Successfully Seeded! All 3 labs and 192 slots are ready.");
+        console.log("🎉 Database Successfully Seeded! All 5 labs and 320 slots are ready.");
         process.exit();
 
     } catch (error) {
-        console.error("❌ Error seeding database:", error);
+        console.error("❌ Error seeding database:");
+        console.error(error);
         process.exit(1);
     }
 }
