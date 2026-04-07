@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Laboratory from "./models/Laboratory.ts"; 
-import Slot from "./models/Slot.ts";
+import Laboratory from "./models/Laboratory.js"; 
+import Slot from "./models/Slot.js";
 
 const MONGO_URI = "mongodb+srv://dlsulabsadmin_db_user:dlsulabsadmin1234@dlsulabs.bjnf7v8.mongodb.net/?appName=DLSULabs"; 
 
